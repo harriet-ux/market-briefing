@@ -1,0 +1,821 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OOCO ✦ Websites for local business</title>
+<meta name="description" content="OOCO builds websites for local businesses across the East Midlands and the North of England. One flat fee of £500, 30 days of support, free preview before you pay.">
+<!--
+  ══════════════════════════════════════════════════════════════
+  OOCO ✦ Web portfolio
+  Quick edits:
+  • Brand colours ......... :root block just below
+  • Email address .......... search for exper@ooco.co.uk
+  • Prices ................. search for £500 and £95
+  • Focus area ............. search for East Midlands
+  ══════════════════════════════════════════════════════════════
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,340;0,9..144,420;0,9..144,560;1,9..144,380&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F6EFE2;
+  --paper-deep:#EFE5D2;
+  --sand:#EDE2CE;
+  --ink:#1C1612;
+  --ink-soft:#54483C;
+  --wine:#6B1E2C;
+  --wine-deep:#4A141F;
+  --line:#D9CBB4;
+  --star:"✦";
+  --serif:"Fraunces",Georgia,"Times New Roman",serif;
+  --sans:"Instrument Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans);
+  background:var(--paper);
+  color:var(--ink);
+  font-size:17px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--wine);color:var(--paper)}
+img{max-width:100%}
+a{color:inherit}
+
+/* ── Type scale ─────────────────────────────── */
+h1,h2,h3,.display{font-family:var(--serif);font-weight:420;line-height:1.05;text-wrap:balance}
+h1{font-size:clamp(2.6rem,6.4vw,4.6rem);letter-spacing:-.01em}
+h2{font-size:clamp(2rem,4.4vw,3.1rem);letter-spacing:-.008em}
+h3{font-size:1.35rem;font-weight:560;line-height:1.2}
+.eyebrow{
+  font-size:.78rem;font-weight:600;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--wine);
+  display:flex;align-items:center;gap:.6em;
+}
+.eyebrow .n{font-family:var(--serif);font-style:italic;letter-spacing:0}
+.lede{font-size:1.15rem;color:var(--ink-soft);max-width:34em}
+
+/* ── Shell ──────────────────────────────────── */
+.wrap{max-width:1180px;margin:0 auto;padding:0 clamp(20px,4vw,48px)}
+section{padding:clamp(64px,9vw,120px) 0}
+.section-head{display:flex;flex-direction:column;gap:18px;margin-bottom:clamp(36px,5vw,64px)}
+
+/* ── Nav ────────────────────────────────────── */
+nav{
+  position:sticky;top:0;z-index:60;
+  background:color-mix(in srgb,var(--paper) 88%,transparent);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:68px}
+.wordmark{
+  font-family:var(--serif);font-weight:560;font-size:1.5rem;
+  letter-spacing:-.02em;text-decoration:none;
+}
+.wordmark em{font-style:italic;color:var(--wine)}
+.nav-links{display:flex;gap:28px;align-items:center;list-style:none}
+.nav-links a{
+  text-decoration:none;font-size:.92rem;font-weight:500;color:var(--ink-soft);
+  transition:color .18s;
+}
+.nav-links a:hover{color:var(--wine)}
+.nav-links a.btn-wine,.nav-links a.btn-wine:hover{color:var(--paper)}
+@media(max-width:760px){.nav-links li.hide-m{display:none}}
+
+.btn{
+  display:inline-flex;align-items:center;gap:.55em;
+  font-family:var(--sans);font-weight:600;font-size:.95rem;
+  text-decoration:none;cursor:pointer;border:1.5px solid var(--ink);
+  padding:.78em 1.5em;border-radius:999px;
+  transition:transform .18s,background .18s,color .18s,border-color .18s;
+}
+.btn:hover{transform:translateY(-2px)}
+.btn:focus-visible,.nav-links a:focus-visible,.wordmark:focus-visible,.seg button:focus-visible{
+  outline:2px solid var(--wine);outline-offset:3px;border-radius:4px;
+}
+.btn-wine{background:var(--wine);border-color:var(--wine);color:var(--paper)}
+.btn-wine:hover{background:var(--wine-deep);border-color:var(--wine-deep)}
+.btn-ghost{background:transparent;color:var(--ink)}
+.btn-ghost:hover{border-color:var(--wine);color:var(--wine)}
+.btn-paper{background:var(--paper);border-color:var(--paper);color:var(--wine)}
+.btn .arr{font-family:var(--serif);font-style:italic}
+.btn-sm{padding:.55em 1.15em;font-size:.88rem}
+
+/* ── Hero ───────────────────────────────────── */
+.hero{padding:clamp(56px,8vw,96px) 0 clamp(40px,6vw,72px)}
+.hero-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(32px,5vw,72px);align-items:center}
+@media(max-width:960px){.hero-grid{grid-template-columns:1fr}}
+.hero-copy{display:flex;flex-direction:column;gap:26px}
+.hero h1 em{font-style:italic;color:var(--wine)}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap}
+.hero-note{font-size:.88rem;color:var(--ink-soft)}
+.hero-note strong{color:var(--wine)}
+
+/* ── Browser + phone frames ─────────────────── */
+.demo{display:flex;flex-direction:column;gap:14px;min-width:0}
+.frame{
+  background:#fff;border:1.5px solid var(--ink);border-radius:14px;
+  overflow:hidden;box-shadow:10px 12px 0 0 color-mix(in srgb,var(--wine) 16%,var(--paper));
+  transition:max-width .35s ease;
+  width:100%;max-width:640px;margin:0 auto;
+}
+.frame-bar{
+  display:flex;align-items:center;gap:10px;padding:10px 14px;
+  background:var(--sand);border-bottom:1.5px solid var(--ink);
+}
+.dots{display:flex;gap:6px}
+.dots i{width:10px;height:10px;border-radius:50%;border:1.2px solid var(--ink);display:block}
+.dots i:nth-child(1){background:var(--wine)}
+.dots i:nth-child(2){background:var(--paper)}
+.dots i:nth-child(3){background:var(--ink)}
+.url{
+  flex:1;background:#fff;border:1.2px solid var(--line);border-radius:999px;
+  font-size:.74rem;padding:.32em 1em;color:var(--ink-soft);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.frame iframe{display:block;width:100%;height:430px;border:0;background:#fff}
+.frame-cap{display:flex;justify-content:space-between;gap:12px;align-items:baseline;max-width:640px;margin:0 auto;width:100%}
+.frame-cap b{font-family:var(--serif);font-weight:560;font-size:1.05rem}
+.frame-cap span{font-size:.85rem;color:var(--ink-soft)}
+
+/* phone mode */
+body.phone .frame{max-width:375px}
+body.phone .frame iframe{height:560px}
+body.phone .frame-bar .url{max-width:180px}
+
+/* device toggle */
+.seg{
+  display:inline-flex;border:1.5px solid var(--ink);border-radius:999px;
+  overflow:hidden;background:var(--paper);align-self:center;
+}
+.seg button{
+  font-family:var(--sans);font-weight:600;font-size:.85rem;
+  border:0;background:transparent;color:var(--ink-soft);
+  padding:.55em 1.4em;cursor:pointer;transition:background .18s,color .18s;
+}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+
+/* ── Marquees ───────────────────────────────── */
+.marquee{
+  overflow:hidden;white-space:nowrap;
+  padding:16px 0;border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);
+}
+.marquee-wine{background:var(--wine);color:var(--paper)}
+.marquee-dark{background:var(--ink);color:var(--paper)}
+.marquee-track{display:inline-flex;gap:0;will-change:transform;animation:scroll-l 36s linear infinite}
+.marquee-dark .marquee-track{animation:scroll-r 42s linear infinite}
+.marquee:hover .marquee-track{animation-play-state:paused}
+.marquee-chunk{display:inline-flex;align-items:center;flex-shrink:0}
+.marquee-chunk span{
+  font-family:var(--serif);font-weight:420;font-size:1.05rem;
+  padding:0 .95em;display:inline-flex;align-items:center;gap:1.9em;
+}
+.marquee-chunk span::after{content:var(--star);font-size:.75em;opacity:.85}
+@keyframes scroll-l{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes scroll-r{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+@media(prefers-reduced-motion:reduce){
+  .marquee-track{animation:none}
+  html{scroll-behavior:auto}
+  .btn:hover{transform:none}
+}
+
+/* ── Stat band ──────────────────────────────── */
+.stat{background:var(--paper-deep);border-bottom:1.5px solid var(--ink)}
+.stat .wrap{padding-top:clamp(48px,7vw,84px);padding-bottom:clamp(48px,7vw,84px)}
+.stat p.big{
+  font-family:var(--serif);font-weight:420;
+  font-size:clamp(1.6rem,3.6vw,2.6rem);line-height:1.18;
+  max-width:22em;text-wrap:balance;
+}
+.stat p.big strong{color:var(--wine);font-weight:560;font-variant-numeric:tabular-nums}
+.stat small{display:block;margin-top:18px;font-size:.85rem;color:var(--ink-soft)}
+
+/* ── Work grid ──────────────────────────────── */
+.work-top{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+.work-grid{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:clamp(28px,4vw,52px);margin-top:clamp(36px,5vw,56px);
+}
+@media(max-width:860px){.work-grid{grid-template-columns:1fr}}
+.work-grid .demo{gap:12px}
+.try-hint{font-size:.85rem;color:var(--ink-soft);font-style:italic}
+
+/* ── Includes ───────────────────────────────── */
+.inc-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.5px;background:var(--ink);border:1.5px solid var(--ink);border-radius:16px;overflow:hidden}
+@media(max-width:860px){.inc-grid{grid-template-columns:1fr}}
+.inc{background:var(--paper);padding:clamp(24px,3vw,36px);display:flex;flex-direction:column;gap:10px}
+.inc .mk{font-family:var(--serif);font-style:italic;color:var(--wine);font-size:1.2rem}
+.inc p{font-size:.95rem;color:var(--ink-soft)}
+
+/* ── Pricing ────────────────────────────────── */
+#pricing{background:var(--paper-deep);border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink)}
+.price-grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(24px,3.5vw,40px);align-items:stretch}
+@media(max-width:860px){.price-grid{grid-template-columns:1fr}}
+.card{
+  border:1.5px solid var(--ink);border-radius:18px;
+  padding:clamp(28px,4vw,44px);display:flex;flex-direction:column;gap:20px;
+}
+.card-wine{background:var(--wine);color:var(--paper);box-shadow:10px 12px 0 0 color-mix(in srgb,var(--wine) 25%,var(--paper-deep))}
+.card-paper{background:var(--paper)}
+.price-tag{display:flex;align-items:baseline;gap:.35em;flex-wrap:wrap}
+.price-tag .amount{font-family:var(--serif);font-weight:560;font-size:clamp(2.6rem,5vw,3.6rem);line-height:1;font-variant-numeric:tabular-nums}
+.price-tag .per{font-size:.95rem;opacity:.85}
+.pill{
+  align-self:flex-start;font-size:.72rem;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;border:1.2px solid currentColor;border-radius:999px;
+  padding:.35em 1em;
+}
+.card ul{list-style:none;display:flex;flex-direction:column;gap:12px}
+.card li{display:flex;gap:.7em;align-items:baseline;font-size:.98rem}
+.card li::before{content:var(--star);font-size:.7em;flex-shrink:0;position:relative;top:-.1em}
+.card-wine li::before{color:#E8C9B0}
+.card-paper li::before{color:var(--wine)}
+.card .fine{font-size:.85rem;opacity:.8;font-style:italic}
+.card .btn{align-self:flex-start;margin-top:auto}
+
+/* ── Process ────────────────────────────────── */
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(24px,3.5vw,40px)}
+@media(max-width:860px){.steps{grid-template-columns:1fr}}
+.step{border-top:1.5px solid var(--ink);padding-top:22px;display:flex;flex-direction:column;gap:12px}
+.step .num{font-family:var(--serif);font-style:italic;font-size:2.4rem;color:var(--wine);line-height:1}
+.step p{font-size:.98rem;color:var(--ink-soft)}
+
+/* ── CTA ────────────────────────────────────── */
+.cta{background:var(--wine);color:var(--paper);border-top:1.5px solid var(--ink);text-align:center}
+.cta .wrap{display:flex;flex-direction:column;align-items:center;gap:28px}
+.cta h2{max-width:15em}
+.cta h2 em{font-style:italic;color:#E8C9B0}
+.cta p{max-width:32em;opacity:.92}
+
+/* ── Footer ─────────────────────────────────── */
+footer{background:var(--ink);color:var(--paper);padding:clamp(44px,6vw,72px) 0}
+.foot{display:flex;justify-content:space-between;gap:32px;flex-wrap:wrap;align-items:flex-start}
+.foot .wordmark{font-size:2rem;color:var(--paper)}
+.foot-col{display:flex;flex-direction:column;gap:8px;font-size:.92rem}
+.foot-col a{color:var(--paper);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--paper) 35%,transparent)}
+.foot-col a:hover{border-bottom-color:var(--paper)}
+.foot-col .lab{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;opacity:.55;margin-bottom:4px}
+.unrobotic{
+  margin-top:clamp(36px,5vw,56px);padding-top:24px;
+  border-top:1px solid color-mix(in srgb,var(--paper) 18%,transparent);
+  display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  font-family:var(--serif);font-style:italic;font-size:.95rem;opacity:.75;
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav-in">
+    <a class="wordmark" href="#top">ooco<em>.</em></a>
+    <ul class="nav-links">
+      <li class="hide-m"><a href="#work">The work</a></li>
+      <li class="hide-m"><a href="#included">What you get</a></li>
+      <li class="hide-m"><a href="#pricing">Pricing</a></li>
+      <li class="hide-m"><a href="#process">How it works</a></li>
+      <li><a class="btn btn-wine btn-sm" href="mailto:exper@ooco.co.uk?subject=Free%20website%20preview">Get a free preview</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow"><span class="n">✦</span> Websites for local business · East Midlands &amp; the North</p>
+      <h1>Your business deserves more than a <em>Facebook page.</em></h1>
+      <p class="lede">OOCO builds clean, professional websites for local businesses that do not have one yet. One flat fee of £500, thirty days of support, and you see your site before you spend a penny.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-wine" href="mailto:exper@ooco.co.uk?subject=Free%20website%20preview">Get a free preview <span class="arr">→</span></a>
+        <a class="btn btn-ghost" href="#work">See the work</a>
+      </div>
+      <p class="hero-note">Every site below is <strong>live</strong>. Scroll it, tap it, type in it.</p>
+    </div>
+
+    <div class="demo">
+      <div class="seg" role="group" aria-label="Preview device">
+        <button type="button" data-device="desktop" aria-pressed="true">Desktop</button>
+        <button type="button" data-device="phone" aria-pressed="false">Phone</button>
+      </div>
+      <div class="frame">
+        <div class="frame-bar">
+          <div class="dots"><i></i><i></i><i></i></div>
+          <div class="url">diamondgirlshair.co.uk</div>
+        </div>
+        <iframe data-site="diamond" title="Diamond Girls Hair Studio example website" loading="eager"></iframe>
+      </div>
+      <div class="frame-cap">
+        <b>Diamond Girls Hair Studio</b>
+        <span>Salon · Worksop</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="marquee marquee-wine" aria-hidden="true">
+  <div class="marquee-track" data-marquee>
+    <div class="marquee-chunk">
+      <span>Websites for local business</span>
+      <span>One flat fee of £500</span>
+      <span>30 days of support included</span>
+      <span>Free preview before you pay</span>
+      <span>Your own domain connected</span>
+      <span>Optional care plan, £95 a month</span>
+      <span>Live in weeks, not months</span>
+    </div>
+  </div>
+</div>
+
+<div class="stat">
+  <div class="wrap">
+    <p class="big"><strong>56%</strong> of consumers will not trust a business that does not have its own website. A Facebook page is not enough any more.</p>
+    <small>Which is exactly why every OOCO site is built to earn that trust in the first five seconds.</small>
+  </div>
+</div>
+
+<section id="work">
+  <div class="wrap">
+    <div class="section-head work-top">
+      <div>
+        <p class="eyebrow"><span class="n">01 ✦</span> The work</p>
+        <h2 style="margin-top:14px">Real sites. Not screenshots.</h2>
+        <p class="lede" style="margin-top:14px">Four more examples of the kind of site OOCO builds, one for each corner of the high street. Flip them to phone view to see them as your customers will.</p>
+      </div>
+      <div class="seg" role="group" aria-label="Preview device">
+        <button type="button" data-device="desktop" aria-pressed="true">Desktop</button>
+        <button type="button" data-device="phone" aria-pressed="false">Phone</button>
+      </div>
+    </div>
+
+    <div class="work-grid">
+      <div class="demo">
+        <div class="frame">
+          <div class="frame-bar">
+            <div class="dots"><i></i><i></i><i></i></div>
+            <div class="url">kingscutbarbers.co.uk</div>
+          </div>
+          <iframe data-site="barber" title="Kings Cut Barber Co example website" loading="lazy"></iframe>
+        </div>
+        <div class="frame-cap"><b>Kings Cut Barber Co.</b><span>Barbershop · Sheffield</span></div>
+      </div>
+
+      <div class="demo">
+        <div class="frame">
+          <div class="frame-bar">
+            <div class="dots"><i></i><i></i><i></i></div>
+            <div class="url">lunanailsstudio.co.uk</div>
+          </div>
+          <iframe data-site="nails" title="Luna Nails Studio example website" loading="lazy"></iframe>
+        </div>
+        <div class="frame-cap"><b>Luna Nails Studio</b><span>Nail studio · Nottingham</span></div>
+      </div>
+
+      <div class="demo">
+        <div class="frame">
+          <div class="frame-bar">
+            <div class="dots"><i></i><i></i><i></i></div>
+            <div class="url">therollingpinbakes.co.uk</div>
+          </div>
+          <iframe data-site="bakery" title="The Rolling Pin home bakery example website" loading="lazy"></iframe>
+        </div>
+        <div class="frame-cap"><b>The Rolling Pin</b><span>Home bakery · Chesterfield <em class="try-hint">· try the order form</em></span></div>
+      </div>
+
+      <div class="demo">
+        <div class="frame">
+          <div class="frame-bar">
+            <div class="dots"><i></i><i></i><i></i></div>
+            <div class="url">hartleyandson.co.uk</div>
+          </div>
+          <iframe data-site="trades" title="Hartley and Son plumbing example website" loading="lazy"></iframe>
+        </div>
+        <div class="frame-cap"><b>Hartley &amp; Son</b><span>Plumbing &amp; heating · Leeds <em class="try-hint">· try the quote form</em></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee marquee-dark" aria-hidden="true">
+  <div class="marquee-track" data-marquee>
+    <div class="marquee-chunk">
+      <span>Salons</span>
+      <span>Barbers</span>
+      <span>Nail studios</span>
+      <span>Home bakers</span>
+      <span>Dog groomers</span>
+      <span>Plumbers</span>
+      <span>Electricians</span>
+      <span>Cafés</span>
+      <span>Florists</span>
+      <span>Cleaners</span>
+      <span>Personal trainers</span>
+      <span>Beauticians</span>
+    </div>
+  </div>
+</div>
+
+<section id="included">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow"><span class="n">02 ✦</span> What you get</p>
+      <h2>Every site includes</h2>
+    </div>
+    <div class="inc-grid">
+      <div class="inc"><span class="mk">✦</span><h3>Designed for phones first</h3><p>Most of your customers will find you on their phone. Your site is built for that screen before any other.</p></div>
+      <div class="inc"><span class="mk">✦</span><h3>Contact &amp; booking buttons</h3><p>Call, message and enquiry buttons that actually work, so a visitor becomes a customer in one tap.</p></div>
+      <div class="inc"><span class="mk">✦</span><h3>Found on Google</h3><p>Set up properly so people searching for what you do in your town can actually find you.</p></div>
+      <div class="inc"><span class="mk">✦</span><h3>Your own domain</h3><p>We connect the site to a domain of your choice, so your business has an address people trust.</p></div>
+      <div class="inc"><span class="mk">✦</span><h3>Prices &amp; photos, laid out properly</h3><p>Your services, prices and pictures presented clearly, so nobody has to scroll a feed to find them.</p></div>
+      <div class="inc"><span class="mk">✦</span><h3>Fast &amp; secure</h3><p>Quick to load and safely hosted, because a slow or broken site loses trust as fast as no site at all.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow"><span class="n">03 ✦</span> Pricing</p>
+      <h2>One flat fee. No surprises.</h2>
+    </div>
+    <div class="price-grid">
+      <div class="card card-wine">
+        <span class="pill">The website</span>
+        <div class="price-tag"><span class="amount">£500</span><span class="per">flat fee, once</span></div>
+        <ul>
+          <li>Your website designed and built for you</li>
+          <li>Free preview first, you only pay if you love it</li>
+          <li>30 days of support to get it exactly right</li>
+          <li>Connected to a domain of your choice</li>
+          <li>No hidden costs, no monthly surprises</li>
+        </ul>
+        <a class="btn btn-paper" href="mailto:exper@ooco.co.uk?subject=Free%20website%20preview">Start with a free preview <span class="arr">→</span></a>
+      </div>
+      <div class="card card-paper">
+        <span class="pill">Care plan · optional</span>
+        <div class="price-tag"><span class="amount">£95</span><span class="per">a month</span></div>
+        <ul>
+          <li>We keep the site running for you</li>
+          <li>Updates and changes whenever you need them</li>
+          <li>Hosting, security and backups looked after</li>
+          <li>Cancel any time</li>
+        </ul>
+        <p class="fine">Completely optional. Busy owners hand it to us; hands on owners run it themselves.</p>
+        <a class="btn btn-ghost" href="mailto:exper@ooco.co.uk?subject=Care%20plan%20enquiry">Ask about the care plan</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="process">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow"><span class="n">04 ✦</span> How it works</p>
+      <h2>See it before you spend a penny.</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <span class="num">1.</span>
+        <h3>Free preview</h3>
+        <p>We build your website first and send it over for free. No deposit, no commitment, no awkward sales call.</p>
+      </div>
+      <div class="step">
+        <span class="num">2.</span>
+        <h3>Fine tuning</h3>
+        <p>Love it? Pay the £500 flat fee and we spend up to 30 days polishing every detail until it is exactly how you want it.</p>
+      </div>
+      <div class="step">
+        <span class="num">3.</span>
+        <h3>Go live</h3>
+        <p>We connect your domain and your business is properly on the map. Run it yourself, or let us handle it from £95 a month.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="wrap">
+    <h2>Your website may already be <em>waiting for you.</em></h2>
+    <p>Tell us your business name and town. If we have already built your preview, we will send it straight over. If not, we will start it today.</p>
+    <a class="btn btn-paper" href="mailto:exper@ooco.co.uk?subject=Free%20website%20preview">Send me my free preview <span class="arr">→</span></a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <a class="wordmark" href="#top">ooco<em style="color:#E8C9B0">.</em></a>
+      <div class="foot-col">
+        <span class="lab">Say hello</span>
+        <a href="mailto:exper@ooco.co.uk">exper@ooco.co.uk</a>
+      </div>
+      <div class="foot-col">
+        <span class="lab">Serving</span>
+        <span>The East Midlands</span>
+        <span>&amp; the North of England</span>
+      </div>
+      <div class="foot-col">
+        <span class="lab">The offer</span>
+        <span>£500 flat fee · 30 days support</span>
+        <span>Optional care plan · £95 a month</span>
+      </div>
+    </div>
+    <div class="unrobotic">
+      <span>Unrobotic since day one.</span>
+      <span>© OOCO 2026</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════ EXAMPLE MINI SITES (injected into the browser frames) ══════════ -->
+
+<template id="site-diamond">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:Georgia,serif;background:#FBF3EE;color:#2B2124;line-height:1.6;font-size:15px}
+  .dg-nav{display:flex;justify-content:space-between;align-items:center;padding:14px 22px;background:#FBF3EE;border-bottom:1px solid #E4CFC6;position:sticky;top:0}
+  .dg-logo{font-size:1.15rem;letter-spacing:.06em}
+  .dg-logo b{color:#B04A5A}
+  .dg-book{font-family:Verdana,sans-serif;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;background:#B04A5A;color:#fff;text-decoration:none;padding:.6em 1.2em;border-radius:999px}
+  .dg-hero{padding:56px 22px;text-align:center;background:linear-gradient(180deg,#F6DDD3,#FBF3EE)}
+  .dg-hero h1{font-size:2rem;font-weight:normal;line-height:1.15}
+  .dg-hero h1 em{color:#B04A5A}
+  .dg-hero p{margin:14px auto 22px;max-width:30em;color:#6E5A5E}
+  .dg-cta{display:inline-block;background:#2B2124;color:#fff;text-decoration:none;padding:.8em 1.8em;border-radius:999px;font-family:Verdana,sans-serif;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase}
+  .dg-strip{background:#B04A5A;color:#fff;text-align:center;padding:10px;font-family:Verdana,sans-serif;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase}
+  section{padding:40px 22px}
+  h2{font-weight:normal;font-size:1.5rem;margin-bottom:18px;text-align:center}
+  .dg-services{max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:0}
+  .dg-row{display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px dashed #D8BCB2}
+  .dg-row span:last-child{color:#B04A5A;white-space:nowrap}
+  .dg-hours{background:#2B2124;color:#F6DDD3}
+  .dg-hours h2{color:#fff}
+  .dg-hrow{display:flex;justify-content:space-between;max-width:340px;margin:0 auto;padding:8px 0;border-bottom:1px solid #4A3B40;font-family:Verdana,sans-serif;font-size:.8rem}
+  footer{text-align:center;padding:26px;font-size:.8rem;color:#6E5A5E}
+</style>
+<nav class="dg-nav"><span class="dg-logo">Diamond <b>Girls</b></span><a class="dg-book" href="#dg-book" onclick="return false">Book now</a></nav>
+<header class="dg-hero">
+  <h1>Hair that turns heads, <em>right here in Worksop.</em></h1>
+  <p>Cuts, colour and occasion styling from a salon that treats every appointment like a big day.</p>
+  <a class="dg-cta" href="#" onclick="alert('On the real site this opens the booking page.');return false">Book an appointment</a>
+</header>
+<div class="dg-strip">New client offer ✦ 20% off your first colour</div>
+<section>
+  <h2>Price list</h2>
+  <div class="dg-services">
+    <div class="dg-row"><span>Cut &amp; blow dry</span><span>from £32</span></div>
+    <div class="dg-row"><span>Full head colour</span><span>from £68</span></div>
+    <div class="dg-row"><span>Balayage</span><span>from £95</span></div>
+    <div class="dg-row"><span>Highlights, half head</span><span>from £58</span></div>
+    <div class="dg-row"><span>Occasion up do</span><span>from £45</span></div>
+    <div class="dg-row"><span>Kids cut, under 12</span><span>£16</span></div>
+  </div>
+</section>
+<section class="dg-hours">
+  <h2>Opening hours</h2>
+  <div class="dg-hrow"><span>Tue to Fri</span><span>9:00 to 18:00</span></div>
+  <div class="dg-hrow"><span>Saturday</span><span>8:30 to 16:00</span></div>
+  <div class="dg-hrow"><span>Sun &amp; Mon</span><span>Closed</span></div>
+</section>
+<footer>Diamond Girls Hair Studio · Bridge Street, Worksop · 01909 000 000</footer>
+</template>
+
+<template id="site-barber">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:"Arial Narrow",Arial,sans-serif;background:#141414;color:#EDE6DA;line-height:1.55;font-size:15px}
+  .kb-nav{display:flex;justify-content:space-between;align-items:center;padding:14px 22px;border-bottom:1px solid #2E2A24;position:sticky;top:0;background:#141414}
+  .kb-logo{font-weight:bold;letter-spacing:.2em;text-transform:uppercase;font-size:.9rem}
+  .kb-logo span{color:#D9A441}
+  .kb-walk{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;border:1px solid #D9A441;color:#D9A441;padding:.55em 1.1em;text-decoration:none}
+  .kb-hero{padding:60px 22px;text-align:center;background:repeating-linear-gradient(135deg,#141414,#141414 14px,#181712 14px,#181712 28px)}
+  .kb-hero h1{font-size:2.4rem;text-transform:uppercase;letter-spacing:.08em;line-height:1.05}
+  .kb-hero h1 b{color:#D9A441}
+  .kb-hero p{margin:14px auto 22px;max-width:28em;color:#A79E8E}
+  .kb-cta{display:inline-block;background:#D9A441;color:#141414;font-weight:bold;text-transform:uppercase;letter-spacing:.12em;font-size:.78rem;text-decoration:none;padding:.9em 2em}
+  section{padding:42px 22px}
+  h2{text-transform:uppercase;letter-spacing:.18em;font-size:1rem;color:#D9A441;text-align:center;margin-bottom:22px}
+  .kb-list{max-width:400px;margin:0 auto}
+  .kb-row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #2E2A24;font-size:.95rem}
+  .kb-row b{color:#D9A441}
+  .kb-band{background:#D9A441;color:#141414;text-align:center;padding:14px;font-weight:bold;text-transform:uppercase;letter-spacing:.14em;font-size:.78rem}
+  footer{text-align:center;padding:26px;font-size:.78rem;color:#6E675C}
+</style>
+<nav class="kb-nav"><span class="kb-logo">Kings<span>Cut</span></span><a class="kb-walk" href="#" onclick="return false">Walk ins welcome</a></nav>
+<header class="kb-hero">
+  <h1>Sharp fades.<br><b>Zero fuss.</b></h1>
+  <p>A proper barbershop off London Road. Turn up, sit down, walk out sharp.</p>
+  <a class="kb-cta" href="#" onclick="alert('On the real site this opens the booking app.');return false">Book a chair</a>
+</header>
+<section>
+  <h2>The menu</h2>
+  <div class="kb-list">
+    <div class="kb-row"><span>Skin fade</span><b>£18</b></div>
+    <div class="kb-row"><span>Scissor cut</span><b>£16</b></div>
+    <div class="kb-row"><span>Cut &amp; beard trim</span><b>£24</b></div>
+    <div class="kb-row"><span>Hot towel shave</span><b>£20</b></div>
+    <div class="kb-row"><span>Under 14s</span><b>£12</b></div>
+  </div>
+</section>
+<div class="kb-band">Open 7 days ✦ Last chair 7pm</div>
+<footer>Kings Cut Barber Co. · London Road, Sheffield · 0114 000 0000</footer>
+</template>
+
+<template id="site-nails">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:"Trebuchet MS",Verdana,sans-serif;background:#F4EFFA;color:#332B45;line-height:1.6;font-size:15px}
+  .ln-nav{display:flex;justify-content:space-between;align-items:center;padding:14px 22px;background:#F4EFFA;border-bottom:1px solid #DACFEE;position:sticky;top:0}
+  .ln-logo{font-weight:bold;font-size:1.05rem}
+  .ln-logo i{font-style:normal;color:#8A5FD3}
+  .ln-book{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;background:#8A5FD3;color:#fff;text-decoration:none;padding:.6em 1.2em;border-radius:999px}
+  .ln-hero{padding:54px 22px;text-align:center;background:radial-gradient(circle at 70% 20%,#E4D6F8,#F4EFFA 60%)}
+  .ln-hero h1{font-size:1.9rem;line-height:1.15}
+  .ln-hero h1 i{font-style:normal;color:#8A5FD3}
+  .ln-hero p{margin:14px auto 22px;max-width:28em;color:#6D6383}
+  .ln-cta{display:inline-block;background:#332B45;color:#fff;text-decoration:none;padding:.8em 1.8em;border-radius:999px;font-size:.8rem;letter-spacing:.06em}
+  .ln-swatches{display:flex;justify-content:center;gap:10px;padding:0 22px 30px;flex-wrap:wrap}
+  .ln-sw{width:38px;height:38px;border-radius:50%;border:2px solid #fff;box-shadow:0 2px 6px rgba(51,43,69,.2);cursor:pointer;transition:transform .15s}
+  .ln-sw:hover{transform:scale(1.15)}
+  section{padding:38px 22px}
+  h2{font-size:1.35rem;text-align:center;margin-bottom:18px}
+  .ln-list{max-width:400px;margin:0 auto}
+  .ln-row{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px dashed #CBBBE8}
+  .ln-row span:last-child{color:#8A5FD3;font-weight:bold}
+  .ln-note{text-align:center;font-size:.85rem;color:#6D6383;padding:0 22px 30px}
+  footer{background:#332B45;color:#D8CCEF;text-align:center;padding:24px;font-size:.8rem}
+</style>
+<nav class="ln-nav"><span class="ln-logo">Luna Nails <i>Studio</i></span><a class="ln-book" href="#" onclick="return false">Book</a></nav>
+<header class="ln-hero">
+  <h1>Nails you will not stop <i>looking at.</i></h1>
+  <p>BIAB, gels and nail art in a calm little studio in Hockley, Nottingham.</p>
+  <a class="ln-cta" href="#" onclick="alert('On the real site this opens the booking calendar.');return false">Book your slot</a>
+</header>
+<div class="ln-swatches">
+  <span class="ln-sw" style="background:#D96C8A" title="Rosewood" onclick="document.getElementById('ln-pick').textContent='Rosewood'"></span>
+  <span class="ln-sw" style="background:#8A5FD3" title="Ultraviolet" onclick="document.getElementById('ln-pick').textContent='Ultraviolet'"></span>
+  <span class="ln-sw" style="background:#E8C9B0" title="Oat milk" onclick="document.getElementById('ln-pick').textContent='Oat milk'"></span>
+  <span class="ln-sw" style="background:#3E7C59" title="Forest" onclick="document.getElementById('ln-pick').textContent='Forest'"></span>
+  <span class="ln-sw" style="background:#332B45" title="Midnight" onclick="document.getElementById('ln-pick').textContent='Midnight'"></span>
+</div>
+<p class="ln-note">Tap a shade ✦ you picked: <b id="ln-pick">none yet</b></p>
+<section>
+  <h2>Treatments</h2>
+  <div class="ln-list">
+    <div class="ln-row"><span>BIAB overlay</span><span>£34</span></div>
+    <div class="ln-row"><span>Gel manicure</span><span>£28</span></div>
+    <div class="ln-row"><span>Full set extensions</span><span>£42</span></div>
+    <div class="ln-row"><span>Nail art, per nail</span><span>from £2</span></div>
+    <div class="ln-row"><span>Luxury pedicure</span><span>£36</span></div>
+  </div>
+</section>
+<footer>Luna Nails Studio · Hockley, Nottingham · DMs open for appointments</footer>
+</template>
+
+<template id="site-bakery">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:Georgia,serif;background:#FFF8EE;color:#3D2B1F;line-height:1.6;font-size:15px}
+  .rp-nav{display:flex;justify-content:space-between;align-items:center;padding:14px 22px;background:#FFF8EE;border-bottom:1px solid #EBD9BC;position:sticky;top:0}
+  .rp-logo{font-size:1.1rem}
+  .rp-logo b{color:#C2662D}
+  .rp-order{font-family:Verdana,sans-serif;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;background:#C2662D;color:#fff;text-decoration:none;padding:.6em 1.2em;border-radius:6px}
+  .rp-hero{padding:50px 22px;text-align:center;background:#F7E7CB}
+  .rp-hero h1{font-size:1.9rem;font-weight:normal;line-height:1.15}
+  .rp-hero h1 em{color:#C2662D}
+  .rp-hero p{margin:14px auto 0;max-width:28em;color:#7A5C42}
+  section{padding:38px 22px}
+  h2{font-weight:normal;font-size:1.4rem;text-align:center;margin-bottom:18px}
+  .rp-menu{max-width:400px;margin:0 auto}
+  .rp-row{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px dotted #D9BE93}
+  .rp-row span:last-child{color:#C2662D}
+  .rp-form{max-width:380px;margin:0 auto;display:flex;flex-direction:column;gap:12px;background:#fff;border:1px solid #EBD9BC;border-radius:12px;padding:22px}
+  .rp-form label{font-family:Verdana,sans-serif;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:#7A5C42;display:flex;flex-direction:column;gap:5px}
+  .rp-form input,.rp-form select{font-family:Georgia,serif;font-size:.95rem;padding:.6em .8em;border:1px solid #D9BE93;border-radius:8px;background:#FFF8EE;color:#3D2B1F}
+  .rp-form input:focus,.rp-form select:focus{outline:2px solid #C2662D}
+  .rp-form button{font-family:Verdana,sans-serif;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;background:#C2662D;color:#fff;border:0;border-radius:8px;padding:.9em;cursor:pointer}
+  .rp-form button:hover{background:#A4531F}
+  .rp-done{display:none;text-align:center;color:#3E7C59;font-style:italic;padding-top:4px}
+  footer{text-align:center;padding:24px;font-size:.8rem;color:#7A5C42}
+</style>
+<nav class="rp-nav"><span class="rp-logo">The <b>Rolling Pin</b></span><a class="rp-order" href="#rp-order">Order a bake</a></nav>
+<header class="rp-hero">
+  <h1>Proper bakes, made in a <em>Chesterfield kitchen.</em></h1>
+  <p>Celebration cakes, brownie boxes and weekend sourdough. Order by Thursday for the weekend.</p>
+</header>
+<section>
+  <h2>This week</h2>
+  <div class="rp-menu">
+    <div class="rp-row"><span>Brownie box of 6</span><span>£12</span></div>
+    <div class="rp-row"><span>Victoria sponge</span><span>£18</span></div>
+    <div class="rp-row"><span>Celebration cake</span><span>from £45</span></div>
+    <div class="rp-row"><span>Sourdough loaf</span><span>£4.50</span></div>
+    <div class="rp-row"><span>Cinnamon buns, 4</span><span>£9</span></div>
+  </div>
+</section>
+<section id="rp-order">
+  <h2>Order a bake</h2>
+  <form class="rp-form" onsubmit="event.preventDefault();this.querySelector('.rp-done').style.display='block';this.querySelector('button').textContent='Order sent ✓'">
+    <label>Your name<input type="text" placeholder="e.g. Sam" required></label>
+    <label>What would you like?
+      <select><option>Brownie box of 6</option><option>Victoria sponge</option><option>Celebration cake</option><option>Sourdough loaf</option><option>Cinnamon buns</option></select>
+    </label>
+    <label>When for?<input type="text" placeholder="e.g. Saturday morning" required></label>
+    <button type="submit">Send order</button>
+    <p class="rp-done">Lovely, your order is in. This is a working demo form.</p>
+  </form>
+</section>
+<footer>The Rolling Pin · Chesterfield · Registered home kitchen, 5★ hygiene</footer>
+</template>
+
+<template id="site-trades">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:Verdana,Arial,sans-serif;background:#F3F5F7;color:#182635;line-height:1.55;font-size:14px}
+  .hs-nav{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;background:#182635;color:#fff;position:sticky;top:0}
+  .hs-logo{font-weight:bold;font-size:.95rem}
+  .hs-logo span{color:#F2B633}
+  .hs-call{background:#F2B633;color:#182635;font-weight:bold;font-size:.75rem;text-decoration:none;padding:.6em 1.1em;border-radius:6px}
+  .hs-hero{padding:46px 20px;background:#182635;color:#fff}
+  .hs-hero h1{font-size:1.7rem;line-height:1.2;max-width:18em}
+  .hs-hero h1 span{color:#F2B633}
+  .hs-hero p{margin:12px 0 0;color:#B9C4D0;max-width:34em}
+  .hs-badges{display:flex;gap:10px;flex-wrap:wrap;padding:16px 20px;background:#F2B633;color:#182635;font-weight:bold;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em}
+  .hs-badges span::before{content:"✓ "}
+  section{padding:34px 20px}
+  h2{font-size:1.2rem;margin-bottom:16px}
+  .hs-services{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;max-width:520px}
+  .hs-svc{background:#fff;border:1px solid #D5DCE3;border-radius:8px;padding:14px;font-size:.85rem}
+  .hs-svc b{display:block;margin-bottom:4px;color:#182635}
+  .hs-form{max-width:400px;display:flex;flex-direction:column;gap:10px;background:#fff;border:1px solid #D5DCE3;border-radius:10px;padding:20px}
+  .hs-form label{font-size:.72rem;font-weight:bold;text-transform:uppercase;letter-spacing:.05em;color:#4E5E6E;display:flex;flex-direction:column;gap:4px}
+  .hs-form input,.hs-form textarea{font-family:Verdana,sans-serif;font-size:.9rem;padding:.55em .7em;border:1px solid #C3CDD6;border-radius:6px}
+  .hs-form input:focus,.hs-form textarea:focus{outline:2px solid #F2B633}
+  .hs-form button{background:#182635;color:#fff;border:0;border-radius:6px;padding:.85em;font-weight:bold;font-size:.8rem;cursor:pointer;text-transform:uppercase;letter-spacing:.06em}
+  .hs-form button:hover{background:#0E1822}
+  .hs-done{display:none;color:#2E7D4F;font-size:.85rem;font-style:italic}
+  footer{background:#182635;color:#B9C4D0;text-align:center;padding:22px;font-size:.75rem}
+</style>
+<nav class="hs-nav"><span class="hs-logo">Hartley <span>&amp;</span> Son</span><a class="hs-call" href="#" onclick="alert('On the real site this dials the business.');return false">Call now</a></nav>
+<header class="hs-hero">
+  <h1>Plumbing &amp; heating you can rely on, <span>across Leeds.</span></h1>
+  <p>Family run for 22 years. Boilers, bathrooms, leaks and landlord certificates. Emergency callouts answered day and night.</p>
+</header>
+<div class="hs-badges"><span>Gas Safe registered</span><span>Fully insured</span><span>Free quotes</span></div>
+<section>
+  <h2>What we do</h2>
+  <div class="hs-services">
+    <div class="hs-svc"><b>Boiler service</b>Annual checks &amp; repairs</div>
+    <div class="hs-svc"><b>Bathrooms</b>Full fits &amp; refurbs</div>
+    <div class="hs-svc"><b>Emergencies</b>Leaks &amp; breakdowns</div>
+    <div class="hs-svc"><b>Landlords</b>Gas certificates</div>
+  </div>
+</section>
+<section>
+  <h2>Get a free quote</h2>
+  <form class="hs-form" onsubmit="event.preventDefault();this.querySelector('.hs-done').style.display='block';this.querySelector('button').textContent='Request sent ✓'">
+    <label>Name<input type="text" placeholder="Your name" required></label>
+    <label>Postcode<input type="text" placeholder="e.g. LS6" required></label>
+    <label>What needs doing?<textarea rows="3" placeholder="e.g. boiler making a banging noise" required></textarea></label>
+    <button type="submit">Request my quote</button>
+    <p class="hs-done">Thanks, we will be in touch within the hour. This is a working demo form.</p>
+  </form>
+</section>
+<footer>Hartley &amp; Son Plumbing &amp; Heating · Leeds &amp; surrounding · Gas Safe 000000</footer>
+</template>
+
+<script>
+(function(){
+  // Inject each example site into its browser frame
+  document.querySelectorAll("iframe[data-site]").forEach(function(f){
+    var t = document.getElementById("site-" + f.dataset.site);
+    if(t){ f.srcdoc = t.innerHTML; }
+  });
+
+  // Seamless marquees: duplicate the chunk so -50% loops perfectly
+  document.querySelectorAll("[data-marquee]").forEach(function(track){
+    track.appendChild(track.firstElementChild.cloneNode(true));
+  });
+
+  // Desktop / Phone toggle (both toggles stay in sync)
+  var buttons = document.querySelectorAll(".seg button");
+  buttons.forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var phone = btn.dataset.device === "phone";
+      document.body.classList.toggle("phone", phone);
+      buttons.forEach(function(b){
+        b.setAttribute("aria-pressed", String((b.dataset.device === "phone") === phone));
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>
