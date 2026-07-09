@@ -17,20 +17,23 @@
 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,340;0,9..144,420;0,9..144,560;1,9..144,380&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Playfair+Display:ital,wght@0,500;1,500;1,600&family=Poppins:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <style>
 :root{
-  --paper:#F6EFE2;
-  --paper-deep:#EFE5D2;
-  --sand:#EDE2CE;
-  --ink:#1C1612;
-  --ink-soft:#54483C;
-  --wine:#6B1E2C;
-  --wine-deep:#4A141F;
-  --line:#D9CBB4;
+  /* OOCO brand palette, from the brand board */
+  --paper:#E9E5F4;        /* pale lavender page background */
+  --paper-deep:#DFD9F0;   /* deeper lavender bands */
+  --sand:#C9BCF4;         /* brand lilac */
+  --ink:#201C41;          /* brand navy */
+  --ink-soft:#4C4670;     /* muted navy for body copy */
+  --plum:#7D3E7D;         /* brand plum */
+  --plum-deep:#602E60;
+  --lime:#BFF549;         /* brand lime accent */
+  --line:#C7BDE4;
   --star:"✦";
-  --serif:"Fraunces",Georgia,"Times New Roman",serif;
-  --sans:"Instrument Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --serif:"Bricolage Grotesque",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --accent-serif:"Playfair Display",Georgia,serif;
+  --sans:"Poppins",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -42,21 +45,22 @@ body{
   line-height:1.6;
   -webkit-font-smoothing:antialiased;
 }
-::selection{background:var(--wine);color:var(--paper)}
+::selection{background:var(--plum);color:var(--paper)}
 img{max-width:100%}
 a{color:inherit}
 
 /* ── Type scale ─────────────────────────────── */
-h1,h2,h3,.display{font-family:var(--serif);font-weight:420;line-height:1.05;text-wrap:balance}
-h1{font-size:clamp(2.6rem,6.4vw,4.6rem);letter-spacing:-.01em}
-h2{font-size:clamp(2rem,4.4vw,3.1rem);letter-spacing:-.008em}
-h3{font-size:1.35rem;font-weight:560;line-height:1.2}
+h1,h2,h3,.display{font-family:var(--serif);font-weight:600;line-height:1.05;text-wrap:balance}
+h1{font-size:clamp(2.5rem,6vw,4.3rem);letter-spacing:-.015em}
+h2{font-size:clamp(1.9rem,4.2vw,3rem);letter-spacing:-.01em}
+h3{font-size:1.25rem;font-weight:600;line-height:1.25}
+h1 em,h2 em{font-family:var(--accent-serif);font-weight:500;letter-spacing:0}
 .eyebrow{
   font-size:.78rem;font-weight:600;letter-spacing:.18em;
-  text-transform:uppercase;color:var(--wine);
+  text-transform:uppercase;color:var(--plum);
   display:flex;align-items:center;gap:.6em;
 }
-.eyebrow .n{font-family:var(--serif);font-style:italic;letter-spacing:0}
+.eyebrow .n{font-family:var(--accent-serif);font-style:italic;letter-spacing:0}
 .lede{font-size:1.15rem;color:var(--ink-soft);max-width:34em}
 
 /* ── Shell ──────────────────────────────────── */
@@ -73,17 +77,17 @@ nav{
 }
 .nav-in{display:flex;align-items:center;justify-content:space-between;height:68px}
 .wordmark{
-  font-family:var(--serif);font-weight:560;font-size:1.5rem;
+  font-family:var(--serif);font-weight:700;font-size:1.5rem;
   letter-spacing:-.02em;text-decoration:none;
 }
-.wordmark em{font-style:italic;color:var(--wine)}
+.wordmark em{font-style:italic;color:var(--plum)}
 .nav-links{display:flex;gap:28px;align-items:center;list-style:none}
 .nav-links a{
   text-decoration:none;font-size:.92rem;font-weight:500;color:var(--ink-soft);
   transition:color .18s;
 }
-.nav-links a:hover{color:var(--wine)}
-.nav-links a.btn-wine,.nav-links a.btn-wine:hover{color:var(--paper)}
+.nav-links a:hover{color:var(--plum)}
+.nav-links a.btn-plum,.nav-links a.btn-plum:hover{color:var(--lime)}
 @media(max-width:760px){.nav-links li.hide-m{display:none}}
 
 .btn{
@@ -95,14 +99,14 @@ nav{
 }
 .btn:hover{transform:translateY(-2px)}
 .btn:focus-visible,.nav-links a:focus-visible,.wordmark:focus-visible,.seg button:focus-visible{
-  outline:2px solid var(--wine);outline-offset:3px;border-radius:4px;
+  outline:2px solid var(--plum);outline-offset:3px;border-radius:4px;
 }
-.btn-wine{background:var(--wine);border-color:var(--wine);color:var(--paper)}
-.btn-wine:hover{background:var(--wine-deep);border-color:var(--wine-deep)}
+.btn-plum{background:var(--plum);border-color:var(--plum);color:var(--lime)}
+.btn-plum:hover{background:var(--ink);border-color:var(--ink)}
 .btn-ghost{background:transparent;color:var(--ink)}
-.btn-ghost:hover{border-color:var(--wine);color:var(--wine)}
-.btn-paper{background:var(--paper);border-color:var(--paper);color:var(--wine)}
-.btn .arr{font-family:var(--serif);font-style:italic}
+.btn-ghost:hover{border-color:var(--plum);color:var(--plum)}
+.btn-paper{background:var(--paper);border-color:var(--paper);color:var(--plum)}
+.btn .arr{font-family:var(--accent-serif);font-style:italic}
 .btn-sm{padding:.55em 1.15em;font-size:.88rem}
 
 /* ── Hero ───────────────────────────────────── */
@@ -110,16 +114,16 @@ nav{
 .hero-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(32px,5vw,72px);align-items:center}
 @media(max-width:960px){.hero-grid{grid-template-columns:1fr}}
 .hero-copy{display:flex;flex-direction:column;gap:26px}
-.hero h1 em{font-style:italic;color:var(--wine)}
+.hero h1 em{font-style:italic;color:var(--plum)}
 .hero-ctas{display:flex;gap:14px;flex-wrap:wrap}
 .hero-note{font-size:.88rem;color:var(--ink-soft)}
-.hero-note strong{color:var(--wine)}
+.hero-note strong{color:var(--plum)}
 
 /* ── Browser + phone frames ─────────────────── */
 .demo{display:flex;flex-direction:column;gap:14px;min-width:0}
 .frame{
   background:#fff;border:1.5px solid var(--ink);border-radius:14px;
-  overflow:hidden;box-shadow:10px 12px 0 0 color-mix(in srgb,var(--wine) 16%,var(--paper));
+  overflow:hidden;box-shadow:10px 12px 0 0 color-mix(in srgb,var(--plum) 16%,var(--paper));
   transition:max-width .35s ease;
   width:100%;max-width:640px;margin:0 auto;
 }
@@ -129,7 +133,7 @@ nav{
 }
 .dots{display:flex;gap:6px}
 .dots i{width:10px;height:10px;border-radius:50%;border:1.2px solid var(--ink);display:block}
-.dots i:nth-child(1){background:var(--wine)}
+.dots i:nth-child(1){background:var(--plum)}
 .dots i:nth-child(2){background:var(--paper)}
 .dots i:nth-child(3){background:var(--ink)}
 .url{
@@ -139,7 +143,7 @@ nav{
 }
 .frame iframe{display:block;width:100%;height:430px;border:0;background:#fff}
 .frame-cap{display:flex;justify-content:space-between;gap:12px;align-items:baseline;max-width:640px;margin:0 auto;width:100%}
-.frame-cap b{font-family:var(--serif);font-weight:560;font-size:1.05rem}
+.frame-cap b{font-family:var(--serif);font-weight:600;font-size:1.02rem}
 .frame-cap span{font-size:.85rem;color:var(--ink-soft)}
 
 /* phone mode */
@@ -164,17 +168,17 @@ body.phone .frame-bar .url{max-width:180px}
   overflow:hidden;white-space:nowrap;
   padding:16px 0;border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);
 }
-.marquee-wine{background:var(--wine);color:var(--paper)}
+.marquee-plum{background:var(--plum);color:var(--paper)}
 .marquee-dark{background:var(--ink);color:var(--paper)}
 .marquee-track{display:inline-flex;gap:0;will-change:transform;animation:scroll-l 36s linear infinite}
 .marquee-dark .marquee-track{animation:scroll-r 42s linear infinite}
 .marquee:hover .marquee-track{animation-play-state:paused}
 .marquee-chunk{display:inline-flex;align-items:center;flex-shrink:0}
 .marquee-chunk span{
-  font-family:var(--serif);font-weight:420;font-size:1.05rem;
+  font-family:var(--serif);font-weight:500;font-size:1.02rem;
   padding:0 .95em;display:inline-flex;align-items:center;gap:1.9em;
 }
-.marquee-chunk span::after{content:var(--star);font-size:.75em;opacity:.85}
+.marquee-chunk span::after{content:var(--star);font-size:.75em;color:var(--lime)}
 @keyframes scroll-l{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @keyframes scroll-r{from{transform:translateX(-50%)}to{transform:translateX(0)}}
 @media(prefers-reduced-motion:reduce){
@@ -187,11 +191,11 @@ body.phone .frame-bar .url{max-width:180px}
 .stat{background:var(--paper-deep);border-bottom:1.5px solid var(--ink)}
 .stat .wrap{padding-top:clamp(48px,7vw,84px);padding-bottom:clamp(48px,7vw,84px)}
 .stat p.big{
-  font-family:var(--serif);font-weight:420;
+  font-family:var(--serif);font-weight:500;
   font-size:clamp(1.6rem,3.6vw,2.6rem);line-height:1.18;
   max-width:22em;text-wrap:balance;
 }
-.stat p.big strong{color:var(--wine);font-weight:560;font-variant-numeric:tabular-nums}
+.stat p.big strong{color:var(--plum);font-weight:560;font-variant-numeric:tabular-nums}
 .stat small{display:block;margin-top:18px;font-size:.85rem;color:var(--ink-soft)}
 
 /* ── Work grid ──────────────────────────────── */
@@ -208,7 +212,7 @@ body.phone .frame-bar .url{max-width:180px}
 .inc-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.5px;background:var(--ink);border:1.5px solid var(--ink);border-radius:16px;overflow:hidden}
 @media(max-width:860px){.inc-grid{grid-template-columns:1fr}}
 .inc{background:var(--paper);padding:clamp(24px,3vw,36px);display:flex;flex-direction:column;gap:10px}
-.inc .mk{font-family:var(--serif);font-style:italic;color:var(--wine);font-size:1.2rem}
+.inc .mk{color:var(--plum);font-size:1.2rem}
 .inc p{font-size:.95rem;color:var(--ink-soft)}
 
 /* ── Pricing ────────────────────────────────── */
@@ -219,10 +223,10 @@ body.phone .frame-bar .url{max-width:180px}
   border:1.5px solid var(--ink);border-radius:18px;
   padding:clamp(28px,4vw,44px);display:flex;flex-direction:column;gap:20px;
 }
-.card-wine{background:var(--wine);color:var(--paper);box-shadow:10px 12px 0 0 color-mix(in srgb,var(--wine) 25%,var(--paper-deep))}
+.card-plum{background:var(--plum);color:var(--paper);box-shadow:10px 12px 0 0 color-mix(in srgb,var(--plum) 25%,var(--paper-deep))}
 .card-paper{background:var(--paper)}
 .price-tag{display:flex;align-items:baseline;gap:.35em;flex-wrap:wrap}
-.price-tag .amount{font-family:var(--serif);font-weight:560;font-size:clamp(2.6rem,5vw,3.6rem);line-height:1;font-variant-numeric:tabular-nums}
+.price-tag .amount{font-family:var(--serif);font-weight:700;font-size:clamp(2.6rem,5vw,3.6rem);line-height:1;font-variant-numeric:tabular-nums}
 .price-tag .per{font-size:.95rem;opacity:.85}
 .pill{
   align-self:flex-start;font-size:.72rem;font-weight:600;letter-spacing:.14em;
@@ -232,8 +236,8 @@ body.phone .frame-bar .url{max-width:180px}
 .card ul{list-style:none;display:flex;flex-direction:column;gap:12px}
 .card li{display:flex;gap:.7em;align-items:baseline;font-size:.98rem}
 .card li::before{content:var(--star);font-size:.7em;flex-shrink:0;position:relative;top:-.1em}
-.card-wine li::before{color:#E8C9B0}
-.card-paper li::before{color:var(--wine)}
+.card-plum li::before{color:var(--lime)}
+.card-paper li::before{color:var(--plum)}
 .card .fine{font-size:.85rem;opacity:.8;font-style:italic}
 .card .btn{align-self:flex-start;margin-top:auto}
 
@@ -241,14 +245,14 @@ body.phone .frame-bar .url{max-width:180px}
 .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(24px,3.5vw,40px)}
 @media(max-width:860px){.steps{grid-template-columns:1fr}}
 .step{border-top:1.5px solid var(--ink);padding-top:22px;display:flex;flex-direction:column;gap:12px}
-.step .num{font-family:var(--serif);font-style:italic;font-size:2.4rem;color:var(--wine);line-height:1}
+.step .num{font-family:var(--accent-serif);font-style:italic;font-size:2.4rem;color:var(--plum);line-height:1}
 .step p{font-size:.98rem;color:var(--ink-soft)}
 
 /* ── CTA ────────────────────────────────────── */
-.cta{background:var(--wine);color:var(--paper);border-top:1.5px solid var(--ink);text-align:center}
+.cta{background:var(--plum);color:var(--paper);border-top:1.5px solid var(--ink);text-align:center}
 .cta .wrap{display:flex;flex-direction:column;align-items:center;gap:28px}
 .cta h2{max-width:15em}
-.cta h2 em{font-style:italic;color:#E8C9B0}
+.cta h2 em{font-style:italic;color:var(--lime)}
 .cta p{max-width:32em;opacity:.92}
 
 /* ── Footer ─────────────────────────────────── */
@@ -263,7 +267,7 @@ footer{background:var(--ink);color:var(--paper);padding:clamp(44px,6vw,72px) 0}
   margin-top:clamp(36px,5vw,56px);padding-top:24px;
   border-top:1px solid color-mix(in srgb,var(--paper) 18%,transparent);
   display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
-  font-family:var(--serif);font-style:italic;font-size:.95rem;opacity:.75;
+  font-family:var(--accent-serif);font-style:italic;font-size:.95rem;opacity:.75;
 }
 </style>
 </head>
@@ -277,7 +281,7 @@ footer{background:var(--ink);color:var(--paper);padding:clamp(44px,6vw,72px) 0}
       <li class="hide-m"><a href="#included">What you get</a></li>
       <li class="hide-m"><a href="#pricing">Pricing</a></li>
       <li class="hide-m"><a href="#process">How it works</a></li>
-      <li><a class="btn btn-wine btn-sm" href="mailto:exper@ooco.co.uk?subject=Free%20website%20preview">Get a free preview</a></li>
+      <li><a class="btn btn-plum btn-sm" href="mailto:exper@ooco.co.uk?subject=Free%20website%20preview">Get a free preview</a></li>
     </ul>
   </div>
 </nav>
@@ -289,7 +293,7 @@ footer{background:var(--ink);color:var(--paper);padding:clamp(44px,6vw,72px) 0}
       <h1>Your business deserves more than a <em>Facebook page.</em></h1>
       <p class="lede">OOCO builds clean, professional websites for local businesses that do not have one yet. One flat fee of £500, thirty days of support, and you see your site before you spend a penny.</p>
       <div class="hero-ctas">
-        <a class="btn btn-wine" href="mailto:exper@ooco.co.uk?subject=Free%20website%20preview">Get a free preview <span class="arr">→</span></a>
+        <a class="btn btn-plum" href="mailto:exper@ooco.co.uk?subject=Free%20website%20preview">Get a free preview <span class="arr">→</span></a>
         <a class="btn btn-ghost" href="#work">See the work</a>
       </div>
       <p class="hero-note">Every site below is <strong>live</strong>. Scroll it, tap it, type in it.</p>
@@ -315,7 +319,7 @@ footer{background:var(--ink);color:var(--paper);padding:clamp(44px,6vw,72px) 0}
   </div>
 </header>
 
-<div class="marquee marquee-wine" aria-hidden="true">
+<div class="marquee marquee-plum" aria-hidden="true">
   <div class="marquee-track" data-marquee>
     <div class="marquee-chunk">
       <span>Websites for local business</span>
@@ -441,7 +445,7 @@ footer{background:var(--ink);color:var(--paper);padding:clamp(44px,6vw,72px) 0}
       <h2>One flat fee. No surprises.</h2>
     </div>
     <div class="price-grid">
-      <div class="card card-wine">
+      <div class="card card-plum">
         <span class="pill">The website</span>
         <div class="price-tag"><span class="amount">£500</span><span class="per">flat fee, once</span></div>
         <ul>
@@ -506,7 +510,7 @@ footer{background:var(--ink);color:var(--paper);padding:clamp(44px,6vw,72px) 0}
 <footer>
   <div class="wrap">
     <div class="foot">
-      <a class="wordmark" href="#top">ooco<em style="color:#E8C9B0">.</em></a>
+      <a class="wordmark" href="#top">ooco<em style="color:var(--lime)">.</em></a>
       <div class="foot-col">
         <span class="lab">Say hello</span>
         <a href="mailto:exper@ooco.co.uk">exper@ooco.co.uk</a>
