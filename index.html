@@ -1,0 +1,760 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#EDE9E3" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<title>Muse — styled from what you own</title>
+<style>
+  /* ---------- Tokens ---------- */
+  :root{
+    --bg:#EDE9E3;
+    --surface:#FBFAF7;
+    --surface-2:#F3EFE8;
+    --ink:#262220;
+    --ink-soft:#6B635C;
+    --ink-faint:#9A9088;
+    --hair:#DED8CE;
+    --accent:#9B7A4C;
+    --accent-soft:#C6A879;
+    --accent-wash:#EFE6D6;
+    --good:#5E7355;
+    /* effort temperature ramp (cool stone -> warm clay) */
+    --e1:#E9E7E2;
+    --e2:#ECE7DE;
+    --e3:#EFE6D9;
+    --e4:#F1E1D2;
+    --shadow:0 24px 60px -28px rgba(45,38,30,.45);
+    --radius:18px;
+    --serif:"Didot","Bodoni 72","Hoefler Text",Georgia,"Times New Roman",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#161311;--surface:#221E1A;--surface-2:#2A251F;
+      --ink:#EFEAE1;--ink-soft:#A99F92;--ink-faint:#7C7368;
+      --hair:#322C25;--accent:#C6A16A;--accent-soft:#8C7146;--accent-wash:#2E2519;
+      --good:#8FA383;
+      --e1:#242019;--e2:#28221A;--e3:#2C2519;--e4:#312717;
+      --shadow:0 24px 60px -30px rgba(0,0,0,.7);
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#EDE9E3;--surface:#FBFAF7;--surface-2:#F3EFE8;
+    --ink:#262220;--ink-soft:#6B635C;--ink-faint:#9A9088;
+    --hair:#DED8CE;--accent:#9B7A4C;--accent-soft:#C6A879;--accent-wash:#EFE6D6;--good:#5E7355;
+    --e1:#E9E7E2;--e2:#ECE7DE;--e3:#EFE6D9;--e4:#F1E1D2;
+    --shadow:0 24px 60px -28px rgba(45,38,30,.45);
+  }
+  :root[data-theme="dark"]{
+    --bg:#161311;--surface:#221E1A;--surface-2:#2A251F;
+    --ink:#EFEAE1;--ink-soft:#A99F92;--ink-faint:#7C7368;
+    --hair:#322C25;--accent:#C6A16A;--accent-soft:#8C7146;--accent-wash:#2E2519;--good:#8FA383;
+    --e1:#242019;--e2:#28221A;--e3:#2C2519;--e4:#312717;
+    --shadow:0 24px 60px -30px rgba(0,0,0,.7);
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:var(--sans);
+    background:var(--bg);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    min-height:100dvh;
+  }
+  button{font-family:inherit;cursor:pointer;color:inherit}
+  @media (prefers-reduced-motion: no-preference){
+    .fade{animation:fade .5s ease both}
+  }
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  ::selection{background:var(--accent-wash)}
+
+  /* ---------- Phone frame ---------- */
+  .phone{
+    position:relative;
+    width:100%;
+    max-width:440px;
+    margin:0 auto;
+    min-height:100dvh;
+    background:var(--surface);
+    display:flex;
+    flex-direction:column;
+  }
+  @media (min-width:520px){
+    body{padding:26px 0}
+    .phone{min-height:auto;height:calc(100dvh - 52px);border-radius:34px;box-shadow:var(--shadow);overflow:hidden;border:1px solid var(--hair)}
+  }
+  .screen{
+    flex:1;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    padding:0 22px 120px;
+  }
+  .screen::-webkit-scrollbar{width:0}
+
+  /* ---------- Typography ---------- */
+  .eyebrow{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-faint);font-weight:600}
+  .serif{font-family:var(--serif)}
+  h1,h2,h3{font-family:var(--serif);font-weight:400;margin:0;text-wrap:balance;letter-spacing:.005em}
+  h1{font-size:33px;line-height:1.08}
+  h2{font-size:25px;line-height:1.12}
+  .lede{color:var(--ink-soft);font-size:15px;line-height:1.5}
+
+  /* ---------- Top bar ---------- */
+  .topbar{
+    position:sticky;top:0;z-index:20;
+    background:color-mix(in srgb,var(--surface) 88%,transparent);
+    backdrop-filter:saturate(1.4) blur(14px);
+    -webkit-backdrop-filter:saturate(1.4) blur(14px);
+    padding:calc(env(safe-area-inset-top) + 16px) 22px 12px;
+    display:flex;align-items:center;justify-content:space-between;
+    border-bottom:1px solid transparent;
+  }
+  .topbar.bordered{border-bottom-color:var(--hair)}
+  .wordmark{font-family:var(--serif);font-size:22px;letter-spacing:.02em}
+  .wordmark b{font-weight:400}
+  .wordmark .dot{color:var(--accent)}
+  .avatar{
+    width:34px;height:34px;border-radius:50%;border:1px solid var(--hair);
+    background:var(--accent-wash);color:var(--accent);
+    display:grid;place-items:center;font-size:13px;font-weight:600;
+    font-family:var(--serif);
+  }
+  .iconbtn{background:none;border:none;padding:8px;color:var(--ink-soft);border-radius:10px;display:grid;place-items:center}
+  .iconbtn:active{background:var(--surface-2)}
+
+  /* ---------- Chips ---------- */
+  .chiprow{display:flex;gap:8px;overflow-x:auto;padding:2px 0;scrollbar-width:none}
+  .chiprow::-webkit-scrollbar{display:none}
+  .chip{
+    flex:0 0 auto;border:1px solid var(--hair);background:var(--surface);
+    color:var(--ink-soft);padding:8px 15px;border-radius:100px;font-size:13px;
+    letter-spacing:.01em;white-space:nowrap;transition:.18s;font-weight:500;
+  }
+  .chip[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+  .chip.accent[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:9px;
+    background:var(--ink);color:var(--surface);border:none;
+    padding:16px 22px;border-radius:100px;font-size:15px;font-weight:600;
+    width:100%;letter-spacing:.01em;transition:.16s;
+  }
+  .btn:active{transform:scale(.985)}
+  .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--hair)}
+  .btn.accent{background:var(--accent);color:#fff}
+  .btn:disabled{opacity:.4}
+  .btn svg{width:19px;height:19px;flex:0 0 auto}
+  .backlink svg{width:17px;height:17px;flex:0 0 auto}
+  .upload svg{width:28px;height:28px;color:var(--ink-faint)}
+
+  /* ---------- Garment tiles ---------- */
+  .tile{
+    position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--hair);
+    aspect-ratio:1/1.16;display:grid;place-items:center;
+    background:var(--tile,var(--surface-2));
+  }
+  .tile svg.garment{width:58%;height:58%;color:color-mix(in srgb,var(--ink) 62%,var(--tile-ink,var(--ink-soft)))}
+  .tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .tile .swatch{position:absolute;left:8px;bottom:8px;width:13px;height:13px;border-radius:50%;border:1.5px solid var(--surface);box-shadow:0 0 0 1px rgba(0,0,0,.08)}
+  .card-label{margin-top:8px}
+  .card-label .nm{font-size:12.5px;line-height:1.25;color:var(--ink);font-weight:500}
+  .card-label .ct{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);margin-top:2px}
+
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px 12px}
+  .grid.two{grid-template-columns:repeat(2,1fr)}
+  .piece{border:none;background:none;padding:0;text-align:left;width:100%}
+  .piece:active .tile{border-color:var(--accent)}
+
+  /* ---------- Outfit cards ---------- */
+  .outfit{
+    border-radius:var(--radius);border:1px solid var(--hair);
+    padding:16px 16px 18px;margin-bottom:14px;background:var(--otint,var(--surface-2));
+  }
+  .outfit-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}
+  .effort-name{font-family:var(--serif);font-size:19px}
+  .effort-sub{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);margin-top:1px}
+  .meter{display:flex;gap:5px;align-items:center}
+  .meter i{width:7px;height:7px;border-radius:50%;background:var(--hair);display:block}
+  .meter i.on{background:var(--accent)}
+  .pieces{display:flex;gap:9px;margin-bottom:12px}
+  .pieces .mini{
+    flex:1;border-radius:11px;border:1px solid color-mix(in srgb,var(--hair) 70%,transparent);
+    aspect-ratio:1/1.14;display:grid;place-items:center;background:var(--tile,var(--surface));position:relative;overflow:hidden;
+  }
+  .pieces .mini svg{width:56%;height:56%;color:color-mix(in srgb,var(--ink) 60%,var(--tile-ink,var(--ink-soft)))}
+  .pieces .mini img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .rationale{font-size:13.5px;line-height:1.5;color:var(--ink-soft)}
+  .rationale b{color:var(--ink);font-weight:600}
+
+  /* ---------- Bottom nav ---------- */
+  .nav{
+    position:absolute;left:0;right:0;bottom:0;z-index:30;
+    display:flex;align-items:center;justify-content:space-around;
+    padding:10px 18px calc(env(safe-area-inset-bottom) + 12px);
+    background:color-mix(in srgb,var(--surface) 90%,transparent);
+    backdrop-filter:blur(16px) saturate(1.3);-webkit-backdrop-filter:blur(16px) saturate(1.3);
+    border-top:1px solid var(--hair);
+  }
+  .navbtn{background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--ink-faint);padding:4px 14px;font-size:10.5px;letter-spacing:.06em}
+  .navbtn svg{width:22px;height:22px}
+  .navbtn[aria-current="true"]{color:var(--ink)}
+  .navbtn.add{color:var(--surface)}
+  .navbtn.add .plus{width:46px;height:46px;border-radius:50%;background:var(--accent);display:grid;place-items:center;box-shadow:0 10px 22px -8px var(--accent);margin-top:-14px}
+  .navbtn.add .plus svg{color:#fff}
+
+  /* ---------- Misc ---------- */
+  .section-gap{height:26px}
+  .hair{height:1px;background:var(--hair);margin:20px 0;border:none}
+  .pill{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;letter-spacing:.04em;color:var(--ink-soft);background:var(--surface-2);border:1px solid var(--hair);padding:5px 11px;border-radius:100px}
+  .note{background:var(--accent-wash);border:1px solid color-mix(in srgb,var(--accent) 24%,transparent);border-radius:14px;padding:13px 15px;font-size:13px;line-height:1.5;color:var(--ink);display:flex;gap:10px;align-items:flex-start}
+  .note svg,.pill svg{width:16px;height:16px;flex:0 0 auto;color:var(--accent)}
+  .empty{text-align:center;color:var(--ink-faint);padding:44px 20px;font-size:14px}
+  .backlink{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--ink-soft);background:none;border:none;padding:6px 0;margin-bottom:4px}
+
+  /* onboarding */
+  .cover{min-height:100dvh;display:flex;flex-direction:column;justify-content:center;padding:40px 30px calc(env(safe-area-inset-bottom) + 34px);gap:22px;background:
+    radial-gradient(120% 80% at 50% -10%, var(--accent-wash) 0%, transparent 55%), var(--surface)}
+  .steps{display:flex;gap:6px;margin-bottom:20px}
+  .steps i{flex:1;height:3px;border-radius:3px;background:var(--hair)}
+  .steps i.on{background:var(--accent)}
+  .selectgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .opt{border:1px solid var(--hair);background:var(--surface);border-radius:14px;padding:15px 14px;text-align:left;transition:.16s}
+  .opt[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-wash)}
+  .opt .t{font-size:15px;font-weight:600;color:var(--ink)}
+  .opt .d{font-size:12px;color:var(--ink-soft);margin-top:3px;line-height:1.4}
+  .swrow{display:flex;gap:10px;flex-wrap:wrap}
+  .sw{width:38px;height:38px;border-radius:50%;border:2px solid transparent;box-shadow:0 0 0 1px var(--hair);position:relative}
+  .sw[aria-pressed="true"]{border-color:var(--accent)}
+  .sw[aria-pressed="true"]::after{content:"";position:absolute;inset:0;border-radius:50%;box-shadow:0 0 0 2px var(--surface) inset}
+  .upload{border:1.5px dashed var(--hair);border-radius:16px;padding:22px;text-align:center;color:var(--ink-soft);font-size:13px;display:block;transition:.16s}
+  .upload:active{border-color:var(--accent);background:var(--surface-2)}
+  .thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .thumbs img{width:52px;height:64px;object-fit:cover;border-radius:9px;border:1px solid var(--hair)}
+  .field{width:100%;border:1px solid var(--hair);background:var(--surface);border-radius:12px;padding:13px 15px;font-size:15px;color:var(--ink);font-family:inherit;margin-top:8px}
+  .field:focus{outline:2px solid var(--accent-soft);outline-offset:1px}
+  label.lbl{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);font-weight:600;display:block;margin-top:16px}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="phone">
+  <div id="app"></div>
+</div>
+
+<script>
+/* ============================================================
+   Muse — personal styling prototype
+   All client-side. Wardrobe + profile persist in localStorage.
+   The styling engine here is rule-based so the whole flow works
+   with zero setup; it's structured so a Claude vision+reasoning
+   brain can slot straight in later (tagging photos, richer outfits).
+   ============================================================ */
+
+/* ---------- Icon set (UI + garments) ---------- */
+const UI = {
+  morning:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="13" r="4"/><path d="M12 3v2M12 21v0M4 13H2M22 13h-2M5.6 6.6 4.2 5.2M18.4 6.6l1.4-1.4"/><path d="M6 20h12"/></svg>',
+  wardrobe:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M12 3v18M9 11h.01M15 11h.01"/></svg>',
+  plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 6v12M6 12h12"/></svg>',
+  back:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',
+  cam:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 011 1v9a1 1 0 01-1 1H4a1 1 0 01-1-1V9a1 1 0 011-1z"/><circle cx="12" cy="13" r="3.2"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg>',
+  spark:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></svg>',
+};
+const G = {
+  tshirt:'<path d="M5 8L10 6Q15 10 20 6L25 8L28 13L24 15L23 13.5V35H7V13.5L6 15L2 13z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>',
+  cami:'<path d="M11 6c0 2 2 3 4 3s4-1 4-3M11 6l-3 4 3 1v20h10V11l3-1-3-4M11 6l4 3 4-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>',
+  blouse:'<path d="M9 8l6-3 6 3 3 4-3 3v18H9V15l-3-3z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M15 5v27" stroke="currentColor" stroke-width="1" opacity=".5"/>',
+  knit:'<path d="M8 10l4-4 3 2 3-2 4 4 2 4-3 2v18H9V16l-3-2z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M12 12l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1" opacity=".55"/>',
+  trousers:'<path d="M10 5h10l1 12-1 18h-5l-1-15-1 15H8L9 17z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>',
+  skirt:'<path d="M9 6h12l4 13c-4 3-16 3-20 0z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>',
+  shorts:'<path d="M9 6h12l1 9-1 9h-5l-1-9-1 9H8l-1-9z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>',
+  dress:'<path d="M10 5c0 2 2 3 5 3s5-1 5-3M10 5l-2 6 2 2-3 20h12l-3-20 2-2-2-6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>',
+  coat:'<path d="M9 7l6-3 6 3 2 5-2 2v20h-6V16h-0V34H9V14l-2-2z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M15 8v26" stroke="currentColor" stroke-width="1" opacity=".5"/>',
+  blazer:'<path d="M9 7l6-3 6 3 2 6-2 1v20h-5l-1-14-1 14H9V14l-2-1z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M15 8l-3 8M15 8l3 8" stroke="currentColor" stroke-width="1" opacity=".5"/>',
+  trainer:'<path d="M4 24c1-3 3-4 5-5l4-4 2 3 4 1c3 .5 6 1 8 3 1 1 1 3 0 4H5c-1 0-1.5-1-1-2z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M13 15l2 4M16 16l2 3" stroke="currentColor" stroke-width="1" opacity=".6"/>',
+  flat:'<path d="M5 22c3-1 6-2 9-2s7 .5 10 2c1 .5 1 3-1 3H6c-2 0-2-2.5-1-3z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M13 20c1-1 3-1 4 0" stroke="currentColor" stroke-width="1" opacity=".6"/>',
+  heel:'<path d="M6 12c2 4 4 6 8 7 4 1 9 2 12 4 1 1 0 3-2 3-6-1-11-2-15-5-3-2-4-6-4-9z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M22 26l1 6" stroke="currentColor" stroke-width="1.5"/>',
+  boot:'<path d="M11 5h5v14c2 2 5 3 7 4 2 1 2 4-1 4h-11c-1 0-2-1-2-2z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>',
+  necklace:'<path d="M8 8c0 6 3.5 10 7 10s7-4 7-10" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="15" cy="21" r="2.4" fill="none" stroke="currentColor" stroke-width="1.5"/>',
+  earrings:'<circle cx="11" cy="13" r="4.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M11 8.5V6" stroke="currentColor" stroke-width="1.5"/><circle cx="20" cy="13" r="4.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M20 8.5V6" stroke="currentColor" stroke-width="1.5"/>',
+  ring:'<circle cx="15" cy="20" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M11 14l4-6 4 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>',
+};
+function garmentSvg(sub){return `<svg class="garment" viewBox="0 0 30 40">${G[sub]||G.tshirt}</svg>`;}
+
+/* ---------- Sample wardrobe ---------- */
+/* formality 1(casual)-5(dressy); warm 1(warm layer)-3(cool); neutral pairs with anything */
+const SAMPLE = [
+  // tops
+  {id:'t1',name:'White cotton tee',cat:'top',sub:'tshirt',hex:'#F1EFE9',color:'White',neutral:true,formality:2,tags:['relaxed','clean']},
+  {id:'t2',name:'Black silk cami',cat:'top',sub:'cami',hex:'#211E1C',color:'Black',neutral:true,formality:4,tags:['evening','sleek']},
+  {id:'t3',name:'Cream knit jumper',cat:'top',sub:'knit',hex:'#E4DCCC',color:'Cream',neutral:true,formality:2,warm:1,tags:['cosy','soft']},
+  {id:'t4',name:'Breton stripe top',cat:'top',sub:'tshirt',hex:'#33405C',color:'Navy stripe',neutral:true,formality:2,tags:['classic']},
+  {id:'t5',name:'Ivory silk blouse',cat:'top',sub:'blouse',hex:'#ECE6D9',color:'Ivory',neutral:true,formality:4,tags:['refined']},
+  {id:'t6',name:'Sage green blouse',cat:'top',sub:'blouse',hex:'#8E9A7C',color:'Sage',neutral:false,formality:3,tags:['soft']},
+  // bottoms
+  {id:'b1',name:'Straight blue jeans',cat:'bottom',sub:'trousers',hex:'#5D6B82',color:'Denim',neutral:true,formality:2,tags:['everyday']},
+  {id:'b2',name:'Black tailored trousers',cat:'bottom',sub:'trousers',hex:'#24211E',color:'Black',neutral:true,formality:4,tags:['tailored']},
+  {id:'b3',name:'Beige wide trousers',cat:'bottom',sub:'trousers',hex:'#C7B9A1',color:'Beige',neutral:true,formality:3,tags:['relaxed','elegant']},
+  {id:'b4',name:'Camel midi skirt',cat:'bottom',sub:'skirt',hex:'#B08A5B',color:'Camel',neutral:true,formality:3,tags:['feminine']},
+  {id:'b5',name:'Black slip skirt',cat:'bottom',sub:'skirt',hex:'#201D1B',color:'Black',neutral:true,formality:4,tags:['evening','sleek']},
+  {id:'b6',name:'Olive linen shorts',cat:'bottom',sub:'shorts',hex:'#6E6A4B',color:'Olive',neutral:false,formality:1,warm:3,tags:['summer','relaxed']},
+  // dresses
+  {id:'d1',name:'Black slip dress',cat:'dress',sub:'dress',hex:'#211E1C',color:'Black',neutral:true,formality:4,tags:['evening','sleek']},
+  {id:'d2',name:'Floral midi dress',cat:'dress',sub:'dress',hex:'#9C6B74',color:'Rosewood floral',neutral:false,formality:3,tags:['feminine','day-to-night']},
+  // outerwear
+  {id:'o1',name:'Camel wool coat',cat:'outerwear',sub:'coat',hex:'#B79068',color:'Camel',neutral:true,formality:4,warm:1,tags:['timeless']},
+  {id:'o2',name:'Black blazer',cat:'outerwear',sub:'blazer',hex:'#26221F',color:'Black',neutral:true,formality:4,tags:['tailored']},
+  {id:'o3',name:'Denim jacket',cat:'outerwear',sub:'blazer',hex:'#6B7A93',color:'Denim',neutral:true,formality:2,tags:['casual']},
+  // shoes
+  {id:'s1',name:'White trainers',cat:'shoes',sub:'trainer',hex:'#EFEDE8',color:'White',neutral:true,formality:1,tags:['comfort']},
+  {id:'s2',name:'Tan leather flats',cat:'shoes',sub:'flat',hex:'#B48A5C',color:'Tan',neutral:true,formality:3,tags:['easy']},
+  {id:'s3',name:'Black heels',cat:'shoes',sub:'heel',hex:'#1F1C1A',color:'Black',neutral:true,formality:5,tags:['evening']},
+  {id:'s4',name:'Ankle boots',cat:'shoes',sub:'boot',hex:'#35302B',color:'Brown',neutral:true,formality:3,tags:['transitional']},
+  {id:'s5',name:'Gold strappy sandals',cat:'shoes',sub:'heel',hex:'#C6A16A',color:'Gold',neutral:true,formality:4,tags:['evening','warm-weather']},
+  // jewellery
+  {id:'j1',name:'Gold hoop earrings',cat:'jewellery',sub:'earrings',hex:'#C6A16A',color:'Gold',neutral:true,formality:3,tags:['everyday-gold']},
+  {id:'j2',name:'Fine gold necklace',cat:'jewellery',sub:'necklace',hex:'#C6A16A',color:'Gold',neutral:true,formality:3,tags:['delicate']},
+  {id:'j3',name:'Statement earrings',cat:'jewellery',sub:'earrings',hex:'#C6A16A',color:'Gold',neutral:true,formality:5,tags:['occasion']},
+  {id:'j4',name:'Silver ring set',cat:'jewellery',sub:'ring',hex:'#C8C8C8',color:'Silver',neutral:true,formality:2,tags:['everyday']},
+];
+
+const CAT_LABEL={top:'Top',bottom:'Bottom',dress:'Dress',outerwear:'Layer',shoes:'Shoes',jewellery:'Jewellery'};
+const EFFORT=[
+  {key:1,name:'Effortless',sub:'Thrown on',tint:'--e1'},
+  {key:2,name:'Easy',sub:'Put together',tint:'--e2'},
+  {key:3,name:'Polished',sub:'Considered',tint:'--e3'},
+  {key:4,name:'Glam',sub:'Turned up',tint:'--e4'},
+];
+const OCCASIONS=[
+  {key:'everyday',label:'Everyday',shift:0},
+  {key:'work',label:'Work',shift:0.7},
+  {key:'weekend',label:'Weekend',shift:-0.5},
+  {key:'date',label:'Date',shift:0.4},
+  {key:'event',label:'Event',shift:1.1},
+];
+
+/* ---------- State + persistence ---------- */
+const store={
+  get wardrobe(){try{return JSON.parse(localStorage.getItem('muse.wardrobe'))||SAMPLE.slice()}catch(e){return SAMPLE.slice()}},
+  set wardrobe(v){localStorage.setItem('muse.wardrobe',JSON.stringify(v))},
+  get profile(){try{return JSON.parse(localStorage.getItem('muse.profile'))||{}}catch(e){return {}}},
+  set profile(v){localStorage.setItem('muse.profile',JSON.stringify(v))},
+  get onboarded(){return localStorage.getItem('muse.onboarded')==='1'},
+  set onboarded(v){localStorage.setItem('muse.onboarded',v?'1':'')},
+};
+let state={screen:'morning',anchor:null,occasion:'everyday',draft:null};
+
+/* ---------- Styling engine ---------- */
+function itemById(id){return store.wardrobe.find(x=>x.id===id);}
+function byCat(cat){return store.wardrobe.filter(x=>x.cat===cat);}
+
+// colour compatibility: neutrals go with everything; otherwise reward tonal/analogous, gentle penalty for two loud colours
+function colourScore(a,b){
+  if(a.neutral||b.neutral) return 1;
+  const h1=hueOf(a.hex),h2=hueOf(b.hex);
+  const d=Math.abs(h1-h2); const dist=Math.min(d,360-d);
+  if(dist<40) return 0.9;         // analogous / tonal
+  if(dist>150) return 0.55;       // near-complementary, can work
+  return 0.35;                    // clashy
+}
+function hueOf(hex){
+  const r=parseInt(hex.slice(1,3),16)/255,g=parseInt(hex.slice(3,5),16)/255,b=parseInt(hex.slice(5,7),16)/255;
+  const mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn; if(!d)return 0;
+  let h; if(mx===r)h=((g-b)/d)%6; else if(mx===g)h=(b-r)/d+2; else h=(r-g)/d+4;
+  return (h*60+360)%360;
+}
+function pick(cands,target,used,anchor){
+  if(!cands.length) return null;
+  let best=null,bestScore=-1;
+  for(const c of cands){
+    const fitForm=1-Math.min(1,Math.abs(c.formality-target)/2.6);
+    const col=colourScore(c,anchor);
+    const fresh=used.has(c.id)?0.55:1;               // encourage variety across the four looks
+    const s=fitForm*0.6+col*0.3+fresh*0.1+ (Math.abs(hueOf(c.hex))*0); // tiny noise-free
+    if(s>bestScore){bestScore=s;best=c;}
+  }
+  return best;
+}
+function buildLook(anchor,level,occasion,used){
+  const occ=OCCASIONS.find(o=>o.key===occasion);
+  const target=Math.max(1,Math.min(5, level + 1 + occ.shift)); // level 1..4 -> base 2..5 formality
+  const parts=[]; const localUsed=new Set(used);
+  const take=(cat)=>{const c=pick(byCat(cat).filter(x=>x.id!==anchor.id&&!localUsed.has(x.id)),target,localUsed,anchor)
+      ||pick(byCat(cat).filter(x=>x.id!==anchor.id),target,new Set(),anchor);
+    if(c){parts.push(c);localUsed.add(c.id);used.add(c.id);}return c;};
+
+  parts.push(anchor);
+  if(anchor.cat==='top'){ take('bottom'); }
+  else if(anchor.cat==='bottom'){ take('top'); }
+  // dress: nothing extra core
+  const shoes=take('shoes');
+  // a layer for cooler / dressier looks
+  if(target>=3.4 || anchor.warm===1){ take('outerwear'); }
+  // jewellery: more as effort climbs
+  if(level>=2){ take('jewellery'); }
+  if(level>=4){ // second piece of jewellery for glam if available
+    const extra=pick(byCat('jewellery').filter(x=>!localUsed.has(x.id)),target,new Set(),anchor);
+    if(extra){parts.push(extra);localUsed.add(extra.id);}
+  }
+  return {level,target,parts,rationale:rationale(anchor,parts,level,occ)};
+}
+function rationale(anchor,parts,level,occ){
+  const find=c=>parts.find(p=>p.cat===c);
+  const bottom=find('bottom'),top=parts.find(p=>p.cat==='top'&&p.id!==anchor.id),
+        shoes=find('shoes'),layer=find('outerwear'),jewel=parts.filter(p=>p.cat==='jewellery');
+  const other=anchor.cat==='top'?bottom:(anchor.cat==='bottom'?top:null);
+  const anchorN=anchor.name.toLowerCase();
+  const lead={
+    1:`Your <b>${anchorN}</b>${other?` with the ${other.name.toLowerCase()}`:''} — barely trying, still considered.`,
+    2:`The <b>${anchorN}</b>${other?` and ${other.name.toLowerCase()}`:''} kept easy${shoes?`, grounded by ${shoes.name.toLowerCase()}`:''}.`,
+    3:`A polished read on your <b>${anchorN}</b>${other?`, balanced with ${other.name.toLowerCase()}`:''}.`,
+    4:`Your <b>${anchorN}</b> dialled all the way up${other?` over ${other.name.toLowerCase()}`:''}.`,
+  }[level];
+  const bits=[];
+  if(layer) bits.push(`the ${layer.name.toLowerCase()} adds a layer`);
+  if(shoes&&level>=3) bits.push(`${shoes.name.toLowerCase()} lift the line`);
+  if(jewel.length) bits.push(`${jewel.map(j=>j.name.toLowerCase()).join(' and ')} finish it`);
+  const allNeutral=parts.every(p=>p.neutral);
+  if(allNeutral&&level<=2) bits.push('a quiet neutral palette does the rest');
+  if(occ.key!=='everyday'&&level>=3) bits.unshift(`right for ${occ.label.toLowerCase()}`);
+  const tail=bits.length?` ${cap(bits[0])}${bits[1]?`, ${bits[1]}`:''}.`:'';
+  return lead+tail;
+}
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+
+function stylistPicks(item){
+  // for the "does it go with anything?" test
+  const targets = item.cat==='top'||item.cat==='dress' ? ['bottom','shoes','outerwear'] :
+                  item.cat==='bottom' ? ['top','shoes'] :
+                  item.cat==='shoes' ? ['top','bottom','dress'] :
+                  ['top','bottom','dress']; // jewellery/outerwear
+  const pool=store.wardrobe.filter(x=> targets.includes(x.cat));
+  return pool.map(c=>({c,score:colourScore(c,item)*0.6 + (1-Math.abs(c.formality-item.formality)/4)*0.4}))
+    .sort((a,b)=>b.score-a.score).filter(x=>x.score>0.5).slice(0,4).map(x=>x.c);
+}
+
+/* ---------- Render helpers ---------- */
+const el=(h)=>{const t=document.createElement('template');t.innerHTML=h.trim();return t.content.firstChild;};
+function tileHtml(item,mini){
+  const tint=`--tile:color-mix(in srgb, ${item.hex} 16%, var(--surface)); --tile-ink:${item.hex}`;
+  const inner=item.photo?`<img src="${item.photo}" alt="${item.name}">`:garmentSvg(item.sub)+`<span class="swatch" style="background:${item.hex}"></span>`;
+  if(mini) return `<div class="mini" style="${tint}">${item.photo?`<img src="${item.photo}" alt="">`:garmentSvg(item.sub)}</div>`;
+  return `<div class="tile" style="${tint}">${inner}</div>`;
+}
+function pieceCard(item){
+  return `<button class="piece" data-anchor="${item.id}">
+    ${tileHtml(item)}
+    <div class="card-label"><div class="nm">${item.name}</div><div class="ct">${CAT_LABEL[item.cat]}</div></div>
+  </button>`;
+}
+
+/* ---------- Screens ---------- */
+function render(){
+  const app=document.getElementById('app');
+  if(!store.onboarded){app.innerHTML=onboarding();bindOnboarding();return;}
+  app.innerHTML = topbar() + `<main class="screen fade" id="screen">${screenBody()}</main>` + nav();
+  bindScreen();
+}
+function topbar(){
+  const p=store.profile;
+  const bordered = state.screen!=='morning';
+  return `<header class="topbar ${bordered?'bordered':''}">
+    <div class="wordmark"><b>Muse</b><span class="dot">.</span></div>
+    <button class="avatar" id="toProfile" aria-label="Your profile">${(p.name||'Y').slice(0,1).toUpperCase()}</button>
+  </header>`;
+}
+function nav(){
+  const t=(k,label,icon,cls='')=>`<button class="navbtn ${cls}" data-nav="${k}" aria-current="${state.screen===k}">
+     ${cls==='add'?`<span class="plus">${icon}</span>`:icon}<span>${label}</span></button>`;
+  return `<nav class="nav">
+    ${t('morning','Morning',UI.morning)}
+    ${t('add','Add',UI.plus,'add')}
+    ${t('wardrobe','Wardrobe',UI.wardrobe)}
+  </nav>`;
+}
+function screenBody(){
+  if(state.screen==='morning') return state.anchor?lookScreen():morningScreen();
+  if(state.screen==='wardrobe') return wardrobeScreen();
+  if(state.screen==='add') return addScreen();
+  if(state.screen==='profile') return profileScreen();
+  return '';
+}
+
+function morningScreen(){
+  const now=new Date();
+  const day=now.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
+  const anchors=store.wardrobe.filter(x=>['top','bottom','dress'].includes(x.cat));
+  const p=store.profile;
+  const hello=now.getHours()<12?'Good morning':now.getHours()<18?'Good afternoon':'Good evening';
+  return `
+    <div style="padding-top:8px">
+      <div class="eyebrow">${day}</div>
+      <h1 style="margin:10px 0 6px">${hello}${p.name?`, ${p.name}`:''}.</h1>
+      <p class="lede">Pick a piece to build around — I’ll style it four ways, from effortless to glam.</p>
+    </div>
+    ${p.bodyShape?`<div class="pill" style="margin-top:16px">${UI.spark} Styled for your ${p.bodyShape.toLowerCase()} shape${p.lifestyle?` · a ${p.lifestyle.toLowerCase()} week`:''}</div>`:''}
+    <div class="section-gap"></div>
+    <div class="eyebrow" style="margin-bottom:12px">Start with a piece</div>
+    <div class="grid">${anchors.map(pieceCard).join('')}</div>
+  `;
+}
+
+function lookScreen(){
+  const anchor=itemById(state.anchor);
+  const used=new Set();
+  const looks=EFFORT.map(e=>buildLook(anchor,e.key,state.occasion,used));
+  return `
+    <button class="backlink" data-back>${UI.back} Change piece</button>
+    <div style="display:flex;gap:14px;align-items:center;margin:6px 0 4px">
+      <div style="width:70px;flex:0 0 70px">${tileHtml(anchor)}</div>
+      <div><div class="eyebrow">Four ways to wear</div><h2 style="margin-top:4px">${anchor.name}</h2></div>
+    </div>
+    <div class="hair"></div>
+    <div class="eyebrow" style="margin-bottom:10px">For a…</div>
+    <div class="chiprow" id="occ">
+      ${OCCASIONS.map(o=>`<button class="chip accent" data-occ="${o.key}" aria-pressed="${state.occasion===o.key}">${o.label}</button>`).join('')}
+    </div>
+    <div class="section-gap"></div>
+    ${looks.map(lookCard).join('')}
+    <div class="note" style="margin-top:6px">${UI.spark} These are built only from pieces you own. Add more to your wardrobe and the looks get richer.</div>
+  `;
+}
+function lookCard(look){
+  const e=EFFORT[look.level-1];
+  return `<div class="outfit" style="--otint:var(${e.tint})">
+    <div class="outfit-head">
+      <div><div class="effort-name">${e.name}</div><div class="effort-sub">${e.sub}</div></div>
+      <div class="meter">${[1,2,3,4].map(i=>`<i class="${i<=look.level?'on':''}"></i>`).join('')}</div>
+    </div>
+    <div class="pieces">${look.parts.map(p=>tileHtml(p,true)).join('')}</div>
+    <p class="rationale">${look.rationale}</p>
+  </div>`;
+}
+
+function wardrobeScreen(){
+  const cats=['all','top','bottom','dress','outerwear','shoes','jewellery'];
+  const active=state.wardrobeFilter||'all';
+  const items=active==='all'?store.wardrobe:byCat(active);
+  return `
+    <div style="padding-top:8px"><div class="eyebrow">Your collection</div>
+    <h1 style="margin:8px 0 4px">Wardrobe</h1>
+    <p class="lede">${store.wardrobe.length} pieces styled and ready.</p></div>
+    <div class="section-gap" style="height:18px"></div>
+    <div class="chiprow" id="wfilter">
+      ${cats.map(c=>`<button class="chip" data-filter="${c}" aria-pressed="${active===c}">${c==='all'?'All':CAT_LABEL[c]+'s'}</button>`).join('')}
+    </div>
+    <div class="section-gap" style="height:18px"></div>
+    ${items.length?`<div class="grid">${items.map(pieceCard).join('')}</div>`:`<div class="empty">Nothing here yet.</div>`}
+  `;
+}
+
+function addScreen(){
+  const d=state.draft;
+  if(d&&d.confirmed){
+    const matches=stylistPicks(d.item);
+    return `
+      <div style="padding-top:8px"><div class="eyebrow">Fitting room</div>
+      <h1 style="margin:8px 0 6px">${matches.length?'Yes — it fits right in.':'A little bit of an orphan.'}</h1></div>
+      <div style="display:flex;gap:14px;align-items:center;margin:14px 0">
+        <div style="width:80px;flex:0 0 80px">${tileHtml(d.item)}</div>
+        <div><div style="font-weight:600">${d.item.name}</div>
+        <div class="ct" style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);margin-top:3px">${CAT_LABEL[d.item.cat]} · ${d.item.color}</div></div>
+      </div>
+      <p class="lede">${matches.length?`Pairs beautifully with <b style="color:var(--ink)">${matches.length}</b> piece${matches.length>1?'s':''} you already own:`:'Nothing in your wardrobe pairs cleanly with it yet — worth a think before you buy.'}</p>
+      ${matches.length?`<div class="grid" style="margin-top:14px">${matches.map(pieceCard).join('')}</div>`:''}
+      <div class="section-gap"></div>
+      <button class="btn accent" id="addConfirm">${UI.check} Add to my collection</button>
+      <div style="height:10px"></div>
+      <button class="btn ghost" id="addDiscard">Not for me</button>
+    `;
+  }
+  // draft form
+  const cat=d?.cat, hex=d?.hex||'#B08A5B';
+  const cats=[['top','Top'],['bottom','Bottom'],['dress','Dress'],['outerwear','Layer'],['shoes','Shoes'],['jewellery','Jewellery']];
+  const palette=['#211E1C','#F1EFE9','#B08A5B','#5D6B82','#8E9A7C','#9C6B74','#C6A16A','#C7B9A1','#33405C','#6E6A4B'];
+  return `
+    <div style="padding-top:8px"><div class="eyebrow">Try before you buy</div>
+    <h1 style="margin:8px 0 6px">Does it go?</h1>
+    <p class="lede">Snap something new — or add a piece by hand — and see what it works with before it joins your wardrobe.</p></div>
+    <div class="section-gap" style="height:20px"></div>
+    <label class="upload" for="photo">${UI.cam}<div style="margin-top:8px">Take or choose a photo</div>
+      <div style="font-size:11px;color:var(--ink-faint);margin-top:3px">optional — we’ll show it on the piece</div></label>
+    <input id="photo" type="file" accept="image/*" capture="environment" hidden>
+    <div id="photoPrev"></div>
+    <label class="lbl">What is it?</label>
+    <div class="chiprow" id="dcat">${cats.map(([k,l])=>`<button class="chip" data-dcat="${k}" aria-pressed="${cat===k}">${l}</button>`).join('')}</div>
+    <label class="lbl">Colour</label>
+    <div class="swrow" id="dhex">${palette.map(c=>`<button class="sw" data-dhex="${c}" style="background:${c}" aria-pressed="${hex===c}" aria-label="colour"></button>`).join('')}</div>
+    <label class="lbl">Name it</label>
+    <input class="field" id="dname" placeholder="e.g. Linen shirt" value="${d?.name||''}">
+    <label class="lbl">How dressy? · ${['Very casual','Casual','Smart-casual','Dressy','Evening'][( d?.formality||3)-1]}</label>
+    <input class="field" id="dform" type="range" min="1" max="5" value="${d?.formality||3}" style="padding:10px 0">
+    <div class="section-gap"></div>
+    <button class="btn" id="dtest">${UI.spark} See what it goes with</button>
+  `;
+}
+
+function profileScreen(){
+  const p=store.profile;
+  return `
+    <button class="backlink" data-back-profile>${UI.back} Back</button>
+    <div class="eyebrow">Your style profile</div>
+    <h1 style="margin:8px 0 6px">${p.name||'You'}</h1>
+    <div class="section-gap" style="height:16px"></div>
+    <div style="display:flex;flex-direction:column;gap:1px;background:var(--hair);border-radius:14px;overflow:hidden;border:1px solid var(--hair)">
+      ${row('Body shape',p.bodyShape||'—')}
+      ${row('Typical week',p.lifestyle||'—')}
+      ${row('Leans toward',(p.palette||[]).length?`${(p.palette||[]).length} tones`:'—')}
+      ${row('Inspiration',(p.inspo||0)+' screenshots')}
+      ${row('Wardrobe',store.wardrobe.length+' pieces')}
+    </div>
+    <div class="section-gap"></div>
+    <button class="btn ghost" id="redo">Redo my setup</button>
+    <div style="height:10px"></div>
+    <button class="btn ghost" id="reset" style="color:var(--ink-faint)">Reset everything</button>
+    <div style="height:20px"></div>
+    <p style="font-size:12px;color:var(--ink-faint);line-height:1.5;text-align:center">Prototype · the styling brain here is a simple rule engine. In the full app your photos are read by Claude to tag pieces and reason out the looks.</p>
+  `;
+}
+const row=(k,v)=>`<div style="display:flex;justify-content:space-between;padding:15px 16px;background:var(--surface)"><span style="color:var(--ink-soft);font-size:14px">${k}</span><span style="font-weight:500;font-size:14px">${v}</span></div>`;
+
+/* ---------- Onboarding ---------- */
+let onb={step:0,name:'',bodyShape:'',lifestyle:'',palette:[],inspo:0};
+function onboarding(){
+  return `<div id="onb">${onbStep()}</div>`;
+}
+function onbStep(){
+  const dots=n=>`<div class="steps">${[0,1,2,3].map(i=>`<i class="${i<=n?'on':''}"></i>`).join('')}</div>`;
+  if(onb.step===0) return `<div class="cover fade">
+    <div style="flex:1"></div>
+    <div class="wordmark" style="font-size:15px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft)">Muse<span class="dot" style="color:var(--accent)">.</span></div>
+    <h1 style="font-size:44px;line-height:1.02">Get dressed<br>from what you<br>already own.</h1>
+    <p class="lede" style="font-size:16px;max-width:30ch">Pick a piece each morning. See four ways to wear it — effortless to glam — styled to you. Let’s set up your style.</p>
+    <div style="flex:1"></div>
+    <button class="btn accent" id="obNext">Begin</button>
+    <button class="btn ghost" id="obSkip" style="border:none">Skip — just show me the app</button>
+  </div>`;
+  if(onb.step===1) return `<div class="cover fade" style="justify-content:flex-start;padding-top:calc(env(safe-area-inset-top) + 40px)">
+    ${dots(0)}<div class="eyebrow">First — your name</div>
+    <h1 style="font-size:30px">What shall I call you?</h1>
+    <input class="field" id="obName" placeholder="Your name" value="${onb.name}" autofocus>
+    <label class="lbl">Your body shape</label>
+    <p class="lede" style="font-size:13px;margin:0 0 4px">So looks flatter your proportions. There’s no wrong answer.</p>
+    <div class="selectgrid">
+      ${['Hourglass','Pear','Apple','Rectangle','Inverted triangle','Not sure'].map(s=>
+        `<button class="opt" data-shape="${s}" aria-pressed="${onb.bodyShape===s}"><div class="t">${s}</div></button>`).join('')}
+    </div>
+    <div style="flex:1;min-height:20px"></div>
+    <button class="btn accent" id="ob1Next">Continue</button>
+  </div>`;
+  if(onb.step===2) return `<div class="cover fade" style="justify-content:flex-start;padding-top:calc(env(safe-area-inset-top) + 40px)">
+    ${dots(1)}<div class="eyebrow">Your lifestyle</div>
+    <h1 style="font-size:30px">What’s a typical week?</h1>
+    <p class="lede" style="font-size:14px">I’ll weight your looks toward how you actually spend your days.</p>
+    <div class="selectgrid">
+      ${[['Mostly casual','Home, errands, family'],['Office days','Desk, meetings'],['On my feet','Active, always moving'],['Nights & events','Out a lot']].map(([t,d])=>
+        `<button class="opt" data-life="${t}" aria-pressed="${onb.lifestyle===t}"><div class="t">${t}</div><div class="d">${d}</div></button>`).join('')}
+    </div>
+    <label class="lbl">Colours you lean to</label>
+    <div class="swrow" id="obPal">
+      ${['#211E1C','#ECE6D9','#B08A5B','#8E9A7C','#5D6B82','#9C6B74','#C6A16A','#6E6A4B'].map(c=>
+        `<button class="sw" data-pal="${c}" style="background:${c}" aria-pressed="${onb.palette.includes(c)}" aria-label="tone"></button>`).join('')}
+    </div>
+    <div style="flex:1;min-height:20px"></div>
+    <button class="btn accent" id="ob2Next">Continue</button>
+  </div>`;
+  if(onb.step===3) return `<div class="cover fade" style="justify-content:flex-start;padding-top:calc(env(safe-area-inset-top) + 40px)">
+    ${dots(2)}<div class="eyebrow">Your style DNA</div>
+    <h1 style="font-size:30px">Show me your taste.</h1>
+    <p class="lede" style="font-size:14px">Drop in a few screenshots from your Pinterest boards, and photos of outfits you’ve loved wearing. I’ll read them for your palette, silhouettes and vibe.</p>
+    <label class="upload" for="inspo" style="margin-top:6px">${UI.cam}<div style="margin-top:8px">Add inspiration & outfit photos</div></label>
+    <input id="inspo" type="file" accept="image/*" multiple hidden>
+    <div class="thumbs" id="inspoThumbs"></div>
+    <div style="flex:1;min-height:24px"></div>
+    <button class="btn accent" id="obDone">${UI.check} Done — dress me</button>
+    <button class="btn ghost" id="obDoneSkip" style="border:none">I’ll add these later</button>
+  </div>`;
+}
+function bindOnboarding(){
+  const root=document.getElementById('onb');
+  const rerender=()=>{root.innerHTML=onbStep();bindOnboarding();};
+  const on=(id,fn)=>{const e=root.querySelector('#'+id);if(e)e.addEventListener('click',fn);};
+  on('obNext',()=>{onb.step=1;rerender();});
+  on('obSkip',finishOnboarding);
+  root.querySelectorAll('[data-shape]').forEach(b=>b.onclick=()=>{onb.bodyShape=b.dataset.shape;rerender();});
+  root.querySelectorAll('[data-life]').forEach(b=>b.onclick=()=>{onb.lifestyle=b.dataset.life;rerender();});
+  root.querySelectorAll('[data-pal]').forEach(b=>b.onclick=()=>{const c=b.dataset.pal;onb.palette.includes(c)?onb.palette=onb.palette.filter(x=>x!==c):onb.palette.push(c);rerender();});
+  const nameEl=root.querySelector('#obName'); if(nameEl)nameEl.oninput=e=>onb.name=e.target.value;
+  on('ob1Next',()=>{const n=root.querySelector('#obName');if(n)onb.name=n.value;onb.step=2;rerender();});
+  on('ob2Next',()=>{onb.step=3;rerender();});
+  const inspo=root.querySelector('#inspo');
+  if(inspo)inspo.onchange=e=>{const t=root.querySelector('#inspoThumbs');onb.inspo+=e.target.files.length;
+    [...e.target.files].slice(0,6).forEach(f=>{const r=new FileReader();r.onload=ev=>{const im=new Image();im.src=ev.target.result;t.appendChild(im);};r.readAsDataURL(f);});};
+  on('obDone',finishOnboarding);
+  on('obDoneSkip',finishOnboarding);
+}
+function finishOnboarding(){
+  store.profile={name:onb.name,bodyShape:onb.bodyShape,lifestyle:onb.lifestyle,palette:onb.palette,inspo:onb.inspo};
+  store.onboarded=true;
+  state.screen='morning';
+  render();
+}
+
+/* ---------- Event binding ---------- */
+function bindScreen(){
+  document.querySelectorAll('[data-nav]').forEach(b=>b.onclick=()=>{
+    state.screen=b.dataset.nav; if(state.screen!=='morning')state.anchor=null;
+    if(state.screen==='add')state.draft=null; render();});
+  const prof=document.getElementById('toProfile'); if(prof)prof.onclick=()=>{state.screen='profile';render();};
+  document.querySelectorAll('[data-anchor]').forEach(b=>b.onclick=()=>{
+    if(state.screen==='wardrobe'){state.screen='morning';}
+    state.anchor=b.dataset.anchor;state.screen='morning';render();
+    document.getElementById('screen')?.scrollTo(0,0);});
+  const back=document.querySelector('[data-back]'); if(back)back.onclick=()=>{state.anchor=null;render();};
+  const backP=document.querySelector('[data-back-profile]'); if(backP)backP.onclick=()=>{state.screen='morning';render();};
+  document.querySelectorAll('[data-occ]').forEach(b=>b.onclick=()=>{state.occasion=b.dataset.occ;render();});
+  document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>{state.wardrobeFilter=b.dataset.filter;render();});
+
+  // add flow
+  document.querySelectorAll('[data-dcat]').forEach(b=>b.onclick=()=>{state.draft={...(state.draft||{}),cat:b.dataset.dcat};render();});
+  document.querySelectorAll('[data-dhex]').forEach(b=>b.onclick=()=>{state.draft={...(state.draft||{}),hex:b.dataset.dhex};render();});
+  const dname=document.getElementById('dname'); if(dname)dname.oninput=e=>{state.draft={...(state.draft||{}),name:e.target.value};};
+  const dform=document.getElementById('dform'); if(dform)dform.oninput=e=>{state.draft={...(state.draft||{}),formality:+e.target.value};};
+  const photo=document.getElementById('photo');
+  if(photo)photo.onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();
+    r.onload=ev=>{state.draft={...(state.draft||{}),photo:ev.target.result};
+      const pv=document.getElementById('photoPrev');if(pv)pv.innerHTML=`<div style="width:96px;margin:14px auto 0">${tileHtml({...(state.draft||{}),sub:'tshirt',hex:'#ccc'})}</div>`;};
+    r.readAsDataURL(f);};
+  const dtest=document.getElementById('dtest');
+  if(dtest)dtest.onclick=()=>{
+    const d=state.draft||{};
+    const sub={top:'tshirt',bottom:'trousers',dress:'dress',outerwear:'blazer',shoes:'flat',jewellery:'necklace'}[d.cat||'top'];
+    const item={id:'new'+Date.now(),name:d.name||'New piece',cat:d.cat||'top',sub,hex:d.hex||'#B08A5B',
+      color:colourName(d.hex||'#B08A5B'),neutral:isNeutral(d.hex||'#B08A5B'),formality:d.formality||3,tags:[],photo:d.photo};
+    if(!d.cat){alert('Pick what kind of piece it is first.');return;}
+    state.draft={item,confirmed:true};render();document.getElementById('screen')?.scrollTo(0,0);};
+  const addConfirm=document.getElementById('addConfirm');
+  if(addConfirm)addConfirm.onclick=()=>{const w=store.wardrobe;w.push(state.draft.item);store.wardrobe=w;
+    state.draft=null;state.screen='wardrobe';state.wardrobeFilter='all';render();};
+  const addDiscard=document.getElementById('addDiscard');
+  if(addDiscard)addDiscard.onclick=()=>{state.draft=null;render();};
+
+  // profile
+  const redo=document.getElementById('redo'); if(redo)redo.onclick=()=>{onb={step:0,name:store.profile.name||'',bodyShape:'',lifestyle:'',palette:[],inspo:0};store.onboarded=false;render();};
+  const reset=document.getElementById('reset'); if(reset)reset.onclick=()=>{if(confirm('Reset your wardrobe and profile back to the sample?')){localStorage.clear();state={screen:'morning',anchor:null,occasion:'everyday',draft:null};onb={step:0,name:'',bodyShape:'',lifestyle:'',palette:[],inspo:0};render();}};
+}
+function isNeutral(hex){const h=hueOf(hex);const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+  const mx=Math.max(r,g,b),mn=Math.min(r,g,b);const sat=mx===0?0:(mx-mn)/mx; return sat<0.22 || (h>20&&h<50&&sat<0.45);}
+function colourName(hex){const names={'#211E1C':'Black','#F1EFE9':'White','#B08A5B':'Camel','#5D6B82':'Denim','#8E9A7C':'Sage','#9C6B74':'Rosewood','#C6A16A':'Gold','#C7B9A1':'Beige','#33405C':'Navy','#6E6A4B':'Olive'};return names[hex]||'New tone';}
+
+/* ---------- Go ---------- */
+render();
+</script>
+</body>
+</html>
