@@ -13,6 +13,20 @@
   • Email .................. search for hello@ilovelandscaping.co.uk
   • Guide prices ........... search for "from £"
   • Areas covered .......... search for Chesterfield
+
+  REAL PHOTOS (recommended): create a folder called "photos" next to
+  this file and drop in JPGs with these exact names. Each one replaces
+  the matching illustration automatically. Missing ones fall back to
+  the drawn version, so add as many or as few as you like.
+    photos/garden-hero.jpg     hero image (your best garden)
+    photos/garden-before.jpg   before shot for the slider
+    photos/garden-after.jpg    after shot, same garden, same angle
+    photos/job-patio.jpg       job cards, one each
+    photos/job-lawn.jpg
+    photos/job-fence.jpg
+    photos/job-drive.jpg
+    photos/job-deck.jpg
+    photos/job-makeover.jpg
   ══════════════════════════════════════════════════════════════
 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -177,6 +191,10 @@ nav{
   75%{top:18%;left:44%}100%{top:34%;left:8%}
 }
 .scene-svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.photo-swap{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;opacity:0;transition:opacity .4s}
+.photo-swap.ok{opacity:1}
+.scene-tag{z-index:3}
+.job-art .photo-swap{z-index:1}
 .sunrays{transform-box:fill-box;transform-origin:center;animation:spin 46s linear infinite}
 .cl{animation:cdrift linear infinite}
 .cl1{animation-duration:74s}
@@ -603,6 +621,12 @@ footer{background:var(--pine-deep);color:var(--paper);padding:clamp(40px,6vw,64p
           <linearGradient id="gSoilBed" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stop-color="#6B4A32"/><stop offset="1" stop-color="#4A3020"/>
           </linearGradient>
+          <linearGradient id="gHaze" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#DCEBF2" stop-opacity=".55"/><stop offset="1" stop-color="#DCEBF2" stop-opacity="0"/>
+          </linearGradient>
+          <radialGradient id="gDapple">
+            <stop offset="0" stop-color="#FFF8D8" stop-opacity=".22"/><stop offset="1" stop-color="#FFF8D8" stop-opacity="0"/>
+          </radialGradient>
           <filter id="fSoft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="4"/></filter>
           <filter id="fGrainV" x="0" y="0" width="100%" height="100%">
             <feTurbulence type="fractalNoise" baseFrequency="0.012 0.4" numOctaves="2" seed="7" result="n"/>
@@ -642,6 +666,7 @@ footer{background:var(--pine-deep);color:var(--paper);padding:clamp(40px,6vw,64p
         <path d="M0 236 Q90 176 200 218 T420 224 T640 208 V300 H0 Z" fill="url(#gHillA)"/>
         <path d="M0 258 Q140 210 300 244 T640 240 V320 H0 Z" fill="url(#gHillB)"/>
         <path d="M0 258 q18 -26 36 0 q14 -32 30 -2 q16 -24 30 2 q12 -18 26 0 q18 -28 34 0 q14 -20 28 0 q16 -26 32 0 q12 -18 26 0 q18 -26 34 0 q14 -22 28 0 q16 -26 32 2 q12 -20 26 0 q18 -26 34 0 q14 -20 28 0 q16 -24 32 0 q12 -18 26 0 q18 -26 34 0 q14 -20 28 -2 q16 -22 30 2 L640 280 H0 Z" fill="#3E7233" opacity=".85"/>
+        <rect x="0" y="212" width="640" height="46" fill="url(#gHaze)"/>
         <g filter="url(#fGrainV)">
           <rect x="0" y="252" width="640" height="62" fill="url(#pPickets)"/>
           <path d="M0 252 h640 v6 q-160 8 -320 0 q-160 -8 -320 0 Z" fill="#5E3E1F" opacity=".35"/>
@@ -707,6 +732,8 @@ footer{background:var(--pine-deep);color:var(--paper);padding:clamp(40px,6vw,64p
             <path d="M580 348 L650 348 L606 440 L536 440 Z"/>
           </g>
           <path d="M0 348 h640 v6 H0 Z" fill="#2E5B23" opacity=".35"/>
+          <ellipse cx="180" cy="392" rx="170" ry="34" fill="url(#gDapple)"/>
+          <ellipse cx="480" cy="410" rx="200" ry="40" fill="url(#gDapple)"/>
         </g>
         <g class="bfly">
           <g class="bwings">
@@ -718,6 +745,7 @@ footer{background:var(--pine-deep);color:var(--paper);padding:clamp(40px,6vw,64p
             path="M120 190 C 220 120, 340 150, 420 180 C 480 200, 520 150, 470 130 C 400 105, 260 110, 180 160 C 140 185, 110 200, 120 190 Z"/>
         </g>
       </svg>
+      <img class="photo-swap" src="photos/garden-hero.jpg" alt="A recent garden project" onload="this.classList.add('ok')" onerror="this.remove()">
     </div>
   </div>
 </header>
@@ -747,7 +775,7 @@ footer{background:var(--pine-deep);color:var(--paper);padding:clamp(40px,6vw,64p
     </div>
     <div class="jobs-grid">
       <article class="job reveal">
-        <div class="job-art art-patio"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="job-art art-patio"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><img class="photo-swap" src="photos/job-patio.jpg" alt="" onload="this.classList.add('ok')" onerror="this.remove()"></div>
         <div class="job-body">
           <h3>Patios &amp; paving</h3>
           <p>Indian sandstone, porcelain or block paving, laid on a proper sub base so it stays flat for decades.</p>
@@ -755,7 +783,7 @@ footer{background:var(--pine-deep);color:var(--paper);padding:clamp(40px,6vw,64p
         </div>
       </article>
       <article class="job reveal">
-        <div class="job-art art-lawn"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="job-art art-lawn"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><img class="photo-swap" src="photos/job-lawn.jpg" alt="" onload="this.classList.add('ok')" onerror="this.remove()"></div>
         <div class="job-body">
           <h3>New lawns &amp; turfing</h3>
           <p>Old lawn out, ground levelled, fresh cultivated turf down. Green and usable in weeks.</p>
@@ -763,7 +791,7 @@ footer{background:var(--pine-deep);color:var(--paper);padding:clamp(40px,6vw,64p
         </div>
       </article>
       <article class="job reveal">
-        <div class="job-art art-fence"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="job-art art-fence"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><img class="photo-swap" src="photos/job-fence.jpg" alt="" onload="this.classList.add('ok')" onerror="this.remove()"></div>
         <div class="job-body">
           <h3>Fencing &amp; gates</h3>
           <p>Closeboard, panel or decorative fencing with concreted posts that will not lean after the first storm.</p>
@@ -771,7 +799,7 @@ footer{background:var(--pine-deep);color:var(--paper);padding:clamp(40px,6vw,64p
         </div>
       </article>
       <article class="job reveal">
-        <div class="job-art art-drive"></div>
+        <div class="job-art art-drive"><img class="photo-swap" src="photos/job-drive.jpg" alt="" onload="this.classList.add('ok')" onerror="this.remove()"></div>
         <div class="job-body">
           <h3>Driveways</h3>
           <p>Block paving, resin or gravel driveways with proper drainage, built to take years of parking.</p>
@@ -779,7 +807,7 @@ footer{background:var(--pine-deep);color:var(--paper);padding:clamp(40px,6vw,64p
         </div>
       </article>
       <article class="job reveal">
-        <div class="job-art art-deck"><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="job-art art-deck"><i></i><i></i><i></i><i></i><i></i><img class="photo-swap" src="photos/job-deck.jpg" alt="" onload="this.classList.add('ok')" onerror="this.remove()"></div>
         <div class="job-body">
           <h3>Decking</h3>
           <p>Timber or composite decking on a solid frame, perfect for gardens with a slope to tame.</p>
@@ -791,6 +819,7 @@ footer{background:var(--pine-deep);color:var(--paper);padding:clamp(40px,6vw,64p
           <div class="flower"><i class="stem"></i><i class="head"></i></div>
           <div class="flower"><i class="stem"></i><i class="head"></i></div>
           <div class="flower"><i class="stem"></i><i class="head"></i></div>
+          <img class="photo-swap" src="photos/job-makeover.jpg" alt="" onload="this.classList.add('ok')" onerror="this.remove()">
         </div>
         <div class="job-body">
           <h3>Full garden makeovers</h3>
@@ -1264,13 +1293,16 @@ footer{background:var(--pine-deep);color:var(--paper);padding:clamp(40px,6vw,64p
             </g>
             <rect x="560" y="266" width="300" height="10" rx="5" fill="#FFFFFF" opacity=".25"/>
           </g>
+          <ellipse cx="710" cy="366" rx="160" ry="11" fill="#1E3A25" opacity=".14"/>
           <g>
+            <ellipse cx="128" cy="284" rx="60" ry="10" fill="#1E3A25" opacity=".18"/>
             <ellipse cx="120" cy="248" rx="52" ry="34" fill="url(#aShrub)" stroke="#2E5B23" stroke-width="2"/>
             <ellipse cx="196" cy="256" rx="34" ry="24" fill="url(#aShrub)" stroke="#2E5B23" stroke-width="2"/>
             <g fill="#D8574A"><circle cx="100" cy="238" r="4"/><circle cx="134" cy="230" r="4"/><circle cx="118" cy="252" r="4"/><circle cx="150" cy="246" r="4"/></g>
             <g fill="#F2B63C"><circle cx="188" cy="248" r="3.5"/><circle cx="206" cy="258" r="3.5"/></g>
           </g>
         </svg>
+        <img class="photo-swap" src="photos/garden-after.jpg" alt="" onload="this.classList.add('ok')" onerror="this.remove()">
       </div>
       <div class="ba-scene ba-before ba-clip" id="ba-clip">
         <svg class="ba-svg" viewBox="0 0 900 380" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
@@ -1314,10 +1346,12 @@ footer{background:var(--pine-deep);color:var(--paper);padding:clamp(40px,6vw,64p
             <path d="M812 322 l-8 -42 l6 4 l4 -17 l5 17 l6 -5 l-5 43 Z"/>
           </g>
           <g opacity=".8">
+            <ellipse cx="403" cy="270" rx="30" ry="6" fill="#3A3A32" opacity=".3"/>
             <rect x="380" y="238" width="46" height="30" rx="4" fill="#8A8D84" stroke="#5F625A" stroke-width="2"/>
             <rect x="386" y="230" width="34" height="10" rx="3" fill="#6F7269"/>
           </g>
         </svg>
+        <img class="photo-swap" src="photos/garden-before.jpg" alt="" onload="this.classList.add('ok')" onerror="this.remove()">
       </div>
       <div class="ba-handle" id="ba-handle"></div>
       <span class="ba-label before">Before</span>
