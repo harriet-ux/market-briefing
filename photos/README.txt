@@ -3,8 +3,6 @@ Each one automatically replaces the matching illustration on
 landscaping.html - add as many or as few as you like.
 
   garden-hero.jpg     big hero image (your best finished garden)
-  garden-before.jpg   before shot for the drag slider
-  garden-after.jpg    after shot (same garden, same angle)
   job-patio.jpg       the six job cards, one each
   job-lawn.jpg
   job-fence.jpg

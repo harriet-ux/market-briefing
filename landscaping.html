@@ -19,8 +19,6 @@
   the matching illustration automatically. Missing ones fall back to
   the drawn version, so add as many or as few as you like.
     photos/garden-hero.jpg     hero image (your best garden)
-    photos/garden-before.jpg   before shot for the slider
-    photos/garden-after.jpg    after shot, same garden, same angle
     photos/job-patio.jpg       job cards, one each
     photos/job-lawn.jpg
     photos/job-fence.jpg
@@ -313,6 +311,12 @@ nav{
   background:var(--sun);border:2.5px solid var(--pine);border-radius:999px;
   padding:.3em .9em;box-shadow:0 3px 0 0 var(--pine);
 }
+/* photo-filled cards */
+.job-art.has-photo{flex:1 1 auto;height:auto;min-height:120px}
+.job:has(.job-art.has-photo) .job-body{flex:0 0 auto}
+.job-art.wants-full.has-photo{flex:0 0 auto;display:block;padding:0}
+.job-art.wants-full.has-photo .photo-swap{position:static;height:auto}
+.job-art.wants-full.has-photo>:not(.photo-swap){display:none}
 /* patio art: tiles fan out on hover */
 .art-patio{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,1fr);gap:5px;padding:14px;background:#DDE9D2}
 .art-patio i{background:var(--stone);border:2.5px solid var(--pine);border-radius:5px;transition:transform .25s}
@@ -355,7 +359,6 @@ nav{
 .art-bloom .flower:nth-child(3) .head{filter:hue-rotate(40deg)}
 .art-bloom .flower{margin:0 16px}
 
-.ba-svg{position:absolute;inset:0;width:100%;height:100%;display:block}
 
 /* ── How we build it (animated assemblies) ──── */
 #build .dig-tabs{margin-bottom:24px}
@@ -432,60 +435,6 @@ nav{
   .bld-panel .pt,.bld-panel .bld-ben li{opacity:1!important;animation:none!important}
   .scene-svg .sunrays,.scene-svg .cl,.scene-svg .flw,.scene-svg .bw{animation:none!important}
 }
-
-/* ── Before / after ─────────────────────────── */
-#redo{background:var(--paper-deep)}
-.ba{
-  position:relative;border:3px solid var(--pine);border-radius:20px;overflow:hidden;
-  height:clamp(280px,34vw,400px);box-shadow:0 8px 0 0 var(--pine);
-  touch-action:none;
-}
-.ba-scene{position:absolute;inset:0}
-.ba-scene.ba-after{z-index:0}
-.ba-scene.ba-before{z-index:1}
-.ba-handle,.ba-label{z-index:2}
-.ba input[type=range]{z-index:3}
-/* before: tired garden */
-.ba-before{background:linear-gradient(180deg,#C9D8D5 0%,#D9DCC8 55%,#A9A26B 55%)}
-.ba-before .weed{position:absolute;bottom:0;width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-bottom:52px solid #5E6B3A}
-.ba-before .weed:nth-child(1){left:8%}.ba-before .weed:nth-child(2){left:16%;transform:scale(.7)}
-.ba-before .weed:nth-child(3){left:30%;transform:scale(1.2)}.ba-before .weed:nth-child(4){left:52%;transform:scale(.8)}
-.ba-before .weed:nth-child(5){left:66%;transform:scale(1.1)}.ba-before .weed:nth-child(6){left:84%;transform:scale(.9)}
-.ba-before .patch{position:absolute;border-radius:50%;background:#8F7F4C;opacity:.55}
-.ba-before .patch:nth-of-type(7){width:120px;height:34px;bottom:12%;left:22%}
-.ba-before .patch:nth-of-type(8){width:90px;height:26px;bottom:28%;left:58%}
-.ba-before .oldfence{position:absolute;left:0;right:0;bottom:45%;height:36px;background:linear-gradient(90deg,transparent 0 5px,#8D8D85 5px 19px,#6E6E67 19px 21px,transparent 21px 30px);background-size:30px 100%}
-/* after: the good stuff */
-.ba-after{background:linear-gradient(180deg,var(--sky) 0%,#DDF0E2 55%,transparent 55%)}
-.ba-after .stripes{position:absolute;left:0;right:0;bottom:0;height:45%;background:repeating-linear-gradient(100deg,var(--leaf) 0 44px,#6CA847 44px 88px)}
-.ba-after .newfence{position:absolute;left:0;right:0;bottom:45%;height:38px;background:linear-gradient(90deg,transparent 0 5px,#B9895B 5px 19px,var(--pine) 19px 21px,transparent 21px 30px);background-size:30px 100%}
-.ba-after .patio{position:absolute;bottom:4%;right:6%;width:34%;height:26%;border-radius:10px;border:2.5px solid var(--pine);background:repeating-linear-gradient(90deg,var(--stone) 0 26px,#B8B09C 26px 29px)}
-.ba-after .shrub{position:absolute;border-radius:50% 50% 45% 45%;background:radial-gradient(circle at 35% 30%,#8CC468 0 30%,var(--leaf) 60%);border:2.5px solid var(--pine)}
-.ba-after .shrub:nth-child(4){width:64px;height:56px;bottom:38%;left:6%}
-.ba-after .shrub:nth-child(5){width:46px;height:40px;bottom:36%;left:16%}
-.ba-after .flr{position:absolute;bottom:40%;font-size:0}
-.ba-clip{clip-path:inset(0 calc(100% - var(--pos,50%)) 0 0)}
-.ba-handle{
-  position:absolute;top:0;bottom:0;left:var(--pos,50%);width:4px;margin-left:-2px;
-  background:var(--pine);pointer-events:none;
-}
-.ba-handle::after{
-  content:"◂ ▸";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-  background:var(--sun);border:2.5px solid var(--pine);border-radius:999px;
-  font-size:.8rem;font-weight:800;color:var(--pine);
-  padding:.45em .7em;white-space:nowrap;box-shadow:0 3px 0 0 var(--pine);
-}
-.ba-label{
-  position:absolute;top:14px;font-family:var(--display);font-size:.85rem;letter-spacing:.06em;
-  background:var(--paper);border:2.5px solid var(--pine);border-radius:999px;padding:.35em 1em;
-  box-shadow:0 3px 0 0 var(--pine);pointer-events:none;
-}
-.ba-label.before{left:14px}
-.ba-label.after{right:14px}
-.ba input[type=range]{
-  position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0;
-}
-.ba-help{text-align:center;font-size:.88rem;color:#44573F;margin-top:14px;font-style:italic}
 
 /* ── Process ────────────────────────────────── */
 .steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(16px,2.5vw,26px)}
@@ -574,7 +523,6 @@ footer{background:var(--pine-deep);color:var(--paper);padding:clamp(40px,6vw,64p
       <li class="hide-m"><a href="#jobs">What we do</a></li>
       <li class="hide-m"><a href="#dig">Under your garden</a></li>
       <li class="hide-m"><a href="#build">How we build</a></li>
-      <li class="hide-m"><a href="#redo">Before &amp; after</a></li>
       <li class="hide-m"><a href="#reviews">Reviews</a></li>
       <li><a class="btn btn-heart btn-sm" href="#quote">Free quote</a></li>
     </ul>
@@ -749,7 +697,7 @@ footer{background:var(--pine-deep);color:var(--paper);padding:clamp(40px,6vw,64p
             path="M120 190 C 220 120, 340 150, 420 180 C 480 200, 520 150, 470 130 C 400 105, 260 110, 180 160 C 140 185, 110 200, 120 190 Z"/>
         </g>
       </svg>
-      <img class="photo-swap" src="photos/garden-hero.jpg" alt="A recent garden project" onload="this.classList.add('ok')" onerror="this.remove()">
+      <img class="photo-swap" src="photos/garden-hero.jpg" alt="A recent garden project" onload="this.classList.add('ok');this.parentElement.classList.add('has-photo')" onerror="this.remove()">
     </div>
   </div>
 </header>
@@ -779,7 +727,7 @@ footer{background:var(--pine-deep);color:var(--paper);padding:clamp(40px,6vw,64p
     </div>
     <div class="jobs-grid">
       <article class="job reveal">
-        <div class="job-art art-patio"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><img class="photo-swap" src="photos/job-patio.jpg" alt="" onload="this.classList.add('ok')" onerror="this.remove()"></div>
+        <div class="job-art art-patio"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><img class="photo-swap" src="photos/job-patio.jpg" alt="" onload="this.classList.add('ok');this.parentElement.classList.add('has-photo')" onerror="this.remove()"></div>
         <div class="job-body">
           <h3>Patios &amp; paving</h3>
           <p>Indian sandstone, porcelain or block paving, laid on a proper sub base so it stays flat for decades.</p>
@@ -787,7 +735,7 @@ footer{background:var(--pine-deep);color:var(--paper);padding:clamp(40px,6vw,64p
         </div>
       </article>
       <article class="job reveal">
-        <div class="job-art art-lawn"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><img class="photo-swap" src="photos/job-lawn.jpg" alt="" onload="this.classList.add('ok')" onerror="this.remove()"></div>
+        <div class="job-art art-lawn"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><img class="photo-swap" src="photos/job-lawn.jpg" alt="" onload="this.classList.add('ok');this.parentElement.classList.add('has-photo')" onerror="this.remove()"></div>
         <div class="job-body">
           <h3>New lawns &amp; turfing</h3>
           <p>Old lawn out, ground levelled, fresh cultivated turf down. Green and usable in weeks.</p>
@@ -795,7 +743,7 @@ footer{background:var(--pine-deep);color:var(--paper);padding:clamp(40px,6vw,64p
         </div>
       </article>
       <article class="job reveal">
-        <div class="job-art art-fence"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><img class="photo-swap" src="photos/job-fence.jpg" alt="" onload="this.classList.add('ok')" onerror="this.remove()"></div>
+        <div class="job-art art-fence wants-full"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><img class="photo-swap" src="photos/job-fence.jpg" alt="" onload="this.classList.add('ok');this.parentElement.classList.add('has-photo')" onerror="this.remove()"></div>
         <div class="job-body">
           <h3>Fencing &amp; gates</h3>
           <p>Closeboard, panel or decorative fencing with concreted posts that will not lean after the first storm.</p>
@@ -803,7 +751,7 @@ footer{background:var(--pine-deep);color:var(--paper);padding:clamp(40px,6vw,64p
         </div>
       </article>
       <article class="job reveal">
-        <div class="job-art art-drive"><img class="photo-swap" src="photos/job-drive.jpg" alt="" onload="this.classList.add('ok')" onerror="this.remove()"></div>
+        <div class="job-art art-drive"><img class="photo-swap" src="photos/job-drive.jpg" alt="" onload="this.classList.add('ok');this.parentElement.classList.add('has-photo')" onerror="this.remove()"></div>
         <div class="job-body">
           <h3>Driveways</h3>
           <p>Block paving, resin or gravel driveways with proper drainage, built to take years of parking.</p>
@@ -811,7 +759,7 @@ footer{background:var(--pine-deep);color:var(--paper);padding:clamp(40px,6vw,64p
         </div>
       </article>
       <article class="job reveal">
-        <div class="job-art art-deck"><i></i><i></i><i></i><i></i><i></i><img class="photo-swap" src="photos/job-deck.jpg" alt="" onload="this.classList.add('ok')" onerror="this.remove()"></div>
+        <div class="job-art art-deck"><i></i><i></i><i></i><i></i><i></i><img class="photo-swap" src="photos/job-deck.jpg" alt="" onload="this.classList.add('ok');this.parentElement.classList.add('has-photo')" onerror="this.remove()"></div>
         <div class="job-body">
           <h3>Decking</h3>
           <p>Timber or composite decking on a solid frame, perfect for gardens with a slope to tame.</p>
@@ -819,11 +767,11 @@ footer{background:var(--pine-deep);color:var(--paper);padding:clamp(40px,6vw,64p
         </div>
       </article>
       <article class="job reveal">
-        <div class="job-art art-bloom">
+        <div class="job-art art-bloom wants-full">
           <div class="flower"><i class="stem"></i><i class="head"></i></div>
           <div class="flower"><i class="stem"></i><i class="head"></i></div>
           <div class="flower"><i class="stem"></i><i class="head"></i></div>
-          <img class="photo-swap" src="photos/job-makeover.jpg" alt="" onload="this.classList.add('ok')" onerror="this.remove()">
+          <img class="photo-swap" src="photos/job-makeover.jpg" alt="" onload="this.classList.add('ok');this.parentElement.classList.add('has-photo')" onerror="this.remove()">
         </div>
         <div class="job-body">
           <h3>Full garden makeovers</h3>
@@ -928,6 +876,15 @@ footer{background:var(--pine-deep);color:var(--paper);padding:clamp(40px,6vw,64p
       <linearGradient id="wCedar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#B26A4B"/><stop offset="1" stop-color="#7C4026"/></linearGradient>
       <linearGradient id="wComposite" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9BA0A6"/><stop offset="1" stop-color="#6F747B"/></linearGradient>
       <linearGradient id="cGrey" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CBCBC2"/><stop offset="1" stop-color="#9E9E96"/></linearGradient>
+      <linearGradient id="aLawn" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#82C057"/><stop offset="1" stop-color="#4A8930"/>
+      </linearGradient>
+      <linearGradient id="aStone" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#D8D2C2"/><stop offset="1" stop-color="#B3AC98"/>
+      </linearGradient>
+      <radialGradient id="aShrub" cx=".35" cy=".3" r="1">
+        <stop offset="0" stop-color="#8CC468"/><stop offset="1" stop-color="#4E8A35"/>
+      </radialGradient>
       <pattern id="pSub" width="34" height="20" patternUnits="userSpaceOnUse">
         <rect width="34" height="20" fill="#AFA795"/>
         <circle cx="8" cy="7" r="3.4" fill="#948C7B"/><circle cx="24" cy="13" r="4" fill="#9A9284"/><circle cx="30" cy="4" r="2.6" fill="#8F8778"/>
@@ -1242,129 +1199,7 @@ footer{background:var(--pine-deep);color:var(--paper);padding:clamp(40px,6vw,64p
   </div>
 </section>
 
-<section id="redo">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <p class="eyebrow">Before &amp; after</p>
-      <h2>Slide it. Go on.</h2>
-      <p class="lede">One side is a garden on planting day, tools still out. The other is what evenings look like when the work is done. Drag the handle between them.</p>
-    </div>
-    <div class="ba reveal" id="ba">
-      <div class="ba-scene ba-after">
-        <svg class="ba-svg" viewBox="0 0 900 380" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
-          <defs>
-            <linearGradient id="aSky" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#7FC3E8"/><stop offset="1" stop-color="#DDEFDC"/>
-            </linearGradient>
-            <linearGradient id="aLawn" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#82C057"/><stop offset="1" stop-color="#4A8930"/>
-            </linearGradient>
-            <linearGradient id="aWood" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#C99E6B"/><stop offset="1" stop-color="#8E6136"/>
-            </linearGradient>
-            <linearGradient id="aStone" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#D8D2C2"/><stop offset="1" stop-color="#B3AC98"/>
-            </linearGradient>
-            <radialGradient id="aShrub" cx=".35" cy=".3" r="1">
-              <stop offset="0" stop-color="#8CC468"/><stop offset="1" stop-color="#4E8A35"/>
-            </radialGradient>
-            <pattern id="aPickets" width="21" height="60" patternUnits="userSpaceOnUse">
-              <rect width="17" height="60" fill="url(#aWood)"/>
-              <rect x="15" width="2" height="60" fill="#6E4A26" opacity=".55"/>
-            </pattern>
-          </defs>
-          <rect width="900" height="380" fill="url(#aSky)"/>
-          <g fill="#FFFFFF" opacity=".85"><ellipse cx="180" cy="60" rx="44" ry="13"/><ellipse cx="212" cy="50" rx="26" ry="10"/><ellipse cx="700" cy="90" rx="36" ry="11"/></g>
-          <rect x="0" y="150" width="900" height="66" fill="url(#aPickets)"/>
-          <rect x="0" y="168" width="900" height="8" fill="#A97F4F"/><rect x="0" y="176" width="900" height="2" fill="#6E4A26" opacity=".6"/>
-          <rect x="0" y="196" width="900" height="8" fill="#A97F4F"/><rect x="0" y="204" width="900" height="2" fill="#6E4A26" opacity=".6"/>
-          <g fill="url(#aWood)" stroke="#5E3E1F" stroke-width="1.5">
-            <rect x="70" y="144" width="15" height="76" rx="2"/><rect x="290" y="144" width="15" height="76" rx="2"/>
-            <rect x="510" y="144" width="15" height="76" rx="2"/><rect x="730" y="144" width="15" height="76" rx="2"/>
-          </g>
-          <rect x="0" y="216" width="900" height="164" fill="url(#aLawn)"/>
-          <g fill="#FFFFFF" opacity=".10">
-            <path d="M40 216 L130 216 L80 380 L-10 380 Z"/><path d="M220 216 L310 216 L260 380 L170 380 Z"/>
-            <path d="M400 216 L490 216 L440 380 L350 380 Z"/><path d="M580 216 L670 216 L620 380 L530 380 Z"/>
-            <path d="M760 216 L850 216 L800 380 L710 380 Z"/>
-          </g>
-          <path d="M0 216 h900 v6 H0 Z" fill="#2E5B23" opacity=".3"/>
-          <g>
-            <rect x="560" y="266" width="300" height="96" rx="10" fill="url(#aStone)" stroke="#7A7362" stroke-width="2.5"/>
-            <g stroke="#8F8873" stroke-width="1.6" opacity=".8">
-              <line x1="635" y1="268" x2="635" y2="360"/><line x1="710" y1="268" x2="710" y2="360"/><line x1="785" y1="268" x2="785" y2="360"/>
-              <line x1="562" y1="298" x2="858" y2="298"/><line x1="562" y1="330" x2="858" y2="330"/>
-            </g>
-            <rect x="560" y="266" width="300" height="10" rx="5" fill="#FFFFFF" opacity=".25"/>
-          </g>
-          <ellipse cx="710" cy="366" rx="160" ry="11" fill="#1E3A25" opacity=".14"/>
-          <g>
-            <ellipse cx="128" cy="284" rx="60" ry="10" fill="#1E3A25" opacity=".18"/>
-            <ellipse cx="120" cy="248" rx="52" ry="34" fill="url(#aShrub)" stroke="#2E5B23" stroke-width="2"/>
-            <ellipse cx="196" cy="256" rx="34" ry="24" fill="url(#aShrub)" stroke="#2E5B23" stroke-width="2"/>
-            <g fill="#D8574A"><circle cx="100" cy="238" r="4"/><circle cx="134" cy="230" r="4"/><circle cx="118" cy="252" r="4"/><circle cx="150" cy="246" r="4"/></g>
-            <g fill="#F2B63C"><circle cx="188" cy="248" r="3.5"/><circle cx="206" cy="258" r="3.5"/></g>
-          </g>
-        </svg>
-        <img class="photo-swap" src="photos/garden-after.jpg" alt="" onload="this.classList.add('ok')" onerror="this.remove()">
-      </div>
-      <div class="ba-scene ba-before ba-clip" id="ba-clip">
-        <svg class="ba-svg" viewBox="0 0 900 380" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
-          <defs>
-            <linearGradient id="bSky" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#AEBFC6"/><stop offset="1" stop-color="#D3D8C4"/>
-            </linearGradient>
-            <linearGradient id="bLawn" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#A9A26B"/><stop offset="1" stop-color="#8B814E"/>
-            </linearGradient>
-            <linearGradient id="bWood" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#9A9A91"/><stop offset="1" stop-color="#6E6E64"/>
-            </linearGradient>
-            <pattern id="bPickets" width="24" height="60" patternUnits="userSpaceOnUse">
-              <rect width="16" height="60" fill="url(#bWood)"/>
-              <rect x="14" width="2" height="60" fill="#4A4A42" opacity=".6"/>
-            </pattern>
-          </defs>
-          <rect width="900" height="380" fill="url(#bSky)"/>
-          <g fill="#FFFFFF" opacity=".5"><ellipse cx="240" cy="70" rx="52" ry="13"/><ellipse cx="640" cy="52" rx="40" ry="11"/></g>
-          <g transform="rotate(-1.6 450 190)">
-            <rect x="-10" y="152" width="920" height="64" fill="url(#bPickets)"/>
-            <rect x="356" y="152" width="20" height="64" fill="#C6CBBD"/>
-            <rect x="-10" y="170" width="920" height="7" fill="#7E7E74"/>
-            <rect x="-10" y="196" width="920" height="7" fill="#7E7E74"/>
-            <rect x="588" y="150" width="16" height="68" fill="url(#bWood)" transform="rotate(3 596 184)"/>
-            <rect x="120" y="146" width="16" height="72" fill="url(#bWood)"/>
-          </g>
-          <rect x="0" y="214" width="900" height="166" fill="url(#bLawn)"/>
-          <g opacity=".65">
-            <ellipse cx="180" cy="280" rx="90" ry="22" fill="#8F7F4C"/>
-            <ellipse cx="470" cy="330" rx="120" ry="26" fill="#97906A"/>
-            <ellipse cx="700" cy="270" rx="80" ry="18" fill="#8F7F4C"/>
-            <ellipse cx="330" cy="246" rx="60" ry="13" fill="#B7B083"/>
-          </g>
-          <g fill="#5E6B3A" stroke="#48532B" stroke-width="1">
-            <path d="M120 320 l-8 -44 l6 4 l4 -18 l5 18 l6 -6 l-5 46 Z"/>
-            <path d="M260 300 l-7 -38 l5 4 l4 -15 l4 15 l6 -5 l-5 39 Z"/>
-            <path d="M560 316 l-9 -48 l7 5 l4 -20 l5 20 l7 -6 l-6 49 Z"/>
-            <path d="M660 298 l-6 -34 l4 3 l4 -13 l4 13 l5 -4 l-4 35 Z"/>
-            <path d="M812 322 l-8 -42 l6 4 l4 -17 l5 17 l6 -5 l-5 43 Z"/>
-          </g>
-          <g opacity=".8">
-            <ellipse cx="403" cy="270" rx="30" ry="6" fill="#3A3A32" opacity=".3"/>
-            <rect x="380" y="238" width="46" height="30" rx="4" fill="#8A8D84" stroke="#5F625A" stroke-width="2"/>
-            <rect x="386" y="230" width="34" height="10" rx="3" fill="#6F7269"/>
-          </g>
-        </svg>
-        <img class="photo-swap" src="photos/garden-before.jpg" alt="" onload="this.classList.add('ok')" onerror="this.remove()">
-      </div>
-      <div class="ba-handle" id="ba-handle"></div>
-      <span class="ba-label before">Before</span>
-      <span class="ba-label after">After</span>
-      <input type="range" min="0" max="100" value="50" step="0.1" id="ba-range" aria-label="Reveal the before and after garden comparison">
-    </div>
-    <p class="ba-help">Drag the handle to see the transformation.</p>
-  </div>
-</section>
+
 
 <section id="process">
   <div class="wrap">
@@ -1554,15 +1389,6 @@ footer{background:var(--pine-deep);color:var(--paper);padding:clamp(40px,6vw,64p
   } else {
     var onp = document.querySelector(".bld-panel.on");
     if (onp) onp.classList.add("play");
-  }
-
-  // Before / after slider
-  var range = document.getElementById("ba-range");
-  var ba = document.getElementById("ba");
-  if (range && ba) {
-    range.addEventListener("input", function(){
-      ba.style.setProperty("--pos", range.value + "%");
-    });
   }
 
   // Demo quote form
