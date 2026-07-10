@@ -1,0 +1,871 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>I Love Landscaping For You ✿ Gardens built with heart in Derbyshire</title>
+<meta name="description" content="I Love Landscaping For You builds patios, lawns, driveways, fencing and full garden makeovers across Derbyshire and the East Midlands. Free quotes, honest prices, tidy work.">
+<!--
+  ══════════════════════════════════════════════════════════════
+  I LOVE LANDSCAPING FOR YOU ✿ demo website
+  Quick edits:
+  • Phone number ........... search for 01246 000000
+  • Email .................. search for hello@ilovelandscaping.co.uk
+  • Guide prices ........... search for "from £"
+  • Areas covered .......... search for Chesterfield
+  ══════════════════════════════════════════════════════════════
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,600;0,6..12,800;1,6..12,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F0F1E4;
+  --paper-deep:#E4E8D2;
+  --pine:#20402A;
+  --pine-deep:#152B1C;
+  --leaf:#79B851;
+  --leaf-soft:#A8D18A;
+  --heart:#D8574A;
+  --sun:#F2B63C;
+  --soil:#6B4A32;
+  --soil-deep:#4E3521;
+  --stone:#C9C2B0;
+  --sky:#BEE3F2;
+  --line:#C9CDB4;
+  --display:"Lilita One","Arial Rounded MT Bold","Trebuchet MS",sans-serif;
+  --body:"Nunito Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--body);background:var(--paper);color:var(--pine);
+  font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--leaf);color:var(--pine-deep)}
+a{color:inherit}
+h1,h2,h3{font-family:var(--display);font-weight:400;line-height:1.06;text-wrap:balance;letter-spacing:.01em}
+h1{font-size:clamp(2.5rem,6vw,4.4rem)}
+h2{font-size:clamp(1.9rem,4.2vw,3rem)}
+h3{font-size:1.25rem}
+.lede{font-size:1.12rem;color:#44573F;max-width:36em}
+.eyebrow{
+  font-size:.76rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--heart);display:flex;align-items:center;gap:.6em;
+}
+.eyebrow::before{content:"✿";color:var(--leaf);letter-spacing:0}
+.wrap{max-width:1180px;margin:0 auto;padding:0 clamp(20px,4vw,48px)}
+section{padding:clamp(60px,8.5vw,110px) 0}
+.section-head{display:flex;flex-direction:column;gap:16px;margin-bottom:clamp(32px,5vw,56px)}
+
+/* ── Buttons ────────────────────────────────── */
+.btn{
+  display:inline-flex;align-items:center;gap:.5em;
+  font-family:var(--body);font-weight:800;font-size:.95rem;
+  text-decoration:none;cursor:pointer;
+  border:2.5px solid var(--pine);border-radius:14px;
+  padding:.75em 1.5em;background:var(--paper);color:var(--pine);
+  box-shadow:0 4px 0 0 var(--pine);
+  transition:transform .15s,box-shadow .15s,background .15s,color .15s;
+}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 0 0 var(--pine)}
+.btn:active{transform:translateY(2px);box-shadow:0 2px 0 0 var(--pine)}
+.btn:focus-visible{outline:3px solid var(--heart);outline-offset:3px}
+.btn-leaf{background:var(--leaf);color:var(--pine-deep)}
+.btn-heart{background:var(--heart);color:#FFF3EC}
+.btn-sun{background:var(--sun);color:var(--pine-deep)}
+.btn-sm{padding:.55em 1.1em;font-size:.85rem;border-radius:11px}
+
+/* ── Nav ────────────────────────────────────── */
+nav{
+  position:sticky;top:0;z-index:60;
+  background:color-mix(in srgb,var(--paper) 90%,transparent);
+  backdrop-filter:blur(10px);border-bottom:2.5px solid var(--pine);
+}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:70px;gap:16px}
+.logo{font-family:var(--display);font-size:1.25rem;text-decoration:none;display:flex;align-items:center;gap:.35em;white-space:nowrap}
+.logo .hrt{color:var(--heart);display:inline-block;animation:heartbeat 2.4s ease-in-out infinite;transform-origin:center}
+@keyframes heartbeat{0%,100%{transform:scale(1)}12%{transform:scale(1.25)}24%{transform:scale(1)}}
+.nav-links{display:flex;gap:22px;align-items:center;list-style:none}
+.nav-links a{text-decoration:none;font-size:.92rem;font-weight:800;color:#44573F;transition:color .15s}
+.nav-links a:hover{color:var(--heart)}
+.nav-links a:focus-visible{outline:3px solid var(--heart);outline-offset:3px;border-radius:4px}
+@media(max-width:900px){.nav-links li.hide-m{display:none}}
+
+/* ── Hero ───────────────────────────────────── */
+.hero{padding:clamp(48px,7vw,88px) 0 0;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:minmax(0,11fr) minmax(0,10fr);gap:clamp(28px,4vw,60px);align-items:center}
+@media(max-width:960px){.hero-grid{grid-template-columns:1fr}}
+.hero-copy{display:flex;flex-direction:column;gap:24px;padding-bottom:clamp(40px,6vw,72px)}
+.hero h1 .hrt{color:var(--heart)}
+.hero h1 .grn{color:var(--leaf);-webkit-text-stroke:1.5px var(--pine)}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap}
+.hero-tick{list-style:none;display:flex;flex-direction:column;gap:8px;font-weight:600;color:#44573F}
+.hero-tick li::before{content:"✿ ";color:var(--heart);font-weight:400}
+
+/* ── Garden scene (pure CSS, animated) ──────── */
+.scene{
+  position:relative;border:3px solid var(--pine);border-radius:20px;
+  background:linear-gradient(180deg,var(--sky) 0%,#DDF0E2 62%,#DDF0E2 62%);
+  height:clamp(300px,36vw,430px);overflow:hidden;
+  box-shadow:0 8px 0 0 var(--pine);
+}
+.sun{
+  position:absolute;top:26px;right:34px;width:74px;height:74px;border-radius:50%;
+  background:var(--sun);border:3px solid var(--pine);
+}
+.sun::after{
+  content:"";position:absolute;inset:-16px;border-radius:50%;
+  border:3px dashed color-mix(in srgb,var(--sun) 70%,var(--pine));
+  animation:spin 24s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.cloud{
+  position:absolute;height:22px;width:64px;border-radius:999px;
+  background:#fff;border:2.5px solid var(--pine);
+  animation:drift linear infinite;
+}
+.cloud::before{content:"";position:absolute;left:14px;top:-13px;width:30px;height:24px;border-radius:999px;background:#fff;border:2.5px solid var(--pine);border-bottom:none}
+.cloud.c1{top:36px;left:-80px;animation-duration:38s}
+.cloud.c2{top:86px;left:-80px;transform:scale(.72);animation-duration:52s;animation-delay:-18s}
+@keyframes drift{from{translate:-90px 0}to{translate:calc(100vw / 2) 0}}
+.hill{position:absolute;border-radius:50% 50% 0 0;border:3px solid var(--pine);border-bottom:none}
+.hill.h1{background:var(--leaf-soft);width:70%;height:38%;bottom:18%;left:-12%}
+.hill.h2{background:var(--leaf);width:80%;height:44%;bottom:14%;right:-18%}
+.fence{
+  position:absolute;left:0;right:0;bottom:18%;height:44px;
+  background:
+    linear-gradient(90deg,transparent 0 6px,#B9895B 6px 22px,var(--pine) 22px 24px,transparent 24px 34px);
+  background-size:34px 100%;
+}
+.fence::after{content:"";position:absolute;left:0;right:0;top:9px;height:7px;background:#A6784C;border-top:2.5px solid var(--pine);border-bottom:2.5px solid var(--pine)}
+.lawn{
+  position:absolute;left:0;right:0;bottom:0;height:19%;
+  background:repeating-linear-gradient(90deg,var(--leaf) 0 42px,#6CA847 42px 84px);
+  border-top:3px solid var(--pine);
+}
+.flowerbed{position:absolute;bottom:calc(19% - 3px);left:0;right:0;height:0}
+.flower{position:absolute;bottom:0;width:8px;transform-origin:bottom center;animation:sway 3.6s ease-in-out infinite}
+.flower .stem{position:absolute;bottom:0;left:2.5px;width:3px;height:52px;background:var(--pine);border-radius:3px}
+.flower .head{
+  position:absolute;bottom:46px;left:-11px;width:30px;height:30px;border-radius:50%;
+  background:radial-gradient(circle at center,var(--sun) 0 5px,transparent 5px),
+    radial-gradient(circle at 50% 12%,var(--heart) 0 6px,transparent 7px),
+    radial-gradient(circle at 88% 50%,var(--heart) 0 6px,transparent 7px),
+    radial-gradient(circle at 50% 88%,var(--heart) 0 6px,transparent 7px),
+    radial-gradient(circle at 12% 50%,var(--heart) 0 6px,transparent 7px),
+    radial-gradient(circle at 20% 20%,var(--heart) 0 6px,transparent 7px),
+    radial-gradient(circle at 80% 20%,var(--heart) 0 6px,transparent 7px),
+    radial-gradient(circle at 80% 80%,var(--heart) 0 6px,transparent 7px),
+    radial-gradient(circle at 20% 80%,var(--heart) 0 6px,transparent 7px);
+}
+.flower.f2 .head{filter:hue-rotate(160deg)}
+.flower.f4 .head{filter:hue-rotate(40deg)}
+@keyframes sway{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(5deg)}}
+.butterfly{position:absolute;width:26px;height:18px;animation:flutterpath 16s ease-in-out infinite}
+.butterfly::after{content:"";position:absolute;left:50%;top:1px;width:5px;height:15px;margin-left:-2.5px;background:var(--pine);border-radius:4px}
+.butterfly i{
+  position:absolute;top:0;width:12px;height:16px;border-radius:60% 60% 40% 40%;
+  background:var(--sun);border:2.5px solid var(--pine);
+  animation:flap .35s ease-in-out infinite alternate;
+}
+.butterfly i:first-child{left:0;transform-origin:right center}
+.butterfly i:last-child{right:0;transform-origin:left center;animation-delay:.15s}
+@keyframes flap{from{transform:scaleX(1)}to{transform:scaleX(.45)}}
+@keyframes flutterpath{
+  0%{top:34%;left:8%}25%{top:22%;left:38%}50%{top:40%;left:64%}
+  75%{top:18%;left:44%}100%{top:34%;left:8%}
+}
+.scene-tag{
+  position:absolute;left:14px;top:14px;background:var(--paper);
+  border:2.5px solid var(--pine);border-radius:999px;
+  font-weight:800;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;
+  padding:.4em 1em;box-shadow:0 3px 0 0 var(--pine);
+}
+
+/* ── Grass divider ──────────────────────────── */
+.grass{
+  height:22px;background:var(--leaf);
+  -webkit-mask:linear-gradient(#000 0 0);
+  clip-path:polygon(0 100%,0 40%,2% 0,4% 45%,6% 5%,8% 42%,10% 8%,12% 46%,14% 2%,16% 44%,18% 6%,20% 40%,22% 4%,24% 46%,26% 8%,28% 42%,30% 2%,32% 45%,34% 6%,36% 40%,38% 4%,40% 44%,42% 8%,44% 46%,46% 2%,48% 42%,50% 6%,52% 45%,54% 4%,56% 40%,58% 8%,60% 44%,62% 2%,64% 46%,66% 6%,68% 42%,70% 4%,72% 45%,74% 8%,76% 40%,78% 2%,80% 44%,82% 6%,84% 46%,86% 4%,88% 42%,90% 8%,92% 45%,94% 2%,96% 40%,98% 6%,100% 44%,100% 100%)
+}
+
+/* ── Marquee ────────────────────────────────── */
+.marquee{
+  overflow:hidden;white-space:nowrap;padding:15px 0;
+  background:var(--pine);color:var(--paper);
+  border-top:3px solid var(--pine);border-bottom:3px solid var(--pine);
+}
+.marquee-track{display:inline-flex;will-change:transform;animation:scroll-l 34s linear infinite}
+.marquee:hover .marquee-track{animation-play-state:paused}
+.marquee-chunk{display:inline-flex;align-items:center;flex-shrink:0}
+.marquee-chunk span{
+  font-family:var(--display);font-size:1.05rem;letter-spacing:.03em;
+  padding:0 .9em;display:inline-flex;align-items:center;gap:1.8em;
+}
+.marquee-chunk span::after{content:"✿";font-size:.85em;color:var(--leaf)}
+.marquee-soil{background:var(--soil);}
+.marquee-soil .marquee-chunk span::after{color:var(--sun)}
+.marquee-soil .marquee-track{animation:scroll-r 40s linear infinite}
+@keyframes scroll-l{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes scroll-r{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+
+/* ── Cross-section (dig down) ───────────────── */
+#dig{background:var(--paper-deep)}
+.dig-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(28px,4vw,56px);align-items:start}
+@media(max-width:900px){.dig-grid{grid-template-columns:1fr}}
+.dig-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.dig-tab{
+  font-family:var(--body);font-weight:800;font-size:.9rem;cursor:pointer;
+  border:2.5px solid var(--pine);border-radius:999px;background:var(--paper);
+  color:var(--pine);padding:.5em 1.3em;transition:background .15s,color .15s;
+}
+.dig-tab[aria-selected="true"]{background:var(--pine);color:var(--paper)}
+.dig-tab:focus-visible{outline:3px solid var(--heart);outline-offset:3px}
+.dig-stack{border:3px solid var(--pine);border-radius:18px;overflow:hidden;box-shadow:0 8px 0 0 var(--pine);background:var(--paper)}
+.dig-panel{display:none}
+.dig-panel.on{display:block}
+.layer{
+  display:block;width:100%;text-align:left;border:0;cursor:pointer;
+  border-bottom:2.5px solid var(--pine);position:relative;
+  font-family:var(--body);color:inherit;
+  padding:0;transition:filter .15s;
+}
+.layer:last-child{border-bottom:0}
+.layer:hover{filter:brightness(1.06)}
+.layer:focus-visible{outline:3px solid var(--heart);outline-offset:-4px}
+.layer-face{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;min-height:58px}
+.layer-name{font-weight:800;font-size:.95rem;display:flex;align-items:center;gap:.7em}
+.layer-name .d{
+  font-family:var(--display);font-size:.8rem;background:var(--paper);
+  border:2px solid var(--pine);border-radius:999px;width:26px;height:26px;
+  display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;
+  color:var(--pine);
+}
+.layer-hint{font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;opacity:.75}
+.layer-note{
+  display:block;max-height:0;overflow:hidden;transition:max-height .3s ease;
+  font-size:.92rem;line-height:1.55;
+}
+.layer[aria-expanded="true"] .layer-note{max-height:130px}
+.layer-note p{padding:0 18px 16px;max-width:42em}
+/* layer skins */
+.l-paving{background:repeating-linear-gradient(90deg,var(--stone) 0 56px,#B8B09C 56px 60px);color:var(--pine-deep)}
+.l-mortar{background:#DAD3C2;color:var(--pine-deep)}
+.l-subbase{background:radial-gradient(circle at 12% 40%,#9A9284 0 5px,transparent 6px),radial-gradient(circle at 34% 70%,#8F8778 0 6px,transparent 7px),radial-gradient(circle at 58% 35%,#9A9284 0 5px,transparent 6px),radial-gradient(circle at 80% 65%,#8F8778 0 6px,transparent 7px),radial-gradient(circle at 94% 30%,#9A9284 0 4px,transparent 5px),#AFA795;background-size:120px 60px;color:var(--pine-deep)}
+.l-membrane{background:repeating-linear-gradient(45deg,#3A3A3A 0 10px,#4A4A4A 10px 20px);color:#F0F1E4}
+.l-membrane .layer-name .d{background:#3A3A3A;color:#F0F1E4;border-color:#F0F1E4}
+.l-soil{background:radial-gradient(circle at 20% 45%,var(--soil-deep) 0 4px,transparent 5px),radial-gradient(circle at 55% 70%,var(--soil-deep) 0 3px,transparent 4px),radial-gradient(circle at 85% 40%,var(--soil-deep) 0 4px,transparent 5px),var(--soil);background-size:110px 55px;color:#F5EBDD}
+.l-soil .layer-name .d{background:var(--soil-deep);color:#F5EBDD;border-color:#F5EBDD}
+.l-turf{background:repeating-linear-gradient(90deg,var(--leaf) 0 40px,#6CA847 40px 80px);color:var(--pine-deep)}
+.l-rootzone{background:#8A6A44;color:#F5EBDD}
+.l-rootzone .layer-name .d{background:var(--soil-deep);color:#F5EBDD;border-color:#F5EBDD}
+.l-gravel{background:radial-gradient(circle at 25% 50%,#B5AC97 0 5px,transparent 6px),radial-gradient(circle at 65% 55%,#A99F8B 0 6px,transparent 7px),#C1B8A3;background-size:90px 45px;color:var(--pine-deep)}
+.l-concrete{background:#B9B6AC;color:var(--pine-deep)}
+.l-post{background:repeating-linear-gradient(0deg,#B9895B 0 14px,#A6784C 14px 16px);color:var(--pine-deep)}
+.dig-note{font-size:.88rem;color:#44573F;margin-top:14px;font-style:italic}
+
+/* ── Jobs grid ──────────────────────────────── */
+.jobs-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(18px,2.5vw,28px)}
+@media(max-width:960px){.jobs-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.jobs-grid{grid-template-columns:1fr}}
+.job{
+  background:#FAFBF2;border:3px solid var(--pine);border-radius:18px;overflow:hidden;
+  box-shadow:0 6px 0 0 var(--pine);transition:transform .18s,box-shadow .18s;
+  display:flex;flex-direction:column;
+}
+.job:hover{transform:translateY(-4px);box-shadow:0 10px 0 0 var(--pine)}
+.job-art{height:120px;position:relative;border-bottom:3px solid var(--pine);background:var(--sky);overflow:hidden}
+.job-body{padding:18px 20px 22px;display:flex;flex-direction:column;gap:8px;flex:1}
+.job-body p{font-size:.92rem;color:#44573F;flex:1}
+.job-price{
+  align-self:flex-start;font-weight:800;font-size:.85rem;
+  background:var(--sun);border:2.5px solid var(--pine);border-radius:999px;
+  padding:.3em .9em;box-shadow:0 3px 0 0 var(--pine);
+}
+/* patio art: tiles fan out on hover */
+.art-patio{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,1fr);gap:5px;padding:14px;background:#DDE9D2}
+.art-patio i{background:var(--stone);border:2.5px solid var(--pine);border-radius:5px;transition:transform .25s}
+.job:hover .art-patio i:nth-child(odd){transform:rotate(-4deg) translateY(-3px)}
+.job:hover .art-patio i:nth-child(even){transform:rotate(4deg) translateY(2px)}
+/* lawn art: grass blades grow */
+.art-lawn{background:#DDF0E2;display:flex;align-items:flex-end;justify-content:space-around;padding:0 12px}
+.art-lawn i{width:9%;background:var(--leaf);border:2.5px solid var(--pine);border-bottom:none;border-radius:8px 8px 0 0;height:36%;transition:height .35s cubic-bezier(.34,1.56,.64,1)}
+.art-lawn i:nth-child(2n){height:58%;background:#6CA847}
+.art-lawn i:nth-child(3n){height:46%}
+.job:hover .art-lawn i{height:82%}
+.job:hover .art-lawn i:nth-child(2n){height:64%}
+.job:hover .art-lawn i:nth-child(3n){height:94%}
+/* fence art: pickets pop up */
+.art-fence{background:var(--sky);display:flex;align-items:flex-end;justify-content:space-around;padding:0 10px}
+.art-fence i{width:11%;height:62%;background:#B9895B;border:2.5px solid var(--pine);border-bottom:none;border-radius:7px 7px 0 0;transition:transform .3s}
+.job:hover .art-fence i{transform:translateY(-8px)}
+.job:hover .art-fence i:nth-child(2n){transform:translateY(-2px);transition-delay:.06s}
+/* deck art: planks slide */
+.art-deck{background:#DDE9D2;display:flex;flex-direction:column;justify-content:space-around;padding:12px 0}
+.art-deck i{height:16px;background:#B9895B;border:2.5px solid var(--pine);border-left:none;border-right:none;transition:transform .3s}
+.art-deck i:nth-child(2n){background:#A6784C}
+.job:hover .art-deck i:nth-child(odd){transform:translateX(10px)}
+.job:hover .art-deck i:nth-child(even){transform:translateX(-10px)}
+/* drive art: moving centre line */
+.art-drive{background:#9C948A}
+.art-drive::before{
+  content:"";position:absolute;left:0;right:0;top:50%;height:8px;margin-top:-4px;
+  background:repeating-linear-gradient(90deg,var(--sun) 0 26px,transparent 26px 52px);
+}
+.job:hover .art-drive::before{animation:roadmove 1s linear infinite}
+@keyframes roadmove{from{background-position:0 0}to{background-position:52px 0}}
+.art-drive::after{content:"";position:absolute;left:0;right:0;top:0;height:12px;background:var(--leaf);border-bottom:2.5px solid var(--pine);box-shadow:0 96px 0 0 var(--leaf),0 93.5px 0 0 var(--pine)}
+/* makeover art: flower blooms */
+.art-bloom{background:#DDF0E2;display:flex;align-items:flex-end;justify-content:center}
+.art-bloom .flower{position:relative;animation:none;transform:none}
+.art-bloom .flower .head{transform:scale(.4);transform-origin:bottom center;transition:transform .4s cubic-bezier(.34,1.56,.64,1)}
+.job:hover .art-bloom .flower .head{transform:scale(1.25)}
+.art-bloom .flower:nth-child(2) .head{filter:hue-rotate(160deg)}
+.art-bloom .flower:nth-child(3) .head{filter:hue-rotate(40deg)}
+.art-bloom .flower{margin:0 16px}
+
+/* ── Before / after ─────────────────────────── */
+#redo{background:var(--paper-deep)}
+.ba{
+  position:relative;border:3px solid var(--pine);border-radius:20px;overflow:hidden;
+  height:clamp(280px,34vw,400px);box-shadow:0 8px 0 0 var(--pine);
+  touch-action:none;
+}
+.ba-scene{position:absolute;inset:0}
+/* before: tired garden */
+.ba-before{background:linear-gradient(180deg,#C9D8D5 0%,#D9DCC8 55%,#A9A26B 55%)}
+.ba-before .weed{position:absolute;bottom:0;width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-bottom:52px solid #5E6B3A}
+.ba-before .weed:nth-child(1){left:8%}.ba-before .weed:nth-child(2){left:16%;transform:scale(.7)}
+.ba-before .weed:nth-child(3){left:30%;transform:scale(1.2)}.ba-before .weed:nth-child(4){left:52%;transform:scale(.8)}
+.ba-before .weed:nth-child(5){left:66%;transform:scale(1.1)}.ba-before .weed:nth-child(6){left:84%;transform:scale(.9)}
+.ba-before .patch{position:absolute;border-radius:50%;background:#8F7F4C;opacity:.55}
+.ba-before .patch:nth-of-type(7){width:120px;height:34px;bottom:12%;left:22%}
+.ba-before .patch:nth-of-type(8){width:90px;height:26px;bottom:28%;left:58%}
+.ba-before .oldfence{position:absolute;left:0;right:0;bottom:45%;height:36px;background:linear-gradient(90deg,transparent 0 5px,#8D8D85 5px 19px,#6E6E67 19px 21px,transparent 21px 30px);background-size:30px 100%}
+/* after: the good stuff */
+.ba-after{background:linear-gradient(180deg,var(--sky) 0%,#DDF0E2 55%,transparent 55%)}
+.ba-after .stripes{position:absolute;left:0;right:0;bottom:0;height:45%;background:repeating-linear-gradient(100deg,var(--leaf) 0 44px,#6CA847 44px 88px)}
+.ba-after .newfence{position:absolute;left:0;right:0;bottom:45%;height:38px;background:linear-gradient(90deg,transparent 0 5px,#B9895B 5px 19px,var(--pine) 19px 21px,transparent 21px 30px);background-size:30px 100%}
+.ba-after .patio{position:absolute;bottom:4%;right:6%;width:34%;height:26%;border-radius:10px;border:2.5px solid var(--pine);background:repeating-linear-gradient(90deg,var(--stone) 0 26px,#B8B09C 26px 29px)}
+.ba-after .shrub{position:absolute;border-radius:50% 50% 45% 45%;background:radial-gradient(circle at 35% 30%,#8CC468 0 30%,var(--leaf) 60%);border:2.5px solid var(--pine)}
+.ba-after .shrub:nth-child(4){width:64px;height:56px;bottom:38%;left:6%}
+.ba-after .shrub:nth-child(5){width:46px;height:40px;bottom:36%;left:16%}
+.ba-after .flr{position:absolute;bottom:40%;font-size:0}
+.ba-clip{clip-path:inset(0 calc(100% - var(--pos,50%)) 0 0)}
+.ba-handle{
+  position:absolute;top:0;bottom:0;left:var(--pos,50%);width:4px;margin-left:-2px;
+  background:var(--pine);pointer-events:none;
+}
+.ba-handle::after{
+  content:"◂ ▸";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  background:var(--sun);border:2.5px solid var(--pine);border-radius:999px;
+  font-size:.8rem;font-weight:800;color:var(--pine);
+  padding:.45em .7em;white-space:nowrap;box-shadow:0 3px 0 0 var(--pine);
+}
+.ba-label{
+  position:absolute;top:14px;font-family:var(--display);font-size:.85rem;letter-spacing:.06em;
+  background:var(--paper);border:2.5px solid var(--pine);border-radius:999px;padding:.35em 1em;
+  box-shadow:0 3px 0 0 var(--pine);pointer-events:none;
+}
+.ba-label.before{left:14px}
+.ba-label.after{right:14px}
+.ba input[type=range]{
+  position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0;
+}
+.ba-help{text-align:center;font-size:.88rem;color:#44573F;margin-top:14px;font-style:italic}
+
+/* ── Process ────────────────────────────────── */
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(16px,2.5vw,26px)}
+@media(max-width:900px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.steps{grid-template-columns:1fr}}
+.step{
+  background:#FAFBF2;border:3px solid var(--pine);border-radius:18px;
+  padding:22px;display:flex;flex-direction:column;gap:10px;box-shadow:0 6px 0 0 var(--pine);
+}
+.step .num{
+  font-family:var(--display);width:44px;height:44px;border-radius:50%;
+  background:var(--leaf);border:2.5px solid var(--pine);
+  display:flex;align-items:center;justify-content:center;font-size:1.15rem;color:var(--pine-deep);
+}
+.step p{font-size:.92rem;color:#44573F}
+
+/* ── Reviews ────────────────────────────────── */
+#reviews{background:var(--pine);color:var(--paper)}
+#reviews .eyebrow{color:var(--sun)}
+#reviews .eyebrow::before{color:var(--leaf)}
+.rev-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,2.5vw,26px)}
+@media(max-width:900px){.rev-grid{grid-template-columns:1fr}}
+.rev{
+  background:var(--pine-deep);border:2.5px solid var(--leaf);border-radius:18px;
+  padding:24px;display:flex;flex-direction:column;gap:12px;
+}
+.stars{color:var(--sun);letter-spacing:.15em;font-size:.95rem}
+.rev p{font-size:.95rem;line-height:1.6}
+.rev cite{font-style:normal;font-weight:800;font-size:.85rem;color:var(--leaf-soft)}
+
+/* ── Quote form ─────────────────────────────── */
+.quote-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(28px,4vw,56px);align-items:start}
+@media(max-width:900px){.quote-grid{grid-template-columns:1fr}}
+.quote-side{display:flex;flex-direction:column;gap:18px}
+.quote-side .btn{align-self:flex-start}
+.qform{
+  background:#FAFBF2;border:3px solid var(--pine);border-radius:20px;
+  padding:clamp(22px,3vw,34px);display:flex;flex-direction:column;gap:16px;
+  box-shadow:0 8px 0 0 var(--pine);
+}
+.qrow{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:560px){.qrow{grid-template-columns:1fr}}
+.qform label{display:flex;flex-direction:column;gap:6px;font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#44573F}
+.qform input,.qform select,.qform textarea{
+  font-family:var(--body);font-size:1rem;color:var(--pine);
+  padding:.7em .9em;border:2.5px solid var(--pine);border-radius:12px;background:var(--paper);
+}
+.qform input:focus,.qform select:focus,.qform textarea:focus{outline:3px solid var(--leaf);outline-offset:1px}
+.qform button{align-self:flex-start}
+.qdone{display:none;background:var(--leaf-soft);border:2.5px solid var(--pine);border-radius:12px;padding:14px 18px;font-weight:600}
+
+/* ── Footer ─────────────────────────────────── */
+footer{background:var(--pine-deep);color:var(--paper);padding:clamp(40px,6vw,64px) 0 30px}
+.foot{display:flex;justify-content:space-between;gap:32px;flex-wrap:wrap}
+.foot .logo{font-size:1.4rem;color:var(--paper)}
+.foot-col{display:flex;flex-direction:column;gap:7px;font-size:.92rem}
+.foot-col .lab{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;opacity:.6;margin-bottom:4px;font-weight:800}
+.foot-col a{color:var(--paper);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--paper) 35%,transparent)}
+.foot-col a:hover{border-bottom-color:var(--leaf)}
+.foot-base{
+  margin-top:clamp(30px,4vw,44px);padding-top:22px;
+  border-top:1px solid color-mix(in srgb,var(--paper) 18%,transparent);
+  display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  font-size:.85rem;opacity:.75;
+}
+
+/* ── Scroll reveal ──────────────────────────── */
+.reveal{opacity:0;translate:0 26px;transition:opacity .6s ease,translate .6s ease}
+.reveal.in{opacity:1;translate:0 0}
+
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .marquee-track,.sun::after,.cloud,.flower,.butterfly,.butterfly i{animation:none!important}
+  .logo .hrt{animation:none}
+  .reveal{opacity:1;translate:0 0;transition:none}
+  .btn:hover,.job:hover{transform:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="#top">I <span class="hrt">♥</span> Landscaping <span style="color:var(--leaf)">For You</span></a>
+    <ul class="nav-links">
+      <li class="hide-m"><a href="#jobs">What we do</a></li>
+      <li class="hide-m"><a href="#dig">Under your garden</a></li>
+      <li class="hide-m"><a href="#redo">Before &amp; after</a></li>
+      <li class="hide-m"><a href="#reviews">Reviews</a></li>
+      <li><a class="btn btn-heart btn-sm" href="#quote">Free quote</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow">Landscaping across Derbyshire &amp; the East Midlands</p>
+      <h1>We <span class="hrt">love</span> your garden like it is <span class="grn">our own.</span></h1>
+      <p class="lede">Patios, lawns, fencing, driveways and full garden makeovers, built properly by a friendly local team. Free quotes, honest prices, and we always sweep up before we leave.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-heart" href="#quote">Get my free quote</a>
+        <a class="btn btn-sun" href="tel:01246000000">Call 01246 000000</a>
+      </div>
+      <ul class="hero-tick">
+        <li>Fully insured, family run</li>
+        <li>Free no obligation quotes</li>
+        <li>Tidy work, guaranteed for 12 months</li>
+      </ul>
+    </div>
+    <div class="scene" role="img" aria-label="Illustration of a sunny garden with a fence, flowers and a butterfly">
+      <span class="scene-tag">Your garden, soon</span>
+      <div class="sun"></div>
+      <div class="cloud c1"></div>
+      <div class="cloud c2"></div>
+      <div class="hill h1"></div>
+      <div class="hill h2"></div>
+      <div class="fence"></div>
+      <div class="flowerbed">
+        <div class="flower f1" style="left:12%"><i class="stem"></i><i class="head"></i></div>
+        <div class="flower f2" style="left:24%;animation-delay:-1.2s"><i class="stem"></i><i class="head"></i></div>
+        <div class="flower f3" style="left:58%;animation-delay:-.6s"><i class="stem"></i><i class="head"></i></div>
+        <div class="flower f4" style="left:71%;animation-delay:-2s"><i class="stem"></i><i class="head"></i></div>
+        <div class="flower f2" style="left:86%;animation-delay:-1.6s"><i class="stem"></i><i class="head"></i></div>
+      </div>
+      <div class="lawn"></div>
+      <div class="butterfly"><i></i><i></i></div>
+    </div>
+  </div>
+</header>
+
+<div class="grass"></div>
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track" data-marquee>
+    <div class="marquee-chunk">
+      <span>Patios &amp; paving</span>
+      <span>New lawns &amp; turfing</span>
+      <span>Fencing &amp; gates</span>
+      <span>Driveways</span>
+      <span>Decking</span>
+      <span>Planting &amp; borders</span>
+      <span>Garden walls</span>
+      <span>Full makeovers</span>
+    </div>
+  </div>
+</div>
+
+<section id="jobs">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">What we do</p>
+      <h2>Typical jobs, honest guide prices.</h2>
+      <p class="lede">Every garden is different, so these are starting points, not surprises. Your free quote is the real number, and it stays the real number.</p>
+    </div>
+    <div class="jobs-grid">
+      <article class="job reveal">
+        <div class="job-art art-patio"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="job-body">
+          <h3>Patios &amp; paving</h3>
+          <p>Indian sandstone, porcelain or block paving, laid on a proper sub base so it stays flat for decades.</p>
+          <span class="job-price">from £1,800</span>
+        </div>
+      </article>
+      <article class="job reveal">
+        <div class="job-art art-lawn"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="job-body">
+          <h3>New lawns &amp; turfing</h3>
+          <p>Old lawn out, ground levelled, fresh cultivated turf down. Green and usable in weeks.</p>
+          <span class="job-price">from £450</span>
+        </div>
+      </article>
+      <article class="job reveal">
+        <div class="job-art art-fence"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="job-body">
+          <h3>Fencing &amp; gates</h3>
+          <p>Closeboard, panel or decorative fencing with concreted posts that will not lean after the first storm.</p>
+          <span class="job-price">from £120 a panel</span>
+        </div>
+      </article>
+      <article class="job reveal">
+        <div class="job-art art-drive"></div>
+        <div class="job-body">
+          <h3>Driveways</h3>
+          <p>Block paving, resin or gravel driveways with proper drainage, built to take years of parking.</p>
+          <span class="job-price">from £3,500</span>
+        </div>
+      </article>
+      <article class="job reveal">
+        <div class="job-art art-deck"><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="job-body">
+          <h3>Decking</h3>
+          <p>Timber or composite decking on a solid frame, perfect for gardens with a slope to tame.</p>
+          <span class="job-price">from £1,500</span>
+        </div>
+      </article>
+      <article class="job reveal">
+        <div class="job-art art-bloom">
+          <div class="flower"><i class="stem"></i><i class="head"></i></div>
+          <div class="flower"><i class="stem"></i><i class="head"></i></div>
+          <div class="flower"><i class="stem"></i><i class="head"></i></div>
+        </div>
+        <div class="job-body">
+          <h3>Full garden makeovers</h3>
+          <p>The whole lot, designed and built as one job. One team, one plan, one very good garden.</p>
+          <span class="job-price">from £6,000</span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="dig">
+  <div class="wrap dig-grid">
+    <div class="section-head reveal" style="margin-bottom:0">
+      <p class="eyebrow">Under your garden</p>
+      <h2>Good landscaping is what you never see.</h2>
+      <p class="lede">Anyone can lay slabs on soil. They sink by Christmas. Here is what we actually build underneath, layer by layer. Tap a layer to see why it is there.</p>
+      <p class="dig-note">This is the difference between a garden that lasts one summer and one that lasts twenty.</p>
+    </div>
+    <div>
+      <div class="dig-tabs" role="tablist" aria-label="Choose a build type">
+        <button class="dig-tab" role="tab" aria-selected="true" data-panel="patio">A patio</button>
+        <button class="dig-tab" role="tab" aria-selected="false" data-panel="lawn">A lawn</button>
+        <button class="dig-tab" role="tab" aria-selected="false" data-panel="fence">A fence post</button>
+      </div>
+
+      <div class="dig-stack">
+        <div class="dig-panel on" data-panel="patio">
+          <button class="layer l-paving" aria-expanded="false">
+            <span class="layer-face"><span class="layer-name"><span class="d">1</span>Paving slabs</span><span class="layer-hint">tap</span></span>
+            <span class="layer-note"><p>The pretty bit. Sandstone, porcelain or block paving, cut and pointed neatly with even joints.</p></span>
+          </button>
+          <button class="layer l-mortar" aria-expanded="false">
+            <span class="layer-face"><span class="layer-name"><span class="d">2</span>Full mortar bed</span><span class="layer-hint">tap</span></span>
+            <span class="layer-note"><p>Every slab sits on a full bed of mortar, never dabs of it. Dabs are why other patios rock and crack.</p></span>
+          </button>
+          <button class="layer l-subbase" aria-expanded="false">
+            <span class="layer-face"><span class="layer-name"><span class="d">3</span>Compacted stone sub base</span><span class="layer-hint">tap</span></span>
+            <span class="layer-note"><p>100mm of crushed stone, compacted hard with a plate. This is what keeps your patio flat for twenty years.</p></span>
+          </button>
+          <button class="layer l-membrane" aria-expanded="false">
+            <span class="layer-face"><span class="layer-name"><span class="d">4</span>Weed membrane</span><span class="layer-hint">tap</span></span>
+            <span class="layer-note"><p>Stops weeds pushing up from below and keeps the stone layer clean and separate from the soil.</p></span>
+          </button>
+          <button class="layer l-soil" aria-expanded="false">
+            <span class="layer-face"><span class="layer-name"><span class="d">5</span>Excavated, level ground</span><span class="layer-hint">tap</span></span>
+            <span class="layer-note"><p>We dig down to firm ground and set the levels so rainwater runs gently away from your house, not into it.</p></span>
+          </button>
+        </div>
+
+        <div class="dig-panel" data-panel="lawn">
+          <button class="layer l-turf" aria-expanded="false">
+            <span class="layer-face"><span class="layer-name"><span class="d">1</span>Fresh cultivated turf</span><span class="layer-hint">tap</span></span>
+            <span class="layer-note"><p>Laid within a day of delivery, staggered like brickwork, and rolled so there are no gaps or lumps.</p></span>
+          </button>
+          <button class="layer l-rootzone" aria-expanded="false">
+            <span class="layer-face"><span class="layer-name"><span class="d">2</span>Screened topsoil root zone</span><span class="layer-hint">tap</span></span>
+            <span class="layer-note"><p>70mm of clean screened topsoil, raked dead level. Roots grow deep and the lawn stays green in dry spells.</p></span>
+          </button>
+          <button class="layer l-soil" aria-expanded="false">
+            <span class="layer-face"><span class="layer-name"><span class="d">3</span>Cultivated ground</span><span class="layer-hint">tap</span></span>
+            <span class="layer-note"><p>The old surface is stripped and the ground beneath broken up, so water drains instead of puddling.</p></span>
+          </button>
+        </div>
+
+        <div class="dig-panel" data-panel="fence">
+          <button class="layer l-post" aria-expanded="false">
+            <span class="layer-face"><span class="layer-name"><span class="d">1</span>Timber post, 600mm deep</span><span class="layer-hint">tap</span></span>
+            <span class="layer-note"><p>A quarter of the post lives underground. That is why our fences stand up straight in a Derbyshire winter.</p></span>
+          </button>
+          <button class="layer l-concrete" aria-expanded="false">
+            <span class="layer-face"><span class="layer-name"><span class="d">2</span>Concrete collar</span><span class="layer-hint">tap</span></span>
+            <span class="layer-note"><p>Postcrete set around the post, sloped at the top so rain runs off instead of pooling and rotting the timber.</p></span>
+          </button>
+          <button class="layer l-gravel" aria-expanded="false">
+            <span class="layer-face"><span class="layer-name"><span class="d">3</span>Gravel drainage base</span><span class="layer-hint">tap</span></span>
+            <span class="layer-note"><p>A bed of gravel under the post lets water drain away from the end grain, doubling the life of the fence.</p></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee marquee-soil" aria-hidden="true">
+  <div class="marquee-track" data-marquee>
+    <div class="marquee-chunk">
+      <span>Free quotes</span>
+      <span>Fully insured</span>
+      <span>12 month guarantee</span>
+      <span>Tidy work</span>
+      <span>Local team</span>
+      <span>Honest prices</span>
+    </div>
+  </div>
+</div>
+
+<section id="redo">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">Before &amp; after</p>
+      <h2>Slide it. Go on.</h2>
+      <p class="lede">A typical back garden makeover: tired lawn and leaning fence out, striped lawn, new closeboard fence, sandstone patio and planting in.</p>
+    </div>
+    <div class="ba reveal" id="ba">
+      <div class="ba-scene ba-after">
+        <div class="stripes"></div>
+        <div class="newfence"></div>
+        <div class="patio"></div>
+        <div class="shrub"></div>
+        <div class="shrub"></div>
+      </div>
+      <div class="ba-scene ba-before ba-clip" id="ba-clip">
+        <i class="weed"></i><i class="weed"></i><i class="weed"></i><i class="weed"></i><i class="weed"></i><i class="weed"></i>
+        <span class="patch"></span><span class="patch"></span>
+        <div class="oldfence"></div>
+      </div>
+      <div class="ba-handle" id="ba-handle"></div>
+      <span class="ba-label before">Before</span>
+      <span class="ba-label after">After</span>
+      <input type="range" min="0" max="100" value="50" step="0.1" id="ba-range" aria-label="Reveal the before and after garden comparison">
+    </div>
+    <p class="ba-help">Drag the handle to see the transformation.</p>
+  </div>
+</section>
+
+<section id="process">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">How it works</p>
+      <h2>Four steps to a garden you love.</h2>
+    </div>
+    <div class="steps">
+      <div class="step reveal"><span class="num">1</span><h3>We visit</h3><p>A free visit at a time that suits you. We measure up, listen, and talk through what is possible.</p></div>
+      <div class="step reveal"><span class="num">2</span><h3>You get a quote</h3><p>A clear written quote within 48 hours. No pressure, no follow up calls every day.</p></div>
+      <div class="step reveal"><span class="num">3</span><h3>We build it</h3><p>We turn up when we say we will, protect what stays, and keep the site tidy every single day.</p></div>
+      <div class="step reveal"><span class="num">4</span><h3>You enjoy it</h3><p>A full walkround together at the end, aftercare advice, and a 12 month guarantee on the work.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="reviews">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">Reviews</p>
+      <h2>Kind words from real gardens.</h2>
+    </div>
+    <div class="rev-grid">
+      <blockquote class="rev reveal">
+        <span class="stars" aria-label="5 out of 5 stars">★★★★★</span>
+        <p>The patio is perfect and they left the garden tidier than they found it. Cannot recommend them enough.</p>
+        <cite>Sandra · Chesterfield</cite>
+      </blockquote>
+      <blockquote class="rev reveal">
+        <span class="stars" aria-label="5 out of 5 stars">★★★★★</span>
+        <p>Quote was spot on, no surprises. New lawn and fencing done in four days and it looks brilliant.</p>
+        <cite>Dave &amp; Karen · Matlock</cite>
+      </blockquote>
+      <blockquote class="rev reveal">
+        <span class="stars" aria-label="5 out of 5 stars">★★★★★</span>
+        <p>They redesigned our whole back garden. Friendly lads, proper workmanship, and they really do love it.</p>
+        <cite>Priya · Belper</cite>
+      </blockquote>
+    </div>
+  </div>
+</section>
+
+<section id="quote">
+  <div class="wrap quote-grid">
+    <div class="quote-side reveal">
+      <p class="eyebrow">Free quote</p>
+      <h2>Tell us about your garden.</h2>
+      <p class="lede">Fill this in and we will be in touch within one working day to arrange a free visit. Prefer to talk to a human? So do we.</p>
+      <a class="btn btn-sun" href="tel:01246000000">Call 01246 000000</a>
+      <a class="btn" href="mailto:hello@ilovelandscaping.co.uk?subject=Free%20garden%20quote">Email us instead</a>
+    </div>
+    <form class="qform reveal" id="qform">
+      <div class="qrow">
+        <label>Your name<input type="text" name="name" placeholder="e.g. Sam Green" required></label>
+        <label>Postcode<input type="text" name="postcode" placeholder="e.g. S40" required></label>
+      </div>
+      <div class="qrow">
+        <label>Phone or email<input type="text" name="contact" placeholder="Best way to reach you" required></label>
+        <label>What needs doing?
+          <select name="job">
+            <option>Patio or paving</option>
+            <option>New lawn or turfing</option>
+            <option>Fencing or gates</option>
+            <option>Driveway</option>
+            <option>Decking</option>
+            <option>Full garden makeover</option>
+            <option>Something else</option>
+          </select>
+        </label>
+      </div>
+      <label>Tell us a little more<textarea name="detail" rows="4" placeholder="e.g. Back garden is about 8m by 6m, lawn is tired and the fence is leaning..."></textarea></label>
+      <button class="btn btn-heart" type="submit">Send my quote request</button>
+      <p class="qdone" id="qdone">Thank you! We will be in touch within one working day. This is a working demo form.</p>
+    </form>
+  </div>
+</section>
+
+<div class="grass" style="transform:scaleY(-1)"></div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-col">
+        <a class="logo" href="#top">I <span class="hrt">♥</span> Landscaping <span style="color:var(--leaf)">For You</span></a>
+        <span style="opacity:.7;max-width:26em">Gardens built with heart, from the first dig to the final sweep up.</span>
+      </div>
+      <div class="foot-col">
+        <span class="lab">Talk to us</span>
+        <a href="tel:01246000000">01246 000000</a>
+        <a href="mailto:hello@ilovelandscaping.co.uk">hello@ilovelandscaping.co.uk</a>
+      </div>
+      <div class="foot-col">
+        <span class="lab">Areas we cover</span>
+        <span>Chesterfield · Derby · Matlock</span>
+        <span>Belper · Alfreton · Bakewell</span>
+        <span>&amp; all around Derbyshire</span>
+      </div>
+      <div class="foot-col">
+        <span class="lab">Hours</span>
+        <span>Mon to Fri · 8:00 to 17:30</span>
+        <span>Sat · 9:00 to 13:00</span>
+      </div>
+    </div>
+    <div class="foot-base">
+      <span>© I Love Landscaping For You 2026 · Fully insured</span>
+      <span>Website by OOCO</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // Seamless marquees
+  document.querySelectorAll("[data-marquee]").forEach(function(track){
+    track.appendChild(track.firstElementChild.cloneNode(true));
+  });
+
+  // Dig-down tabs
+  var tabs = document.querySelectorAll(".dig-tab");
+  tabs.forEach(function(tab){
+    tab.addEventListener("click", function(){
+      tabs.forEach(function(t){ t.setAttribute("aria-selected", String(t === tab)); });
+      document.querySelectorAll(".dig-panel").forEach(function(p){
+        p.classList.toggle("on", p.dataset.panel === tab.dataset.panel);
+      });
+    });
+  });
+
+  // Expandable layers
+  document.querySelectorAll(".layer").forEach(function(layer){
+    layer.addEventListener("click", function(){
+      var open = layer.getAttribute("aria-expanded") === "true";
+      layer.setAttribute("aria-expanded", String(!open));
+      layer.querySelector(".layer-hint").textContent = open ? "tap" : "close";
+    });
+  });
+
+  // Before / after slider
+  var range = document.getElementById("ba-range");
+  var ba = document.getElementById("ba");
+  if (range && ba) {
+    range.addEventListener("input", function(){
+      ba.style.setProperty("--pos", range.value + "%");
+    });
+  }
+
+  // Demo quote form
+  var form = document.getElementById("qform");
+  if (form) {
+    form.addEventListener("submit", function(e){
+      e.preventDefault();
+      document.getElementById("qdone").style.display = "block";
+      form.querySelector("button").textContent = "Request sent ✓";
+    });
+  }
+
+  // Scroll reveal
+  if ("IntersectionObserver" in window && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+      });
+    }, { threshold: .12 });
+    document.querySelectorAll(".reveal").forEach(function(el){ io.observe(el); });
+  } else {
+    document.querySelectorAll(".reveal").forEach(function(el){ el.classList.add("in"); });
+  }
+})();
+</script>
+</body>
+</html>
