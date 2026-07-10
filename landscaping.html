@@ -441,6 +441,10 @@ nav{
   touch-action:none;
 }
 .ba-scene{position:absolute;inset:0}
+.ba-scene.ba-after{z-index:0}
+.ba-scene.ba-before{z-index:1}
+.ba-handle,.ba-label{z-index:2}
+.ba input[type=range]{z-index:3}
 /* before: tired garden */
 .ba-before{background:linear-gradient(180deg,#C9D8D5 0%,#D9DCC8 55%,#A9A26B 55%)}
 .ba-before .weed{position:absolute;bottom:0;width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-bottom:52px solid #5E6B3A}
@@ -1243,7 +1247,7 @@ footer{background:var(--pine-deep);color:var(--paper);padding:clamp(40px,6vw,64p
     <div class="section-head reveal">
       <p class="eyebrow">Before &amp; after</p>
       <h2>Slide it. Go on.</h2>
-      <p class="lede">A typical back garden makeover: tired lawn and leaning fence out, striped lawn, new closeboard fence, sandstone patio and planting in.</p>
+      <p class="lede">One side is a garden on planting day, tools still out. The other is what evenings look like when the work is done. Drag the handle between them.</p>
     </div>
     <div class="ba reveal" id="ba">
       <div class="ba-scene ba-after">
