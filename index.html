@@ -472,6 +472,79 @@ function nearestColourName(hex){
 }
 const SUBDEF={top:'tshirt',bottom:'trousers',dress:'dress',outerwear:'blazer',shoes:'flat',jewellery:'necklace'};
 const IMPNOUN={top:'top',bottom:'bottoms',dress:'dress',outerwear:'layer',shoes:'shoes',jewellery:'jewellery'};
+const SHOESUB={trainers:'trainer',flats:'flat',boots:'boot',heels:'heel',sandals:'heel'};
+
+/* ---------- The AI brain: Claude vision reads garment photos ---------- */
+const AI={
+  get key(){try{return localStorage.getItem('muse.apikey')||''}catch(e){return''}},
+  set key(v){try{v?localStorage.setItem('muse.apikey',v):localStorage.removeItem('muse.apikey')}catch(e){}},
+};
+const GARMENT_SCHEMA={
+  type:'object',
+  properties:{
+    name:{type:'string',description:'Short name a shopper would use, e.g. Cropped rib-knit tee, Wide-leg camel trousers'},
+    category:{type:'string',enum:['top','bottom','dress','outerwear','shoes','jewellery']},
+    colour:{type:'string',description:'Main colour or print, e.g. Sage, Black, Leopard print'},
+    neutral:{type:'boolean',description:'True if the colour pairs with almost anything (black, white, cream, grey, camel, navy, denim)'},
+    formality:{type:'integer',enum:[1,2,3,4,5],description:'1 very casual, 2 casual, 3 smart-casual, 4 dressy, 5 evening'},
+    fit:{type:'string',enum:['fitted','regular','relaxed','na'],description:'How the piece sits on the body; na for shoes and jewellery'},
+    cropped:{type:'boolean',description:'True only for tops that end at or above the natural waist'},
+    rise:{type:'string',enum:['high','mid','low','na'],description:'Waist rise for bottoms; na otherwise'},
+    shoe_type:{type:'string',enum:['trainers','flats','boots','heels','sandals','na']},
+    warmth:{type:'string',enum:['summer','all-season','winter'],description:'Fabric weight / season'},
+  },
+  required:['name','category','colour','neutral','formality','fit','cropped','rise','shoe_type','warmth'],
+  additionalProperties:false,
+};
+async function aiTagPhoto(dataUri){
+  const key=AI.key;
+  if(!key)return null;
+  const b64=dataUri.split(',')[1];
+  const res=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{
+      'content-type':'application/json',
+      'x-api-key':key,
+      'anthropic-version':'2023-06-01',
+      'anthropic-dangerous-direct-browser-access':'true',
+    },
+    body:JSON.stringify({
+      model:'claude-opus-4-8',
+      max_tokens:1024,
+      system:'You are a professional personal stylist cataloguing a client\'s wardrobe from photos. Judge each piece the way a stylist would: what it is, its true colour family, how dressy it reads (1 very casual to 5 evening), how it fits, and construction details that matter for outfit building. Use "na" for fields that do not apply to the piece.',
+      messages:[{role:'user',content:[
+        {type:'image',source:{type:'base64',media_type:'image/jpeg',data:b64}},
+        {type:'text',text:'Catalogue this piece for the wardrobe.'},
+      ]}],
+      output_config:{format:{type:'json_schema',schema:GARMENT_SCHEMA}},
+    }),
+  });
+  if(!res.ok){
+    let msg='API error '+res.status;
+    try{const e=await res.json();if(e&&e.error&&e.error.message)msg=e.error.message;}catch(err){}
+    if(res.status===401)msg='That API key was rejected. Check it in your profile.';
+    throw new Error(msg);
+  }
+  const data=await res.json();
+  if(data.stop_reason==='refusal')throw new Error('The model declined to read this photo.');
+  const text=(data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');
+  return JSON.parse(text);
+}
+// map the model's read onto our item fields
+function aiApply(t){
+  const cat=['top','bottom','dress','outerwear','shoes','jewellery'].includes(t.category)?t.category:'top';
+  const out={
+    cat,name:t.name,color:t.colour,neutral:!!t.neutral,
+    formality:clamp(Math.round(t.formality||3),1,5),
+    crop:!!t.cropped,
+    sub:cat==='shoes'?(SHOESUB[t.shoe_type]||'flat'):SUBDEF[cat],
+    tags:t.warmth==='summer'?['summer']:(t.warmth==='winter'?['winter']:[]),
+  };
+  if(t.fit&&t.fit!=='na')out.fit=t.fit;
+  if(t.rise&&t.rise!=='na')out.rise=t.rise;
+  if(t.shoe_type&&t.shoe_type!=='na')out.style=t.shoe_type;
+  return out;
+}
 
 /* ---------- Styling engine ---------- */
 function itemById(id){return store.wardrobe.find(x=>x.id===id);}
@@ -667,7 +740,7 @@ function gapsNote(){
 const clamp=(n,lo,hi)=>Math.max(lo,Math.min(hi,n));
 const CATORDER={dress:1,top:1,bottom:2,outerwear:3,shoes:4,jewellery:5};
 function itemWarmth(it){ // 'warm' heavy, 'cool' summer, 'mid'
-  if(['coat','knit','boot'].includes(it.sub)||it.cat==='outerwear') return 'warm';
+  if((it.tags||[]).includes('winter')||['coat','knit','boot'].includes(it.sub)||it.cat==='outerwear') return 'warm';
   if(it.sub==='shorts'||it.sub==='cami'||(it.tags||[]).includes('warm-weather')||(it.tags||[]).includes('summer')) return 'cool';
   return 'mid';
 }
@@ -960,6 +1033,7 @@ function wardrobeScreen(){
     <h1 style="margin:8px 0 4px">Wardrobe</h1>
     <p class="lede">${store.wardrobe.length} pieces styled and ready.</p></div>
     <button class="btn accent" id="toImport" style="margin:16px 0 2px">${UI.cam} Add photos of your clothes</button>
+    ${aiScanBlock()}
     ${misTagHint}
     <div class="section-gap" style="height:16px"></div>
     <div class="chiprow" id="wfilter">
@@ -972,13 +1046,22 @@ function wardrobeScreen(){
   `;
 }
 
+function aiScanBlock(){
+  const withPhotos=store.wardrobe.filter(it=>PHOTOS[it.id]).length;
+  if(state.aiScan&&state.aiScan.running){
+    return `<div class="note" style="margin:14px 0 2px">${UI.spark} The stylist is reading your wardrobe… <b>${state.aiScan.done} of ${state.aiScan.total}</b>. Keep this tab open.${state.aiScan.errors?` (${state.aiScan.errors} couldn't be read)`:''}</div>`;
+  }
+  if(!AI.key||!withPhotos)return'';
+  return `<button class="btn ghost" id="aiScanBtn" style="margin:10px 0 2px">${UI.spark} Let the AI read my wardrobe (${withPhotos} photos)</button>`;
+}
+
 function importScreen(){
   const cats=[['top','Tops'],['bottom','Bottoms'],['dress','Dresses'],['outerwear','Layers'],['shoes','Shoes'],['jewellery','Jewellery']];
   const cat=state.importCat||'top';
   if(state.importBusy){const pr=state.importProgress||{};
-    return `<div class="empty" style="padding-top:120px">Reading your photos…<br>
+    return `<div class="empty" style="padding-top:120px">${pr.ai?'The stylist is looking at each piece…':'Reading your photos…'}<br>
       <span class="serif" style="font-size:26px;color:var(--ink)">${pr.done||0} of ${pr.total||'…'}</span><br>
-      <span style="font-size:12px">sizing them down and reading the colours</span></div>`;}
+      <span style="font-size:12px">${pr.ai?'working out what it is, the fit and how dressy it reads':'sizing them down and reading the colours'}</span></div>`;}
   const q=state.importQueue||[];
   const errNote=state.importErrors&&state.importErrors.length
     ?`<div class="note" style="margin-top:14px">${UI.spark} ${state.importErrors.length} photo${state.importErrors.length>1?'s':''} couldn’t be read, likely HEIC in this browser. Open this page in Safari (or send those as JPEG) and they’ll come in fine.</div>`:'';
@@ -994,6 +1077,8 @@ function importScreen(){
         <div class="pwrap"><div class="tile"><img src="${it.photo}" alt=""><span class="swatch" style="background:${it.hex}"></span></div>
         <button class="rm" data-imp-rm="${i}" aria-label="Remove">✕</button></div>
         <input class="field" data-imp-name="${i}" value="${(it.name||'').replace(/"/g,'&quot;')}">
+        <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin-top:6px">
+          ${CAT_LABEL[it.cat]}${it.style?` · ${it.style}`:''}${it.fit?` · ${it.fit}`:''}${it.crop?' · cropped':''}${it.rise?` · ${it.rise} rise`:''}</div>
         <div class="chiprow" style="margin-top:7px">
           ${[[2,'Casual'],[3,'Smart'],[4,'Dressy']].map(([v,l])=>`<button class="chip" style="padding:5px 10px;font-size:11.5px" data-imp-form="${i}:${v}" aria-pressed="${it.formality===v}">${l}</button>`).join('')}
         </div>
@@ -1014,8 +1099,10 @@ function importScreen(){
     <button class="backlink" data-imp-back2>${UI.back} Wardrobe</button>
     <div class="eyebrow">Build your real wardrobe</div>
     <h1 style="margin:8px 0 6px">Add your photos.</h1>
-    <p class="lede">One category at a time is quickest: say what these are, then select all the matching photos in one go.</p>
-    <label class="lbl">These are…</label>
+    ${AI.key
+      ?`<p class="lede">The AI brain is on. Select all your photos in one go and it works out what each piece is, the fit, and how dressy it reads.</p>`
+      :`<p class="lede">One category at a time is quickest: say what these are, then select all the matching photos in one go.</p>`}
+    <label class="lbl">These are…${AI.key?' <span style="text-transform:none;letter-spacing:0">(only used if the AI can\'t tell)</span>':''}</label>
     <div class="chiprow">${cats.map(([k,l])=>`<button class="chip accent" data-imp-cat="${k}" aria-pressed="${cat===k}">${l}</button>`).join('')}</div>
     <div style="height:18px"></div>
     <label class="upload" for="impFiles">${UI.cam}<div style="margin-top:8px">Choose photos, as many as you like</div>
@@ -1124,6 +1211,15 @@ function profileScreen(){
       ${row('No-gos',(p.noGo||[]).length?p.noGo.join(' · '):'Not set')}
       ${row('Wardrobe',store.wardrobe.length+' pieces')}
     </div>
+    <div class="section-gap"></div>
+    <label class="lbl">AI stylist brain</label>
+    <p class="lede" style="font-size:13px;margin:2px 0 8px">Paste a Claude API key and the app can look at your photos itself: what each piece is, the fit, heels or flats, how dressy it reads. The key is saved only on this device and only ever talks to Anthropic.</p>
+    <input class="field" id="apiKey" type="password" placeholder="sk-ant-…" value="${AI.key?'••••••••••••':''}" autocomplete="off">
+    <div style="height:10px"></div>
+    <button class="btn ghost" id="saveKey">${AI.key?'Update key':'Save key'}</button>
+    ${AI.key?`<div style="height:10px"></div><button class="btn ghost" id="testKey">Test the connection</button>
+    <div style="height:10px"></div><button class="btn ghost" id="clearKey" style="color:var(--ink-faint)">Remove key</button>`:''}
+    <div id="keyStatus" style="font-size:13px;color:var(--ink-soft);text-align:center;margin-top:10px"></div>
     <div class="section-gap"></div>
     <button class="btn ghost" id="redo">Redo my setup</button>
     <div style="height:10px"></div>
@@ -1354,15 +1450,22 @@ function bindScreen(){
   if(impFiles)impFiles.onchange=async e=>{
     const files=[...e.target.files]; if(!files.length)return;
     const cat=state.importCat||'top';
-    state.importBusy=true;state.importProgress={done:0,total:files.length};render();
+    const useAI=!!AI.key;
+    state.importBusy=true;state.importProgress={done:0,total:files.length,ai:useAI};render();
     const out=[],errs=[];
     for(const f of files){
       const r=await fileToTile(f);
-      if(r.error){errs.push(r.error);}
-      else{
-        const colour=nearestColourName(r.hex);
-        out.push({photo:r.photo,hex:r.hex,cat,formality:3,name:`${colour} ${IMPNOUN[cat]}`});
+      if(r.error){errs.push(r.error);state.importProgress.done++;render();continue;}
+      let item={photo:r.photo,hex:r.hex,cat,formality:3,name:`${nearestColourName(r.hex)} ${IMPNOUN[cat]}`};
+      if(useAI){
+        try{
+          const t=await aiTagPhoto(r.photo);
+          if(t)item={...item,...aiApply(t)};
+        }catch(err){
+          errs.push(`${f.name}: ${err.message}`);
+        }
       }
+      out.push(item);
       state.importProgress.done++;render();
     }
     state.importQueue=out;state.importErrors=errs;state.importBusy=false;render();
@@ -1382,9 +1485,11 @@ function bindScreen(){
     const w=store.wardrobe;
     state.importQueue.forEach((it,i)=>{
       const id='u'+Date.now().toString(36)+i;
-      const sub=it.cat==='shoes'&&it.style?({trainers:'trainer',flats:'flat',boots:'boot',heels:'heel',sandals:'heel'}[it.style]):SUBDEF[it.cat];
+      const sub=it.cat==='shoes'&&it.style?(SHOESUB[it.style]||'flat'):(it.sub||SUBDEF[it.cat]);
       w.push({id,name:it.name.trim()||`${nearestColourName(it.hex)} ${IMPNOUN[it.cat]}`,cat:it.cat,sub,
-        hex:it.hex,color:nearestColourName(it.hex),neutral:isNeutral(it.hex),formality:it.formality,tags:[],
+        hex:it.hex,color:it.color||nearestColourName(it.hex),
+        neutral:it.neutral!==undefined?it.neutral:isNeutral(it.hex),
+        formality:it.formality,tags:it.tags||[],
         style:it.style,fit:it.fit,crop:!!it.crop,rise:it.rise});
       PHOTOS[id]=it.photo;idb.put(id,it.photo);
     });
@@ -1418,6 +1523,57 @@ function bindScreen(){
     state.draft=null;state.screen='wardrobe';state.wardrobeFilter='all';render();};
   const addDiscard=document.getElementById('addDiscard');
   if(addDiscard)addDiscard.onclick=()=>{state.draft=null;render();};
+
+  // AI brain: key management + wardrobe backfill
+  const setKeyStatus=t=>{const s=document.getElementById('keyStatus');if(s)s.textContent=t;};
+  const saveKey=document.getElementById('saveKey');
+  if(saveKey)saveKey.onclick=()=>{
+    const inp=document.getElementById('apiKey');
+    const v=(inp?inp.value:'').trim();
+    if(!v||/^•+$/.test(v)){setKeyStatus('Paste your key first (it starts sk-ant-).');return;}
+    if(!v.startsWith('sk-ant-')){setKeyStatus('That doesn\'t look like a Claude API key. It starts sk-ant-.');return;}
+    AI.key=v;render();
+  };
+  const clearKey=document.getElementById('clearKey');
+  if(clearKey)clearKey.onclick=()=>{if(confirm('Remove the API key from this device?')){AI.key='';render();}};
+  const testKey=document.getElementById('testKey');
+  if(testKey)testKey.onclick=async()=>{
+    setKeyStatus('Testing…');
+    try{
+      const res=await fetch('https://api.anthropic.com/v1/messages',{
+        method:'POST',
+        headers:{'content-type':'application/json','x-api-key':AI.key,
+          'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+        body:JSON.stringify({model:'claude-opus-4-8',max_tokens:1,messages:[{role:'user',content:'hi'}]}),
+      });
+      if(res.ok)setKeyStatus('Connected. The brain is on.');
+      else{const e=await res.json().catch(()=>({}));setKeyStatus(res.status===401?'Key rejected. Double-check it.':(e?.error?.message||('Error '+res.status)));}
+    }catch(err){setKeyStatus('Couldn\'t reach Anthropic. Check your connection.');}
+  };
+  const aiScanBtn=document.getElementById('aiScanBtn');
+  if(aiScanBtn)aiScanBtn.onclick=async()=>{
+    const targets=store.wardrobe.filter(it=>PHOTOS[it.id]);
+    if(!targets.length)return;
+    if(!confirm(`The AI will look at ${targets.length} photos and retag each piece (category, name, fit, dressiness). Costs a small amount on your API key. Go ahead?`))return;
+    state.aiScan={running:true,done:0,total:targets.length,errors:0};render();
+    for(const it of targets){
+      try{
+        const t=await aiTagPhoto(PHOTOS[it.id]);
+        if(t){
+          const w=store.wardrobe;const live=w.find(x=>x.id===it.id);
+          if(live)Object.assign(live,aiApply(t));
+          store.wardrobe=w;
+        }
+      }catch(err){
+        state.aiScan.errors++;
+        if(/rejected|401/.test(err.message)){state.aiScan.running=false;render();alert(err.message);return;}
+      }
+      state.aiScan.done++;
+      if(state.screen==='wardrobe')keepScroll(render);
+    }
+    state.aiScan.running=false;render();
+    alert(`Done. ${state.aiScan.done-state.aiScan.errors} pieces retagged${state.aiScan.errors?`, ${state.aiScan.errors} couldn't be read`:''}.`);
+  };
 
   // profile: backup & restore (wardrobe + profile + all photos)
   const backup=document.getElementById('backup');
