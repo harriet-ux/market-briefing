@@ -79,22 +79,30 @@
     width:100%;
     max-width:440px;
     margin:0 auto;
-    min-height:100dvh;
+    height:100vh;
+    height:100dvh; /* the app always scrolls itself — the outer page (e.g. the artifact viewer) may not scroll at all */
+    overflow:hidden;
     background:var(--surface);
     display:flex;
     flex-direction:column;
   }
+  #app{display:flex;flex-direction:column;flex:1;min-height:0;overflow-y:auto}
   @media (min-width:520px){
     body{padding:26px 0}
-    .phone{min-height:auto;height:calc(100dvh - 52px);border-radius:34px;box-shadow:var(--shadow);overflow:hidden;border:1px solid var(--hair)}
+    .phone{height:calc(100vh - 52px);height:calc(100dvh - 52px);border-radius:34px;box-shadow:var(--shadow);border:1px solid var(--hair)}
   }
   .screen{
     flex:1;
+    min-height:0;
     overflow-y:auto;
     -webkit-overflow-scrolling:touch;
     padding:0 22px 120px;
   }
   .screen::-webkit-scrollbar{width:0}
+  .stickybar{position:sticky;bottom:calc(74px + env(safe-area-inset-bottom));z-index:5;
+    padding:18px 0 10px;margin-top:4px;
+    background:linear-gradient(to top,var(--surface) 82%,transparent)}
+  .stickybar .btn{box-shadow:0 12px 30px -12px rgba(45,38,30,.5)}
 
   /* ---------- Typography ---------- */
   .eyebrow{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-faint);font-weight:600}
@@ -842,7 +850,10 @@ function wardrobeScreen(){
 function importScreen(){
   const cats=[['top','Tops'],['bottom','Bottoms'],['dress','Dresses'],['outerwear','Layers'],['shoes','Shoes'],['jewellery','Jewellery']];
   const cat=state.importCat||'top';
-  if(state.importBusy) return `<div class="empty" style="padding-top:120px">Reading your photos…<br><span style="font-size:12px">a moment — sizing them down</span></div>`;
+  if(state.importBusy){const pr=state.importProgress||{};
+    return `<div class="empty" style="padding-top:120px">Reading your photos…<br>
+      <span class="serif" style="font-size:26px;color:var(--ink)">${pr.done||0} of ${pr.total||'…'}</span><br>
+      <span style="font-size:12px">sizing them down and reading the colours</span></div>`;}
   const q=state.importQueue||[];
   const errNote=state.importErrors&&state.importErrors.length
     ?`<div class="note" style="margin-top:14px">${UI.spark} ${state.importErrors.length} photo${state.importErrors.length>1?'s':''} couldn’t be read — likely HEIC in this browser. Open this page in Safari (or send those as JPEG) and they’ll come in fine.</div>`:'';
@@ -863,8 +874,7 @@ function importScreen(){
         </div>
       </div>`).join('')}
     </div>
-    <div class="section-gap"></div>
-    <button class="btn accent" id="impCommit">${UI.check} Add ${q.length} to my wardrobe</button>`;
+    <div class="stickybar"><button class="btn accent" id="impCommit">${UI.check} Add ${q.length} to my wardrobe</button></div>`;
   return `
     <button class="backlink" data-imp-back2>${UI.back} Wardrobe</button>
     <div class="eyebrow">Build your real wardrobe</div>
@@ -1077,13 +1087,16 @@ function bindScreen(){
   if(impFiles)impFiles.onchange=async e=>{
     const files=[...e.target.files]; if(!files.length)return;
     const cat=state.importCat||'top';
-    state.importBusy=true;render();
+    state.importBusy=true;state.importProgress={done:0,total:files.length};render();
     const out=[],errs=[];
     for(const f of files){
       const r=await fileToTile(f);
-      if(r.error){errs.push(r.error);continue;}
-      const colour=nearestColourName(r.hex);
-      out.push({photo:r.photo,hex:r.hex,cat,formality:3,name:`${colour} ${IMPNOUN[cat]}`});
+      if(r.error){errs.push(r.error);}
+      else{
+        const colour=nearestColourName(r.hex);
+        out.push({photo:r.photo,hex:r.hex,cat,formality:3,name:`${colour} ${IMPNOUN[cat]}`});
+      }
+      state.importProgress.done++;render();
     }
     state.importQueue=out;state.importErrors=errs;state.importBusy=false;render();
     document.getElementById('screen')?.scrollTo(0,0);
