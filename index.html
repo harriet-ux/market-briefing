@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#EDE9E3" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-<title>Muse — styled from what you own</title>
+<title>Muse. Styled from what you own.</title>
 <style>
   /* ---------- Tokens ---------- */
   :root{
@@ -80,7 +80,7 @@
     max-width:440px;
     margin:0 auto;
     height:100vh;
-    height:100dvh; /* the app always scrolls itself — the outer page (e.g. the artifact viewer) may not scroll at all */
+    height:100dvh; /* the app always scrolls itself; the outer page (e.g. the artifact viewer) may not scroll at all */
     overflow:hidden;
     background:var(--surface);
     display:flex;
@@ -228,6 +228,10 @@
     background:var(--ink);color:var(--surface);border:none;font-size:12px;line-height:1;
     display:grid;place-items:center;box-shadow:0 4px 10px -4px rgba(0,0,0,.45)}
   .impcard .field{padding:9px 11px;font-size:13px;margin-top:8px}
+  .tipline{display:flex;gap:7px;align-items:flex-start;margin-top:10px;padding-top:10px;
+    border-top:1px solid color-mix(in srgb,var(--hair) 65%,transparent);
+    font-size:12.5px;line-height:1.5;color:var(--ink-soft)}
+  .tipline svg{width:14px;height:14px;flex:0 0 auto;color:var(--accent);margin-top:2px}
   .daycta{width:100%;margin-top:18px;display:flex;align-items:center;justify-content:space-between;gap:14px;
     text-align:left;border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);border-radius:var(--radius);
     padding:17px 18px;background:linear-gradient(120% 120% at 100% 0%,var(--accent-wash),var(--surface));transition:.16s}
@@ -270,7 +274,7 @@
 
 <script>
 /* ============================================================
-   Muse — personal styling prototype
+   Muse, personal styling prototype
    All client-side. Wardrobe + profile persist in localStorage.
    The styling engine here is rule-based so the whole flow works
    with zero setup; it's structured so a Claude vision+reasoning
@@ -397,7 +401,7 @@ const store={
 let state={screen:'morning',anchor:null,occasion:'everyday',draft:null,
   plan:{temp:2,rain:false,activity:'errands',feel:'comfortable',duration:'day',effort:'auto',note:'',result:null}};
 
-/* ---------- Photo store (IndexedDB — photos are too big for localStorage) ---------- */
+/* ---------- Photo store (IndexedDB; photos are too big for localStorage) ---------- */
 let PHOTOS={};
 const idb={
   db:null,
@@ -553,7 +557,7 @@ function rationale(anchor,parts,level,occ){
   const other=anchor.cat==='top'?bottom:(anchor.cat==='bottom'?top:null);
   const anchorN=anchor.name.toLowerCase();
   const lead={
-    1:`Your <b>${anchorN}</b>${other?` with the ${other.name.toLowerCase()}`:''} — barely trying, still considered.`,
+    1:`Your <b>${anchorN}</b>${other?` with the ${other.name.toLowerCase()}`:''}. Barely trying, still considered.`,
     2:`The <b>${anchorN}</b>${other?` and ${other.name.toLowerCase()}`:''} kept easy${shoes?`, grounded by ${shoes.name.toLowerCase()}`:''}.`,
     3:`A polished read on your <b>${anchorN}</b>${other?`, balanced with ${other.name.toLowerCase()}`:''}.`,
     4:`Your <b>${anchorN}</b> dialled all the way up${other?` over ${other.name.toLowerCase()}`:''}.`,
@@ -563,7 +567,7 @@ function rationale(anchor,parts,level,occ){
   if(shoes&&level>=3) bits.push(`${shoes.name.toLowerCase()} lift the line`);
   if(jewel.length){
     const m=metalOf(jewel[0]),warm=/warm/i.test(prof.undertone||''),cool=/cool/i.test(prof.undertone||'');
-    const tone=(m==='gold'&&warm)?` — gold for your warm undertone`:(m==='silver'&&cool)?` — silver for your cool undertone`:'';
+    const tone=(m==='gold'&&warm)?`, gold for your warm undertone`:(m==='silver'&&cool)?`, silver for your cool undertone`:'';
     bits.push(`${jewel.map(j=>j.name.toLowerCase()).join(' and ')} finish it${tone}`);
   }
   const allNeutral=parts.every(p=>p.neutral);
@@ -583,6 +587,48 @@ function stylistPicks(item){
   const pool=store.wardrobe.filter(x=> targets.includes(x.cat));
   return pool.map(c=>({c,score:colourScore(c,item)*0.6 + (1-Math.abs(c.formality-item.formality)/4)*0.4}))
     .sort((a,b)=>b.score-a.score).filter(x=>x.score>0.5).slice(0,4).map(x=>x.c);
+}
+
+/* ---------- Stylist's notes: real styling technique, midsize-friendly, body-neutral ---------- */
+function wardrobeGaps(){
+  const w=store.wardrobe;const has=c=>w.some(i=>i.cat===c);
+  const gaps=[];
+  if(!has('top')&&!has('dress'))gaps.push('tops');
+  if(!has('bottom')&&!has('dress'))gaps.push('bottoms');
+  if(!has('shoes'))gaps.push('shoes');
+  return gaps;
+}
+function stylistTips(parts,level){
+  const p=store.profile||{};
+  const dress=parts.find(x=>x.cat==='dress'),top=parts.find(x=>x.cat==='top'),
+        bottom=parts.find(x=>x.cat==='bottom'),layer=parts.find(x=>x.cat==='outerwear'),
+        shoes=parts.find(x=>x.cat==='shoes');
+  const tips=[];
+  if(top&&bottom)tips.push('Front-tuck the top. It breaks the 50/50 split and sets the one-third to two-thirds line stylists love.');
+  if(top&&bottom)tips.push('High-rise bottoms plus a tuck is the fastest leg-lengthening move you own.');
+  if(top&&bottom&&nearestColourName(top.hex)===nearestColourName(bottom.hex))tips.push('A one-colour column reads tall and expensive. Match the shoes to the bottoms and it runs to the floor.');
+  if(dress)tips.push('Belt the dress at your natural waist to give the whole line a clear shape.');
+  if(dress)tips.push('Anything wrap-shaped fits the exact waist that standard sizing gets wrong, which is why it never misses.');
+  if(dress||(top&&bottom))tips.push('End hems at narrow points: tops at the hip bone, midis just below the widest part of the calf.');
+  if(layer)tips.push('Wear the layer open. The unbroken vertical line lengthens your whole frame.');
+  if(layer&&level>=3)tips.push('The third piece is what makes it look styled: layer, belt or statement jewellery, pick one.');
+  if(shoes&&level>=3)tips.push('A pointed or low-cut shoe extends the leg line, especially with a midi length.');
+  if(!layer&&(top&&bottom)&&level>=2)tips.push('If it feels unfinished, add a third piece: a layer, a belt, or one bold accessory.');
+  const shape=(p.bodyShape||'').toLowerCase();
+  if(shape.startsWith('hour'))tips.push('Keep the waist visible somewhere. It is the line your shape is built around.');
+  if(shape.startsWith('pear'))tips.push('Keep the interest up top: neckline, earrings, the brighter colour above the waist.');
+  if(shape.startsWith('apple'))tips.push('Open necklines and fabric that falls rather than clings will always serve you.');
+  if(shape.startsWith('rect'))tips.push('Create the waist: knot the top, add a belt, or reach for anything wrap-shaped.');
+  if(shape.startsWith('inverted'))tips.push('Soft shoulders, volume kept low. It balances a strong shoulder line beautifully.');
+  tips.push('Fit the largest part and tailor the rest. Fit beats the number on the label, every time.');
+  tips.push('One fitted piece with one relaxed piece is the balance that flatters everyone.');
+  return tips[(level+parts.length)%tips.length]||'';
+}
+const tipHtml=t=>t?`<div class="tipline">${UI.spark}<span>${t}</span></div>`:'';
+function gapsNote(){
+  const gaps=wardrobeGaps();
+  if(!gaps.length)return'';
+  return `<div class="note" style="margin-bottom:14px">${UI.spark} Your wardrobe has no ${gaps.join(' or ')} tagged yet, so I can't build a complete outfit. If pieces went in under the wrong category, open Wardrobe, tap Edit, then tap any piece to fix it.</div>`;
 }
 
 /* ---------- "Plan my day" engine ---------- */
@@ -678,7 +724,7 @@ function tileHtml(item,mini){
   return `<div class="tile" style="${tint}">${inner}</div>`;
 }
 function pieceCard(item,inert){
-  // NB: inert must be exactly true — pieceCard is used directly in .map(), where the 2nd arg is the index
+  // NB: inert must be exactly true; pieceCard is used directly in .map(), where the 2nd arg is the index
   return `<button class="piece" ${inert===true?'':`data-anchor="${item.id}"`}>
     ${tileHtml(item)}
     <div class="card-label"><div class="nm">${item.name}</div><div class="ct">${CAT_LABEL[item.cat]}</div></div>
@@ -713,6 +759,7 @@ function screenBody(){
   if(state.screen==='morning') return state.anchor?lookScreen():morningScreen();
   if(state.screen==='plan') return planScreen();
   if(state.screen==='import') return importScreen();
+  if(state.screen==='edititem') return editItemScreen();
   if(state.screen==='wardrobe') return wardrobeScreen();
   if(state.screen==='add') return addScreen();
   if(state.screen==='profile') return profileScreen();
@@ -729,13 +776,13 @@ function morningScreen(){
     <div style="padding-top:8px">
       <div class="eyebrow">${day}</div>
       <h1 style="margin:10px 0 6px">${hello}${p.name?`, ${p.name}`:''}.</h1>
-      <p class="lede">Pick a piece to build around — I’ll style it four ways, from effortless to glam.</p>
+      <p class="lede">Pick a piece to build around and I’ll style it four ways, from effortless to glam.</p>
     </div>
     ${p.bodyShape?`<div class="pill" style="margin-top:16px">${UI.spark} Styled for your ${p.bodyShape.toLowerCase()} shape${p.lifestyle?` · a ${p.lifestyle.toLowerCase()} week`:''}</div>`:''}
     <button class="daycta" id="toPlan">
       <div class="daycta-txt"><div class="eyebrow" style="color:var(--accent)">No idea what to wear?</div>
         <div class="daycta-h">Plan my day</div>
-        <div class="daycta-s">Tell me your day — I’ll style the whole outfit.</div></div>
+        <div class="daycta-s">Tell me your day and I’ll style the whole outfit.</div></div>
       <span class="daycta-arrow">${UI.back}</span>
     </button>
     <div class="section-gap" style="height:22px"></div>
@@ -754,7 +801,7 @@ function planScreen(){
     <button class="backlink" data-plan-back>${UI.back} Back</button>
     <div class="eyebrow">Your stylist</div>
     <h1 style="margin:8px 0 6px">Tell me about your day.</h1>
-    <p class="lede">A few taps — I’ll build the whole outfit from your wardrobe.</p>
+    <p class="lede">A few taps and I’ll build the whole outfit from your wardrobe.</p>
     <div class="section-gap" style="height:20px"></div>
 
     <label class="lbl">Weather</label>
@@ -773,7 +820,7 @@ function planScreen(){
     <label class="lbl">Effort this morning</label>
     ${seg('effort',EFFORTS,pl.effort,'key','label',true)}
 
-    <label class="lbl">Anything specific? <span style="text-transform:none;letter-spacing:0;color:var(--ink-faint)">— optional</span></label>
+    <label class="lbl">Anything specific? <span style="text-transform:none;letter-spacing:0;color:var(--ink-faint)">(optional)</span></label>
     <input class="field" id="planNote" placeholder="e.g. wear my white boots" value="${pl.note||''}">
 
     <div class="section-gap"></div>
@@ -789,7 +836,8 @@ function planResult(){
     <h1 style="margin:8px 0 4px">Here’s what I’d wear.</h1>
     <div class="pill" style="margin:10px 0 4px">${TEMPS[r.ctx.temp]}${r.ctx.rain?' · rain':''} · ${r.act.label} · feeling ${r.feel.label.toLowerCase()}</div>
     <div class="section-gap" style="height:18px"></div>
-    ${outfitBlock('The look',EFFORT[clamp(r.level-1,0,3)].name,r.primary,planRationale(r,r.primary),primaryTint,true)}
+    ${gapsNote()}
+    ${outfitBlock('The look',EFFORT[clamp(r.level-1,0,3)].name,r.primary,planRationale(r,r.primary),primaryTint,true,stylistTips(r.primary,r.level))}
     <div class="eyebrow" style="margin:22px 0 12px">Two other ways</div>
     ${outfitBlock('Dial it down','Easier',r.down,altLine(r.down,r.primary,'A softer, comfier version.'),`var(--e1)`,false)}
     ${outfitBlock('Dial it up','Dressier',r.up,altLine(r.up,r.primary,'Turned up a notch.'),`var(--e4)`,false)}
@@ -799,13 +847,14 @@ function planResult(){
     <button class="btn ghost" id="planTweak2">Change my day</button>
   `;
 }
-function outfitBlock(title,tag,parts,line,tint,big){
+function outfitBlock(title,tag,parts,line,tint,big,tip){
   return `<div class="outfit" style="--otint:${tint}">
     <div class="outfit-head">
       <div><div class="effort-name" style="${big?'font-size:22px':''}">${title}</div><div class="effort-sub">${tag}</div></div>
     </div>
     <div class="pieces" style="${big?'gap:10px':''}">${parts.map(p=>tileHtml(p,true)).join('')}</div>
     <p class="rationale">${line}</p>
+    ${tipHtml(tip)}
   </div>`;
 }
 function altLine(parts,primary,fallback){
@@ -814,7 +863,7 @@ function altLine(parts,primary,fallback){
     const d=diff.slice(0,2).map(p=>p.name.toLowerCase()).join(' and ');
     return `Swap in <b>${d}</b>. <span style="color:var(--ink-faint)">${fallback}</span>`;
   }
-  return `<span style="color:var(--ink-faint)">Much like the main look — add more pieces to your wardrobe for wider range.</span>`;
+  return `<span style="color:var(--ink-faint)">Much like the main look. Add more pieces to your wardrobe for wider range.</span>`;
 }
 
 function lookScreen(){
@@ -833,6 +882,7 @@ function lookScreen(){
       ${OCCASIONS.map(o=>`<button class="chip accent" data-occ="${o.key}" aria-pressed="${state.occasion===o.key}">${o.label}</button>`).join('')}
     </div>
     <div class="section-gap"></div>
+    ${gapsNote()}
     ${looks.map(lookCard).join('')}
     <div class="note" style="margin-top:6px">${UI.spark} These are built only from pieces you own. Add more to your wardrobe and the looks get richer.</div>
   `;
@@ -846,6 +896,7 @@ function lookCard(look){
     </div>
     <div class="pieces">${look.parts.map(p=>tileHtml(p,true)).join('')}</div>
     <p class="rationale">${look.rationale}</p>
+    ${tipHtml(stylistTips(look.parts,look.level))}
   </div>`;
 }
 
@@ -856,13 +907,19 @@ function wardrobeScreen(){
   const items=active==='all'?store.wardrobe:byCat(active);
   const samples=store.wardrobe.filter(isSample).length;
   const card=it=>state.wEdit
-    ?`<div class="pwrap">${pieceCard(it,true)}<button class="rm" data-rm="${it.id}" aria-label="Remove ${it.name}">✕</button></div>`
+    ?`<div class="pwrap"><button class="piece" data-edit="${it.id}">${tileHtml(it)}
+        <div class="card-label"><div class="nm">${it.name}</div><div class="ct">${CAT_LABEL[it.cat]}</div></div></button>
+      <button class="rm" data-rm="${it.id}" aria-label="Remove ${it.name}">✕</button></div>`
     :pieceCard(it);
+  const tops=store.wardrobe.filter(i=>i.cat==='top').length;
+  const misTagHint=(store.wardrobe.length>=10&&tops/store.wardrobe.length>0.75)
+    ?`<div class="note" style="margin:14px 0 2px">${UI.spark} Almost everything here is tagged as a top. If that's not right, tap Edit, then tap any piece to change its category. Full outfits need bottoms and shoes too.</div>`:'';
   return `
     <div style="padding-top:8px"><div class="eyebrow">Your collection</div>
     <h1 style="margin:8px 0 4px">Wardrobe</h1>
     <p class="lede">${store.wardrobe.length} pieces styled and ready.</p></div>
     <button class="btn accent" id="toImport" style="margin:16px 0 2px">${UI.cam} Add photos of your clothes</button>
+    ${misTagHint}
     <div class="section-gap" style="height:16px"></div>
     <div class="chiprow" id="wfilter">
       ${cats.map(c=>`<button class="chip" data-filter="${c}" aria-pressed="${active===c}">${c==='all'?'All':CAT_LABEL[c]+'s'}</button>`).join('')}
@@ -883,7 +940,7 @@ function importScreen(){
       <span style="font-size:12px">sizing them down and reading the colours</span></div>`;}
   const q=state.importQueue||[];
   const errNote=state.importErrors&&state.importErrors.length
-    ?`<div class="note" style="margin-top:14px">${UI.spark} ${state.importErrors.length} photo${state.importErrors.length>1?'s':''} couldn’t be read — likely HEIC in this browser. Open this page in Safari (or send those as JPEG) and they’ll come in fine.</div>`:'';
+    ?`<div class="note" style="margin-top:14px">${UI.spark} ${state.importErrors.length} photo${state.importErrors.length>1?'s':''} couldn’t be read, likely HEIC in this browser. Open this page in Safari (or send those as JPEG) and they’ll come in fine.</div>`:'';
   if(q.length) return `
     <button class="backlink" data-imp-back>${UI.back} Choose different photos</button>
     <div class="eyebrow">Check my read</div>
@@ -906,15 +963,38 @@ function importScreen(){
     <button class="backlink" data-imp-back2>${UI.back} Wardrobe</button>
     <div class="eyebrow">Build your real wardrobe</div>
     <h1 style="margin:8px 0 6px">Add your photos.</h1>
-    <p class="lede">One category at a time is quickest — say what these are, then select all the matching photos in one go.</p>
+    <p class="lede">One category at a time is quickest: say what these are, then select all the matching photos in one go.</p>
     <label class="lbl">These are…</label>
     <div class="chiprow">${cats.map(([k,l])=>`<button class="chip accent" data-imp-cat="${k}" aria-pressed="${cat===k}">${l}</button>`).join('')}</div>
     <div style="height:18px"></div>
-    <label class="upload" for="impFiles">${UI.cam}<div style="margin-top:8px">Choose photos — as many as you like</div>
+    <label class="upload" for="impFiles">${UI.cam}<div style="margin-top:8px">Choose photos, as many as you like</div>
       <div style="font-size:11px;color:var(--ink-faint);margin-top:3px">they stay on this device, sized down to keep things quick</div></label>
     <input id="impFiles" type="file" accept="image/*" multiple hidden>
     ${errNote}
-    <div class="note" style="margin-top:14px">${UI.spark} Import on the device you’ll use each morning — your wardrobe lives in this browser.</div>`;
+    <div class="note" style="margin-top:14px">${UI.spark} Import on the device you’ll use each morning. Your wardrobe lives in this browser.</div>`;
+}
+
+function editItemScreen(){
+  const it=itemById(state.editItem);
+  if(!it){state.screen='wardrobe';return wardrobeScreen();}
+  const cats=[['top','Top'],['bottom','Bottom'],['dress','Dress'],['outerwear','Layer'],['shoes','Shoes'],['jewellery','Jewellery']];
+  const forms=[[1,'Very casual'],[2,'Casual'],[3,'Smart'],[4,'Dressy'],[5,'Evening']];
+  return `
+    <button class="backlink" data-edit-back>${UI.back} Wardrobe</button>
+    <div class="eyebrow">Edit piece</div>
+    <h1 style="margin:8px 0 6px">${it.name}</h1>
+    <div style="width:110px;margin:14px 0">${tileHtml(it)}</div>
+    <label class="lbl">Name</label>
+    <input class="field" id="eName" value="${(it.name||'').replace(/"/g,'&quot;')}">
+    <label class="lbl">What is it?</label>
+    <div class="chiprow" style="flex-wrap:wrap">${cats.map(([k,l])=>`<button class="chip accent" data-ecat="${k}" aria-pressed="${it.cat===k}">${l}</button>`).join('')}</div>
+    <label class="lbl">How dressy?</label>
+    <div class="chiprow" style="flex-wrap:wrap">${forms.map(([v,l])=>`<button class="chip" data-eform="${v}" aria-pressed="${it.formality===v}">${l}</button>`).join('')}</div>
+    <div class="section-gap"></div>
+    <button class="btn accent" id="eSave">${UI.check} Save changes</button>
+    <div style="height:10px"></div>
+    <button class="btn ghost" id="eRemove" style="color:var(--ink-faint)">Remove from wardrobe</button>
+  `;
 }
 
 function addScreen(){
@@ -923,13 +1003,13 @@ function addScreen(){
     const matches=stylistPicks(d.item);
     return `
       <div style="padding-top:8px"><div class="eyebrow">Fitting room</div>
-      <h1 style="margin:8px 0 6px">${matches.length?'Yes — it fits right in.':'A little bit of an orphan.'}</h1></div>
+      <h1 style="margin:8px 0 6px">${matches.length?'Yes, it fits right in.':'A little bit of an orphan.'}</h1></div>
       <div style="display:flex;gap:14px;align-items:center;margin:14px 0">
         <div style="width:80px;flex:0 0 80px">${tileHtml(d.item)}</div>
         <div><div style="font-weight:600">${d.item.name}</div>
         <div class="ct" style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);margin-top:3px">${CAT_LABEL[d.item.cat]} · ${d.item.color}</div></div>
       </div>
-      <p class="lede">${matches.length?`Pairs beautifully with <b style="color:var(--ink)">${matches.length}</b> piece${matches.length>1?'s':''} you already own:`:'Nothing in your wardrobe pairs cleanly with it yet — worth a think before you buy.'}</p>
+      <p class="lede">${matches.length?`Pairs beautifully with <b style="color:var(--ink)">${matches.length}</b> piece${matches.length>1?'s':''} you already own:`:'Nothing in your wardrobe pairs cleanly with it yet. Worth a think before you buy.'}</p>
       ${matches.length?`<div class="grid" style="margin-top:14px">${matches.map(pieceCard).join('')}</div>`:''}
       <div class="section-gap"></div>
       <button class="btn accent" id="addConfirm">${UI.check} Add to my collection</button>
@@ -944,10 +1024,10 @@ function addScreen(){
   return `
     <div style="padding-top:8px"><div class="eyebrow">Try before you buy</div>
     <h1 style="margin:8px 0 6px">Does it go?</h1>
-    <p class="lede">Snap something new — or add a piece by hand — and see what it works with before it joins your wardrobe.</p></div>
+    <p class="lede">Snap something new, or add a piece by hand, and see what it works with before it joins your wardrobe.</p></div>
     <div class="section-gap" style="height:20px"></div>
     <label class="upload" for="photo">${UI.cam}<div style="margin-top:8px">Take or choose a photo</div>
-      <div style="font-size:11px;color:var(--ink-faint);margin-top:3px">optional — we’ll show it on the piece</div></label>
+      <div style="font-size:11px;color:var(--ink-faint);margin-top:3px">optional. We’ll show it on the piece</div></label>
     <input id="photo" type="file" accept="image/*" capture="environment" hidden>
     <div id="photoPrev"></div>
     <label class="lbl">What is it?</label>
@@ -972,15 +1052,15 @@ function profileScreen(){
     <div class="section-gap" style="height:16px"></div>
     ${p.selfCount?`<div class="thumbs" style="margin-bottom:16px">${Array.from({length:p.selfCount},(_,i)=>PHOTOS['self'+i]?`<img src="${PHOTOS['self'+i]}" alt="">`:'').join('')}</div>`:''}
     <div style="display:flex;flex-direction:column;gap:1px;background:var(--hair);border-radius:14px;overflow:hidden;border:1px solid var(--hair)">
-      ${row('Body shape',p.bodyShape||'—')}
-      ${row('Height',p.heightScale||'—')}
-      ${row('Undertone',p.undertone||'—')}
-      ${row('Contrast',p.contrast||'—')}
-      ${row('Typical week',p.lifestyle||'—')}
-      ${row('Style words',(p.archetypes||[]).length?p.archetypes.join(' · '):'—')}
-      ${row('Loves',(p.loved||[]).length?p.loved.map(h=>nearestColourName(h)).join(', '):'—')}
-      ${row('Never',(p.hated||[]).length?p.hated.map(h=>nearestColourName(h)).join(', '):'—')}
-      ${row('No-gos',(p.noGo||[]).length?p.noGo.join(' · '):'—')}
+      ${row('Body shape',p.bodyShape||'Not set')}
+      ${row('Height',p.heightScale||'Not set')}
+      ${row('Undertone',p.undertone||'Not set')}
+      ${row('Contrast',p.contrast||'Not set')}
+      ${row('Typical week',p.lifestyle||'Not set')}
+      ${row('Style words',(p.archetypes||[]).length?p.archetypes.join(' · '):'Not set')}
+      ${row('Loves',(p.loved||[]).length?p.loved.map(h=>nearestColourName(h)).join(', '):'Not set')}
+      ${row('Never',(p.hated||[]).length?p.hated.map(h=>nearestColourName(h)).join(', '):'Not set')}
+      ${row('No-gos',(p.noGo||[]).length?p.noGo.join(' · '):'Not set')}
       ${row('Wardrobe',store.wardrobe.length+' pieces')}
     </div>
     <div class="section-gap"></div>
@@ -998,7 +1078,7 @@ function profileScreen(){
 }
 const row=(k,v)=>`<div style="display:flex;justify-content:space-between;padding:15px 16px;background:var(--surface)"><span style="color:var(--ink-soft);font-size:14px">${k}</span><span style="font-weight:500;font-size:14px">${v}</span></div>`;
 
-/* ---------- Onboarding — the stylist's intake ---------- */
+/* ---------- Onboarding: the stylist's intake ---------- */
 const TONES=[['#211E1C','Black'],['#F1EFE9','White'],['#C7B9A1','Beige'],['#B08A5B','Camel'],['#8E9A7C','Sage'],['#6E6A4B','Olive'],['#5D6B82','Denim'],['#33405C','Navy'],['#9C6B74','Rosewood'],['#B3392F','Red'],['#D8A7B1','Pink'],['#C6A16A','Gold']];
 const ARCHETYPES=['Classic','Minimal','Romantic','Edgy','Boho','Tailored','Sporty','Glam'];
 const NOGOS=['No heels','No bare arms','Nothing above the knee','Nothing clingy','No low necklines'];
@@ -1017,17 +1097,17 @@ function onbStep(){
     <div style="flex:1"></div>
     <div class="wordmark" style="font-size:15px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft)">Muse<span class="dot" style="color:var(--accent)">.</span></div>
     <h1 style="font-size:44px;line-height:1.02">Get dressed<br>from what you<br>already own.</h1>
-    <p class="lede" style="font-size:16px;max-width:30ch">A few minutes now and every look is styled to your body, your colouring and your taste — like a stylist who knows you.</p>
+    <p class="lede" style="font-size:16px;max-width:30ch">A few minutes now and every look is styled to your body, your colouring and your taste, like a stylist who knows you.</p>
     <div style="flex:1"></div>
     <button class="btn accent" id="obNext">Begin</button>
-    <button class="btn ghost" id="obSkip" style="border:none">Skip — just show me the app</button>
+    <button class="btn ghost" id="obSkip" style="border:none">Skip, just show me the app</button>
   </div>`;
   if(onb.step===1) return `<div class="cover fade" style="${stepTop}">
     ${dots(0)}<div class="eyebrow">You</div>
     <h1 style="font-size:30px">What shall I call you?</h1>
     <input class="field" id="obName" placeholder="Your name" value="${onb.name}">
     <label class="lbl">Your body shape</label>
-    <p class="lede" style="font-size:13px;margin:0 0 4px">A tool for emphasis, never a rule — there’s no wrong answer.</p>
+    <p class="lede" style="font-size:13px;margin:0 0 4px">A tool for emphasis, never a rule. There’s no wrong answer.</p>
     <div class="selectgrid">
       ${[['Hourglass','Bust & hips balanced, defined waist'],['Pear','Hips wider than shoulders'],['Apple','Fuller middle, great legs'],['Rectangle','Fairly even all the way down'],['Inverted triangle','Shoulders wider than hips'],['Not sure','I’ll help you work it out']].map(([s,d])=>
         `<button class="opt" data-shape="${s}" aria-pressed="${onb.bodyShape===s}"><div class="t">${s}</div><div class="d">${d}</div></button>`).join('')}
@@ -1049,7 +1129,7 @@ function onbStep(){
     <label class="lbl">Your contrast</label>
     <p class="lede" style="font-size:13px;margin:0 0 4px">How different is your hair from your skin?</p>
     <div class="selectgrid">
-      ${[['High','Hair much darker (or lighter) than skin'],['Medium','A clear step, not dramatic'],['Low','Hair and skin close in depth — soft, blended']].map(([s,d])=>
+      ${[['High','Hair much darker (or lighter) than skin'],['Medium','A clear step, not dramatic'],['Low','Hair and skin close in depth, soft and blended']].map(([s,d])=>
         `<button class="opt" data-contrast="${s}" aria-pressed="${onb.contrast===s}"><div class="t">${s}</div><div class="d">${d}</div></button>`).join('')}
     </div>
     <div style="flex:1;min-height:20px"></div>
@@ -1062,20 +1142,20 @@ function onbStep(){
       ${[['Mostly casual','Home, errands, family'],['Office days','Desk, meetings'],['On my feet','Active, always moving'],['Nights & events','Out a lot']].map(([t,d])=>
         `<button class="opt" data-life="${t}" aria-pressed="${onb.lifestyle===t}"><div class="t">${t}</div><div class="d">${d}</div></button>`).join('')}
     </div>
-    <label class="lbl">Your style words <span style="text-transform:none;letter-spacing:0">— pick any</span></label>
+    <label class="lbl">Your style words <span style="text-transform:none;letter-spacing:0">(pick any)</span></label>
     <div class="chiprow" style="flex-wrap:wrap">${ARCHETYPES.map(a=>`<button class="chip accent" data-arch="${a}" aria-pressed="${onb.archetypes.includes(a)}">${a}</button>`).join('')}</div>
-    <label class="lbl">Never suggest <span style="text-transform:none;letter-spacing:0">— optional</span></label>
+    <label class="lbl">Never suggest <span style="text-transform:none;letter-spacing:0">(optional)</span></label>
     <div class="chiprow" style="flex-wrap:wrap">${NOGOS.map(g=>`<button class="chip" data-nogo="${g}" aria-pressed="${onb.noGo.includes(g)}">${g}</button>`).join('')}</div>
     <div style="flex:1;min-height:20px"></div>
     <button class="btn accent" id="ob3Next">Continue</button>
   </div>`;
   if(onb.step===4) return `<div class="cover fade" style="${stepTop}">
     ${dots(3)}<div class="eyebrow">Your palette</div>
-    <h1 style="font-size:30px">Colours you love —<br>and colours you don’t.</h1>
+    <h1 style="font-size:30px">Colours you love,<br>and colours you don’t.</h1>
     <label class="lbl">Love wearing</label>
     ${swRow('love',onb.loved)}
     <label class="lbl">Never dress me in</label>
-    <p class="lede" style="font-size:13px;margin:0 0 4px">These are a hard no — I’ll never build a look around them.</p>
+    <p class="lede" style="font-size:13px;margin:0 0 4px">These are a hard no. I’ll never build a look around them.</p>
     ${swRow('hate',onb.hated)}
     <div style="flex:1;min-height:20px"></div>
     <button class="btn accent" id="ob4Next">Continue</button>
@@ -1083,17 +1163,17 @@ function onbStep(){
   if(onb.step===5) return `<div class="cover fade" style="${stepTop}">
     ${dots(4)}<div class="eyebrow">Your style DNA</div>
     <h1 style="font-size:30px">Show me you.</h1>
-    <p class="lede" style="font-size:14px">Photos of yourself help the styling fit <i>you</i> — and Pinterest screenshots teach it your taste. Both stay on this device.</p>
-    <label class="upload" for="selfPhotos" style="margin-top:6px">${UI.cam}<div style="margin-top:8px">Photos of me — face & full-length</div>
+    <p class="lede" style="font-size:14px">Photos of yourself help the styling fit <i>you</i>, and Pinterest screenshots teach it your taste. Both stay on this device.</p>
+    <label class="upload" for="selfPhotos" style="margin-top:6px">${UI.cam}<div style="margin-top:8px">Photos of me: face and full-length</div>
       <div style="font-size:11px;color:var(--ink-faint);margin-top:3px">saved to your profile${onb.selfCount?` · ${onb.selfCount} added`:''}</div></label>
     <input id="selfPhotos" type="file" accept="image/*" multiple hidden>
     <div class="thumbs" id="selfThumbs"></div>
-    <label class="upload" for="inspo" style="margin-top:12px">${UI.spark}<div style="margin-top:8px">Inspiration — Pinterest screenshots, outfits you loved</div>
+    <label class="upload" for="inspo" style="margin-top:12px">${UI.spark}<div style="margin-top:8px">Inspiration: Pinterest screenshots, outfits you loved</div>
       <div style="font-size:11px;color:var(--ink-faint);margin-top:3px">${onb.inspo?`${onb.inspo} added`:'optional'}</div></label>
     <input id="inspo" type="file" accept="image/*" multiple hidden>
     <div class="thumbs" id="inspoThumbs"></div>
     <div style="flex:1;min-height:24px"></div>
-    <button class="btn accent" id="obDone">${UI.check} Done — dress me</button>
+    <button class="btn accent" id="obDone">${UI.check} Done, dress me</button>
   </div>`;
 }
 function bindOnboarding(){
@@ -1181,6 +1261,21 @@ function bindScreen(){
   document.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{
     const id=b.dataset.rm;store.wardrobe=store.wardrobe.filter(it=>it.id!==id);
     delete PHOTOS[id];idb.del(id);render();});
+
+  // item editor
+  document.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>{state.editItem=b.dataset.edit;state.screen='edititem';render();document.getElementById('screen')?.scrollTo(0,0);});
+  const eBack=document.querySelector('[data-edit-back]'); if(eBack)eBack.onclick=()=>{state.screen='wardrobe';render();};
+  const applyEdit=(mut)=>{
+    const w=store.wardrobe;const it=w.find(x=>x.id===state.editItem);if(!it)return;
+    const nameEl=document.getElementById('eName');if(nameEl)it.name=nameEl.value.trim()||it.name;
+    mut&&mut(it);store.wardrobe=w;};
+  document.querySelectorAll('[data-ecat]').forEach(b=>b.onclick=()=>{applyEdit(it=>{it.cat=b.dataset.ecat;it.sub=SUBDEF[it.cat];});keepScroll(render);});
+  document.querySelectorAll('[data-eform]').forEach(b=>b.onclick=()=>{applyEdit(it=>{it.formality=+b.dataset.eform;});keepScroll(render);});
+  const eSave=document.getElementById('eSave'); if(eSave)eSave.onclick=()=>{applyEdit();state.screen='wardrobe';render();};
+  const eRemove=document.getElementById('eRemove'); if(eRemove)eRemove.onclick=()=>{
+    if(!confirm('Remove this piece from your wardrobe?'))return;
+    const id=state.editItem;store.wardrobe=store.wardrobe.filter(x=>x.id!==id);
+    delete PHOTOS[id];idb.del(id);state.screen='wardrobe';render();};
   const toImport=document.getElementById('toImport'); if(toImport)toImport.onclick=()=>{state.screen='import';state.importQueue=null;state.importErrors=null;render();};
   document.querySelectorAll('[data-imp-cat]').forEach(b=>b.onclick=()=>{state.importCat=b.dataset.impCat;render();});
   const impBack=document.querySelector('[data-imp-back]'); if(impBack)impBack.onclick=()=>{state.importQueue=null;render();};
@@ -1247,7 +1342,7 @@ function bindScreen(){
   const addDiscard=document.getElementById('addDiscard');
   if(addDiscard)addDiscard.onclick=()=>{state.draft=null;render();};
 
-  // profile — backup & restore (wardrobe + profile + all photos)
+  // profile: backup & restore (wardrobe + profile + all photos)
   const backup=document.getElementById('backup');
   if(backup)backup.onclick=()=>{
     const data={app:'muse',v:1,when:new Date().toISOString(),
@@ -1274,7 +1369,7 @@ function bindScreen(){
         PHOTOS=d.photos||{};
         Object.entries(PHOTOS).forEach(([k,v])=>idb.put(k,v));
         state.screen='wardrobe';state.wardrobeFilter='all';render();
-      }catch(err){alert('That file doesn’t look like a Muse backup — nothing was changed.');}
+      }catch(err){alert('That file doesn’t look like a Muse backup. Nothing was changed.');}
     };
     r.readAsText(f);
   };
