@@ -215,6 +215,11 @@
   .note{background:var(--accent-wash);border:1px solid color-mix(in srgb,var(--accent) 24%,transparent);border-radius:14px;padding:13px 15px;font-size:13px;line-height:1.5;color:var(--ink);display:flex;gap:10px;align-items:flex-start}
   .note svg,.pill svg{width:16px;height:16px;flex:0 0 auto;color:var(--accent)}
   .empty{text-align:center;color:var(--ink-faint);padding:44px 20px;font-size:14px}
+  .pwrap{position:relative}
+  .rm{position:absolute;top:6px;right:6px;z-index:2;width:26px;height:26px;border-radius:50%;
+    background:var(--ink);color:var(--surface);border:none;font-size:12px;line-height:1;
+    display:grid;place-items:center;box-shadow:0 4px 10px -4px rgba(0,0,0,.45)}
+  .impcard .field{padding:9px 11px;font-size:13px;margin-top:8px}
   .daycta{width:100%;margin-top:18px;display:flex;align-items:center;justify-content:space-between;gap:14px;
     text-align:left;border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);border-radius:var(--radius);
     padding:17px 18px;background:linear-gradient(120% 120% at 100% 0%,var(--accent-wash),var(--surface));transition:.16s}
@@ -383,6 +388,78 @@ const store={
 };
 let state={screen:'morning',anchor:null,occasion:'everyday',draft:null,
   plan:{temp:2,rain:false,activity:'errands',feel:'comfortable',duration:'day',effort:'auto',note:'',result:null}};
+
+/* ---------- Photo store (IndexedDB — photos are too big for localStorage) ---------- */
+let PHOTOS={};
+const idb={
+  db:null,
+  open(){return new Promise(res=>{try{
+    const r=indexedDB.open('muse',1);
+    r.onupgradeneeded=()=>r.result.createObjectStore('photos');
+    r.onsuccess=()=>{idb.db=r.result;res();};
+    r.onerror=()=>res();
+  }catch(e){res();}});},
+  put(k,v){try{if(!idb.db)return;idb.db.transaction('photos','readwrite').objectStore('photos').put(v,k);}catch(e){}},
+  del(k){try{if(!idb.db)return;idb.db.transaction('photos','readwrite').objectStore('photos').delete(k);}catch(e){}},
+  all(){return new Promise(res=>{try{
+    if(!idb.db)return res({});
+    const o={},c=idb.db.transaction('photos').objectStore('photos').openCursor();
+    c.onsuccess=e=>{const cur=e.target.result;if(cur){o[cur.key]=cur.value;cur.continue();}else res(o);};
+    c.onerror=()=>res({});
+  }catch(e){res({});}});},
+};
+
+/* Read an image file -> small JPEG data-URI + dominant garment colour */
+function fileToTile(file){
+  return new Promise(resolve=>{
+    const url=URL.createObjectURL(file);
+    const img=new Image();
+    img.onload=()=>{
+      try{
+        const m=600,sc=Math.min(1,m/Math.max(img.width,img.height));
+        const c=document.createElement('canvas');
+        c.width=Math.max(1,Math.round(img.width*sc));c.height=Math.max(1,Math.round(img.height*sc));
+        const x=c.getContext('2d');x.drawImage(img,0,0,c.width,c.height);
+        // sample the central region; skip near-white pixels (flat-lay background)
+        const rw=Math.max(1,Math.round(c.width*.44)),rh=Math.max(1,Math.round(c.height*.44));
+        const d=x.getImageData(Math.round(c.width*.28),Math.round(c.height*.28),rw,rh).data;
+        let r=0,g=0,b=0,n=0,ar=0,ag=0,ab=0,an=0;
+        for(let i=0;i<d.length;i+=16){
+          const R=d[i],G=d[i+1],B=d[i+2];
+          ar+=R;ag+=G;ab+=B;an++;
+          if(R>235&&G>235&&B>235)continue; // background
+          r+=R;g+=G;b+=B;n++;
+        }
+        if(!n){r=ar;g=ag;b=ab;n=an;}
+        const hex='#'+[r,g,b].map(v=>Math.round(v/n).toString(16).padStart(2,'0')).join('');
+        URL.revokeObjectURL(url);
+        resolve({photo:c.toDataURL('image/jpeg',0.78),hex});
+      }catch(e){URL.revokeObjectURL(url);resolve({error:file.name});}
+    };
+    img.onerror=()=>{URL.revokeObjectURL(url);resolve({error:file.name});};
+    img.src=url;
+  });
+}
+function nearestColourName(hex){
+  const r=parseInt(hex.slice(1,3),16)/255,g=parseInt(hex.slice(3,5),16)/255,b=parseInt(hex.slice(5,7),16)/255;
+  const mx=Math.max(r,g,b),mn=Math.min(r,g,b),l=(mx+mn)/2,d=mx-mn;
+  const s=d?d/(1-Math.abs(2*l-1)):0;
+  let h=0;if(d){if(mx===r)h=((g-b)/d)%6;else if(mx===g)h=(b-r)/d+2;else h=(r-g)/d+4;h=(h*60+360)%360;}
+  if(l<0.13)return'Black';
+  if(l>0.92&&s<0.18)return'White';
+  if(l>0.8&&s<0.3&&h>=20&&h<=90)return'Cream';
+  if(s<0.11)return l<0.3?'Charcoal':l>0.75?'Off-white':'Grey';
+  if(h<15||h>=345)return l>0.65?'Pink':'Red';
+  if(h<45)return l<0.35?'Brown':(s<0.55?'Camel':'Orange');
+  if(h<70)return'Yellow';
+  if(h<160)return s<0.35?'Sage':'Green';
+  if(h<200)return'Teal';
+  if(h<250)return l<0.35?'Navy':'Blue';
+  if(h<290)return'Purple';
+  return'Pink';
+}
+const SUBDEF={top:'tshirt',bottom:'trousers',dress:'dress',outerwear:'blazer',shoes:'flat',jewellery:'necklace'};
+const IMPNOUN={top:'top',bottom:'bottoms',dress:'dress',outerwear:'layer',shoes:'shoes',jewellery:'jewellery'};
 
 /* ---------- Styling engine ---------- */
 function itemById(id){return store.wardrobe.find(x=>x.id===id);}
@@ -559,13 +636,15 @@ function planRationale(r,parts){
 /* ---------- Render helpers ---------- */
 const el=(h)=>{const t=document.createElement('template');t.innerHTML=h.trim();return t.content.firstChild;};
 function tileHtml(item,mini){
+  const ph=PHOTOS[item.id]||item.photo;
   const tint=`--tile:color-mix(in srgb, ${item.hex} 16%, var(--surface)); --tile-ink:${item.hex}`;
-  const inner=item.photo?`<img src="${item.photo}" alt="${item.name}">`:garmentSvg(item.sub)+`<span class="swatch" style="background:${item.hex}"></span>`;
-  if(mini) return `<div class="mini" style="${tint}">${item.photo?`<img src="${item.photo}" alt="">`:garmentSvg(item.sub)}</div>`;
+  const inner=ph?`<img src="${ph}" alt="${item.name}">`:garmentSvg(item.sub)+`<span class="swatch" style="background:${item.hex}"></span>`;
+  if(mini) return `<div class="mini" style="${tint}">${ph?`<img src="${ph}" alt="">`:garmentSvg(item.sub)}</div>`;
   return `<div class="tile" style="${tint}">${inner}</div>`;
 }
-function pieceCard(item){
-  return `<button class="piece" data-anchor="${item.id}">
+function pieceCard(item,inert){
+  // NB: inert must be exactly true — pieceCard is used directly in .map(), where the 2nd arg is the index
+  return `<button class="piece" ${inert===true?'':`data-anchor="${item.id}"`}>
     ${tileHtml(item)}
     <div class="card-label"><div class="nm">${item.name}</div><div class="ct">${CAT_LABEL[item.cat]}</div></div>
   </button>`;
@@ -598,6 +677,7 @@ function nav(){
 function screenBody(){
   if(state.screen==='morning') return state.anchor?lookScreen():morningScreen();
   if(state.screen==='plan') return planScreen();
+  if(state.screen==='import') return importScreen();
   if(state.screen==='wardrobe') return wardrobeScreen();
   if(state.screen==='add') return addScreen();
   if(state.screen==='profile') return profileScreen();
@@ -734,21 +814,70 @@ function lookCard(look){
   </div>`;
 }
 
+const isSample=it=>/^[tbdosj]\d+$/.test(it.id);
 function wardrobeScreen(){
   const cats=['all','top','bottom','dress','outerwear','shoes','jewellery'];
   const active=state.wardrobeFilter||'all';
   const items=active==='all'?store.wardrobe:byCat(active);
+  const samples=store.wardrobe.filter(isSample).length;
+  const card=it=>state.wEdit
+    ?`<div class="pwrap">${pieceCard(it,true)}<button class="rm" data-rm="${it.id}" aria-label="Remove ${it.name}">✕</button></div>`
+    :pieceCard(it);
   return `
     <div style="padding-top:8px"><div class="eyebrow">Your collection</div>
     <h1 style="margin:8px 0 4px">Wardrobe</h1>
     <p class="lede">${store.wardrobe.length} pieces styled and ready.</p></div>
-    <div class="section-gap" style="height:18px"></div>
+    <button class="btn accent" id="toImport" style="margin:16px 0 2px">${UI.cam} Add photos of your clothes</button>
+    <div class="section-gap" style="height:16px"></div>
     <div class="chiprow" id="wfilter">
       ${cats.map(c=>`<button class="chip" data-filter="${c}" aria-pressed="${active===c}">${c==='all'?'All':CAT_LABEL[c]+'s'}</button>`).join('')}
+      <button class="chip" id="wEditToggle" aria-pressed="${!!state.wEdit}">Edit</button>
+      ${state.wEdit&&samples?`<button class="chip" id="wDropSamples">Remove ${samples} sample pieces</button>`:''}
     </div>
     <div class="section-gap" style="height:18px"></div>
-    ${items.length?`<div class="grid">${items.map(pieceCard).join('')}</div>`:`<div class="empty">Nothing here yet.</div>`}
+    ${items.length?`<div class="grid">${items.map(card).join('')}</div>`:`<div class="empty">Nothing here yet.</div>`}
   `;
+}
+
+function importScreen(){
+  const cats=[['top','Tops'],['bottom','Bottoms'],['dress','Dresses'],['outerwear','Layers'],['shoes','Shoes'],['jewellery','Jewellery']];
+  const cat=state.importCat||'top';
+  if(state.importBusy) return `<div class="empty" style="padding-top:120px">Reading your photos…<br><span style="font-size:12px">a moment — sizing them down</span></div>`;
+  const q=state.importQueue||[];
+  const errNote=state.importErrors&&state.importErrors.length
+    ?`<div class="note" style="margin-top:14px">${UI.spark} ${state.importErrors.length} photo${state.importErrors.length>1?'s':''} couldn’t be read — likely HEIC in this browser. Open this page in Safari (or send those as JPEG) and they’ll come in fine.</div>`:'';
+  if(q.length) return `
+    <button class="backlink" data-imp-back>${UI.back} Choose different photos</button>
+    <div class="eyebrow">Check my read</div>
+    <h1 style="margin:8px 0 6px">${q.length} ${q.length>1?'pieces':'piece'} ready.</h1>
+    <p class="lede">I’ve pulled a colour from each photo and named them. Fix anything that’s off, then add the lot.</p>
+    ${errNote}
+    <div class="section-gap" style="height:18px"></div>
+    <div class="grid two">
+      ${q.map((it,i)=>`<div class="impcard">
+        <div class="pwrap"><div class="tile"><img src="${it.photo}" alt=""><span class="swatch" style="background:${it.hex}"></span></div>
+        <button class="rm" data-imp-rm="${i}" aria-label="Remove">✕</button></div>
+        <input class="field" data-imp-name="${i}" value="${(it.name||'').replace(/"/g,'&quot;')}">
+        <div class="chiprow" style="margin-top:7px">
+          ${[[2,'Casual'],[3,'Smart'],[4,'Dressy']].map(([v,l])=>`<button class="chip" style="padding:5px 10px;font-size:11.5px" data-imp-form="${i}:${v}" aria-pressed="${it.formality===v}">${l}</button>`).join('')}
+        </div>
+      </div>`).join('')}
+    </div>
+    <div class="section-gap"></div>
+    <button class="btn accent" id="impCommit">${UI.check} Add ${q.length} to my wardrobe</button>`;
+  return `
+    <button class="backlink" data-imp-back2>${UI.back} Wardrobe</button>
+    <div class="eyebrow">Build your real wardrobe</div>
+    <h1 style="margin:8px 0 6px">Add your photos.</h1>
+    <p class="lede">One category at a time is quickest — say what these are, then select all the matching photos in one go.</p>
+    <label class="lbl">These are…</label>
+    <div class="chiprow">${cats.map(([k,l])=>`<button class="chip accent" data-imp-cat="${k}" aria-pressed="${cat===k}">${l}</button>`).join('')}</div>
+    <div style="height:18px"></div>
+    <label class="upload" for="impFiles">${UI.cam}<div style="margin-top:8px">Choose photos — as many as you like</div>
+      <div style="font-size:11px;color:var(--ink-faint);margin-top:3px">they stay on this device, sized down to keep things quick</div></label>
+    <input id="impFiles" type="file" accept="image/*" multiple hidden>
+    ${errNote}
+    <div class="note" style="margin-top:14px">${UI.spark} Import on the device you’ll use each morning — your wardrobe lives in this browser.</div>`;
 }
 
 function addScreen(){
@@ -932,6 +1061,51 @@ function bindScreen(){
   const pTweak2=document.getElementById('planTweak2'); if(pTweak2)pTweak2.onclick=()=>{state.plan.result=null;render();};
   document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>{state.wardrobeFilter=b.dataset.filter;render();});
 
+  // wardrobe edit + photo import
+  const wEdit=document.getElementById('wEditToggle'); if(wEdit)wEdit.onclick=()=>{state.wEdit=!state.wEdit;render();};
+  const wDrop=document.getElementById('wDropSamples'); if(wDrop)wDrop.onclick=()=>{
+    if(!confirm('Remove the built-in sample pieces and keep only your own?'))return;
+    store.wardrobe=store.wardrobe.filter(it=>!isSample(it));render();};
+  document.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{
+    const id=b.dataset.rm;store.wardrobe=store.wardrobe.filter(it=>it.id!==id);
+    delete PHOTOS[id];idb.del(id);render();});
+  const toImport=document.getElementById('toImport'); if(toImport)toImport.onclick=()=>{state.screen='import';state.importQueue=null;state.importErrors=null;render();};
+  document.querySelectorAll('[data-imp-cat]').forEach(b=>b.onclick=()=>{state.importCat=b.dataset.impCat;render();});
+  const impBack=document.querySelector('[data-imp-back]'); if(impBack)impBack.onclick=()=>{state.importQueue=null;render();};
+  const impBack2=document.querySelector('[data-imp-back2]'); if(impBack2)impBack2.onclick=()=>{state.screen='wardrobe';render();};
+  const impFiles=document.getElementById('impFiles');
+  if(impFiles)impFiles.onchange=async e=>{
+    const files=[...e.target.files]; if(!files.length)return;
+    const cat=state.importCat||'top';
+    state.importBusy=true;render();
+    const out=[],errs=[];
+    for(const f of files){
+      const r=await fileToTile(f);
+      if(r.error){errs.push(r.error);continue;}
+      const colour=nearestColourName(r.hex);
+      out.push({photo:r.photo,hex:r.hex,cat,formality:3,name:`${colour} ${IMPNOUN[cat]}`});
+    }
+    state.importQueue=out;state.importErrors=errs;state.importBusy=false;render();
+    document.getElementById('screen')?.scrollTo(0,0);
+  };
+  document.querySelectorAll('[data-imp-name]').forEach(inp=>inp.oninput=e=>{state.importQueue[+inp.dataset.impName].name=e.target.value;});
+  document.querySelectorAll('[data-imp-form]').forEach(b=>b.onclick=()=>{
+    const[i,v]=b.dataset.impForm.split(':');state.importQueue[+i].formality=+v;keepScroll(render);});
+  document.querySelectorAll('[data-imp-rm]').forEach(b=>b.onclick=()=>{state.importQueue.splice(+b.dataset.impRm,1);keepScroll(render);});
+  const impCommit=document.getElementById('impCommit');
+  if(impCommit)impCommit.onclick=()=>{
+    const w=store.wardrobe;
+    state.importQueue.forEach((it,i)=>{
+      const id='u'+Date.now().toString(36)+i;
+      w.push({id,name:it.name.trim()||`${nearestColourName(it.hex)} ${IMPNOUN[it.cat]}`,cat:it.cat,sub:SUBDEF[it.cat],
+        hex:it.hex,color:nearestColourName(it.hex),neutral:isNeutral(it.hex),formality:it.formality,tags:[]});
+      PHOTOS[id]=it.photo;idb.put(id,it.photo);
+    });
+    store.wardrobe=w;
+    state.importQueue=null;state.importErrors=null;state.screen='wardrobe';state.wardrobeFilter='all';state.wEdit=false;
+    render();document.getElementById('screen')?.scrollTo(0,0);
+  };
+
   // add flow
   document.querySelectorAll('[data-dcat]').forEach(b=>b.onclick=()=>{state.draft={...(state.draft||{}),cat:b.dataset.dcat};render();});
   document.querySelectorAll('[data-dhex]').forEach(b=>b.onclick=()=>{state.draft={...(state.draft||{}),hex:b.dataset.dhex};render();});
@@ -951,14 +1125,18 @@ function bindScreen(){
     if(!d.cat){alert('Pick what kind of piece it is first.');return;}
     state.draft={item,confirmed:true};render();document.getElementById('screen')?.scrollTo(0,0);};
   const addConfirm=document.getElementById('addConfirm');
-  if(addConfirm)addConfirm.onclick=()=>{const w=store.wardrobe;w.push(state.draft.item);store.wardrobe=w;
+  if(addConfirm)addConfirm.onclick=()=>{const w=store.wardrobe;const item=state.draft.item;
+    if(item.photo){PHOTOS[item.id]=item.photo;idb.put(item.id,item.photo);delete item.photo;} // photos live in IDB, not localStorage
+    w.push(item);store.wardrobe=w;
     state.draft=null;state.screen='wardrobe';state.wardrobeFilter='all';render();};
   const addDiscard=document.getElementById('addDiscard');
   if(addDiscard)addDiscard.onclick=()=>{state.draft=null;render();};
 
   // profile
   const redo=document.getElementById('redo'); if(redo)redo.onclick=()=>{onb={step:0,name:store.profile.name||'',bodyShape:'',lifestyle:'',palette:[],inspo:0};store.onboarded=false;render();};
-  const reset=document.getElementById('reset'); if(reset)reset.onclick=()=>{if(confirm('Reset your wardrobe and profile back to the sample?')){localStorage.clear();state={screen:'morning',anchor:null,occasion:'everyday',draft:null,plan:{temp:2,rain:false,activity:'errands',feel:'comfortable',duration:'day',effort:'auto',note:'',result:null}};onb={step:0,name:'',bodyShape:'',lifestyle:'',palette:[],inspo:0};render();}};
+  const reset=document.getElementById('reset'); if(reset)reset.onclick=()=>{if(confirm('Reset your wardrobe and profile back to the sample?')){localStorage.clear();
+    PHOTOS={};try{store.wardrobe&&idb.db&&idb.db.transaction('photos','readwrite').objectStore('photos').clear();}catch(e){}
+    state={screen:'morning',anchor:null,occasion:'everyday',draft:null,plan:{temp:2,rain:false,activity:'errands',feel:'comfortable',duration:'day',effort:'auto',note:'',result:null}};onb={step:0,name:'',bodyShape:'',lifestyle:'',palette:[],inspo:0};render();}};
 }
 function isNeutral(hex){const h=hueOf(hex);const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
   const mx=Math.max(r,g,b),mn=Math.min(r,g,b);const sat=mx===0?0:(mx-mn)/mx; return sat<0.22 || (h>20&&h<50&&sat<0.45);}
@@ -966,6 +1144,7 @@ function colourName(hex){const names={'#211E1C':'Black','#F1EFE9':'White','#B08A
 
 /* ---------- Go ---------- */
 render();
+idb.open().then(()=>idb.all()).then(p=>{PHOTOS=p;if(Object.keys(p).length)render();});
 </script>
 </body>
 </html>
