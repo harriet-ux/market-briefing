@@ -923,7 +923,7 @@ function wardrobeScreen(){
     <div class="section-gap" style="height:16px"></div>
     <div class="chiprow" id="wfilter">
       ${cats.map(c=>`<button class="chip" data-filter="${c}" aria-pressed="${active===c}">${c==='all'?'All':CAT_LABEL[c]+'s'}</button>`).join('')}
-      <button class="chip" id="wEditToggle" aria-pressed="${!!state.wEdit}">Edit</button>
+      <button class="chip" id="wEditToggle" aria-pressed="${!!state.wEdit}">${state.wEdit?'Done':'Edit · Remove'}</button>
       ${state.wEdit&&samples?`<button class="chip" id="wDropSamples">Remove ${samples} sample pieces</button>`:''}
     </div>
     <div class="section-gap" style="height:18px"></div>
@@ -1259,7 +1259,9 @@ function bindScreen(){
     if(!confirm('Remove the built-in sample pieces and keep only your own?'))return;
     store.wardrobe=store.wardrobe.filter(it=>!isSample(it));render();};
   document.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{
-    const id=b.dataset.rm;store.wardrobe=store.wardrobe.filter(it=>it.id!==id);
+    const id=b.dataset.rm;const it=itemById(id);
+    if(!confirm(`Remove ${it?it.name:'this piece'} from your wardrobe?`))return;
+    store.wardrobe=store.wardrobe.filter(x=>x.id!==id);
     delete PHOTOS[id];idb.del(id);render();});
 
   // item editor
