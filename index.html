@@ -513,6 +513,33 @@ function personalScore(c,anchor){
   }
   return clamp(s,0,1);
 }
+/* Hard outfit-construction rules */
+const isHeel=s=>!!s&&(s.style==='heels'||s.sub==='heel'||/heel|stilet|platform/i.test(s.name||''));
+// no heels when effort is low, when moving a lot, unless the occasion is properly dressy
+function shoePool(pool,level,dressy,movement){
+  let l=pool;
+  if(level<=1||(level===2&&!dressy)||movement==='high') l=l.filter(s=>!isHeel(s));
+  return l.length?l:pool;
+}
+// never a cropped top with a tight bottom; a crop wants high rise or a relaxed leg
+function pairOk(cand,parts){
+  const top=parts.find(p=>p.cat==='top'),bottom=parts.find(p=>p.cat==='bottom');
+  if(cand.cat==='bottom'&&top&&top.crop&&cand.fit==='fitted')return false;
+  if(cand.cat==='top'&&cand.crop&&bottom&&bottom.fit==='fitted')return false;
+  return true;
+}
+// soft balance: one fitted piece with one relaxed piece
+function balancePool(cands,parts){
+  const hard=cands.filter(c=>pairOk(c,parts));
+  const pool=hard.length?hard:cands;
+  const top=parts.find(p=>p.cat==='top'),bottom=parts.find(p=>p.cat==='bottom');
+  const fittedAnchor=(top&&top.fit==='fitted')||(bottom&&bottom.fit==='fitted');
+  if(fittedAnchor){
+    const soft=pool.filter(c=>!((c.cat==='top'||c.cat==='bottom')&&c.fit==='fitted'));
+    if(soft.length)return soft;
+  }
+  return pool;
+}
 function pick(cands,target,used,anchor){
   if(!cands.length) return null;
   const nice=cands.filter(c=>!isHated(c));            // "never dress me in" is a hard rule
@@ -521,7 +548,7 @@ function pick(cands,target,used,anchor){
   for(const c of cands){
     const fitForm=1-Math.min(1,Math.abs(c.formality-target)/2.6);
     const col=colourScore(c,anchor);
-    const fresh=used.has(c.id)?0.55:1;               // encourage variety across the four looks
+    const fresh=used.has(c.id)?0.45:1;               // encourage variety across looks and alternatives
     const s=fitForm*0.5+col*0.25+fresh*0.08+personalScore(c,anchor)*0.17;
     if(s>bestScore){bestScore=s;best=c;}
   }
@@ -531,8 +558,12 @@ function buildLook(anchor,level,occasion,used){
   const occ=OCCASIONS.find(o=>o.key===occasion);
   const target=Math.max(1,Math.min(5, level + 1 + occ.shift)); // level 1..4 -> base 2..5 formality
   const parts=[]; const localUsed=new Set(used);
-  const take=(cat)=>{const c=pick(byCat(cat).filter(x=>x.id!==anchor.id&&!localUsed.has(x.id)),target,localUsed,anchor)
-      ||pick(byCat(cat).filter(x=>x.id!==anchor.id),target,new Set(),anchor);
+  const take=(cat)=>{
+    let base=byCat(cat).filter(x=>x.id!==anchor.id);
+    if(cat==='shoes')base=shoePool(base,level,target>=4,null);
+    if(cat==='top'||cat==='bottom')base=balancePool(base,parts);
+    const c=pick(base.filter(x=>!localUsed.has(x.id)),target,localUsed,anchor)
+      ||pick(base,target,new Set(),anchor);
     if(c){parts.push(c);localUsed.add(c.id);used.add(c.id);}return c;};
 
   parts.push(anchor);
@@ -606,6 +637,7 @@ function stylistTips(parts,level){
   const tips=[];
   if(top&&bottom)tips.push('Front-tuck the top. It breaks the 50/50 split and sets the one-third to two-thirds line stylists love.');
   if(top&&bottom)tips.push('High-rise bottoms plus a tuck is the fastest leg-lengthening move you own.');
+  if(top&&top.crop)tips.push('Balance the crop: the highest rise you own, or a relaxed wide leg below.');
   if(top&&bottom&&nearestColourName(top.hex)===nearestColourName(bottom.hex))tips.push('A one-colour column reads tall and expensive. Match the shoes to the bottoms and it runs to the floor.');
   if(dress)tips.push('Belt the dress at your natural waist to give the whole line a clear shape.');
   if(dress)tips.push('Anything wrap-shaped fits the exact waist that standard sizing gets wrong, which is why it never misses.');
@@ -652,12 +684,17 @@ function filteredCat(cat,ctx){
   }
   return list.length?list:byCat(cat); // never let a filter empty a slot
 }
-function composeOutfit(target,ctx,level,mustInclude){
-  const used=new Set(),parts=[];
+function composeOutfit(target,ctx,level,mustInclude,avoid){
+  const used=new Set(),parts=[];const av=avoid||new Set();
   const add=it=>{if(it&&!used.has(it.id)){parts.push(it);used.add(it.id);}return it;};
   const anchorC=()=>parts[0]||{neutral:true,hex:'#888888'};
-  const take=cat=>{let c=pick(filteredCat(cat,ctx).filter(x=>!used.has(x.id)),target,used,anchorC());
-    if(!c)c=pick(byCat(cat).filter(x=>!used.has(x.id)),target,used,anchorC());return add(c);};
+  const take=cat=>{
+    let base=filteredCat(cat,ctx);
+    if(cat==='shoes')base=shoePool(base,level,ctx.dressy,ctx.movement);
+    if(cat==='top'||cat==='bottom')base=balancePool(base,parts);
+    let c=pick(base.filter(x=>!used.has(x.id)),target,av,anchorC());
+    if(!c)c=pick(byCat(cat).filter(x=>!used.has(x.id)),target,av,anchorC());
+    return add(c);};
   let baseIsDress=false;
   if(mustInclude){add(mustInclude);if(mustInclude.cat==='dress')baseIsDress=true;}
   const haveTop=()=>parts.some(p=>p.cat==='top'),haveBot=()=>parts.some(p=>p.cat==='bottom'),haveDr=()=>parts.some(p=>p.cat==='dress');
@@ -690,11 +727,13 @@ function planDay(plan){
             : ({low:1,med:2,high:4})[plan.effort];
   level=clamp(level,1,4);
   const seed=matchNote(plan.note);
+  const primary=composeOutfit(target,ctx,level,seed);
+  // steer the alternatives away from the primary's pieces so the three looks differ
+  const avoid=new Set(primary.filter(p=>!seed||p.id!==seed.id).map(p=>p.id));
   return {
-    act,feel,ctx,target,level,seed,
-    primary:composeOutfit(target,ctx,level,seed),
-    down:composeOutfit(clamp(target-1,1,5),{...ctx,dressy:false},clamp(level-1,1,4),seed&&seed.cat==='dress'?seed:null),
-    up:composeOutfit(clamp(target+0.9,1,5),{...ctx,dressy:true},clamp(level+1,1,4),seed),
+    act,feel,ctx,target,level,seed,primary,
+    down:composeOutfit(clamp(target-1,1,5),{...ctx,dressy:false},clamp(level-1,1,4),seed&&seed.cat==='dress'?seed:null,avoid),
+    up:composeOutfit(clamp(target+0.9,1,5),{...ctx,dressy:true},clamp(level+1,1,4),seed,avoid),
   };
 }
 function planRationale(r,parts){
@@ -912,8 +951,10 @@ function wardrobeScreen(){
       <button class="rm" data-rm="${it.id}" aria-label="Remove ${it.name}">✕</button></div>`
     :pieceCard(it);
   const tops=store.wardrobe.filter(i=>i.cat==='top').length;
+  const untypedShoes=store.wardrobe.filter(i=>i.cat==='shoes'&&!i.style).length;
   const misTagHint=(store.wardrobe.length>=10&&tops/store.wardrobe.length>0.75)
-    ?`<div class="note" style="margin:14px 0 2px">${UI.spark} Almost everything here is tagged as a top. If that's not right, tap Edit, then tap any piece to change its category. Full outfits need bottoms and shoes too.</div>`:'';
+    ?`<div class="note" style="margin:14px 0 2px">${UI.spark} Almost everything here is tagged as a top. If that's not right, tap Edit, then tap any piece to change its category. Full outfits need bottoms and shoes too.</div>`
+    :untypedShoes?`<div class="note" style="margin:14px 0 2px">${UI.spark} ${untypedShoes} pair${untypedShoes>1?'s':''} of shoes ${untypedShoes>1?'don’t':'doesn’t'} have a type yet. Tap Edit, then a shoe, and tell me if it's a heel, flat, boot or trainer. Then low-effort looks will never put you in heels.</div>`:'';
   return `
     <div style="padding-top:8px"><div class="eyebrow">Your collection</div>
     <h1 style="margin:8px 0 4px">Wardrobe</h1>
@@ -956,6 +997,16 @@ function importScreen(){
         <div class="chiprow" style="margin-top:7px">
           ${[[2,'Casual'],[3,'Smart'],[4,'Dressy']].map(([v,l])=>`<button class="chip" style="padding:5px 10px;font-size:11.5px" data-imp-form="${i}:${v}" aria-pressed="${it.formality===v}">${l}</button>`).join('')}
         </div>
+        ${it.cat==='shoes'?`<div class="chiprow" style="margin-top:7px">
+          ${[['trainers','Trainers'],['flats','Flats'],['boots','Boots'],['heels','Heels'],['sandals','Sandals']].map(([v,l])=>`<button class="chip" style="padding:5px 10px;font-size:11.5px" data-imp-attr="${i}:style:${v}" aria-pressed="${it.style===v}">${l}</button>`).join('')}
+        </div>`:''}
+        ${it.cat==='top'?`<div class="chiprow" style="margin-top:7px">
+          ${[['fit:fitted','Fitted'],['fit:relaxed','Relaxed'],['crop:yes','Cropped']].map(([v,l])=>{const[a,val]=v.split(':');const on=a==='crop'?it.crop:(it.fit===val);
+            return `<button class="chip" style="padding:5px 10px;font-size:11.5px" data-imp-attr="${i}:${a}:${val}" aria-pressed="${!!on}">${l}</button>`;}).join('')}
+        </div>`:''}
+        ${it.cat==='bottom'?`<div class="chiprow" style="margin-top:7px">
+          ${[['fitted','Fitted'],['straight','Straight'],['relaxed','Wide']].map(([v,l])=>`<button class="chip" style="padding:5px 10px;font-size:11.5px" data-imp-attr="${i}:fit:${v}" aria-pressed="${it.fit===v}">${l}</button>`).join('')}
+        </div>`:''}
       </div>`).join('')}
     </div>
     <div class="stickybar"><button class="btn accent" id="impCommit">${UI.check} Add ${q.length} to my wardrobe</button></div>`;
@@ -979,6 +1030,15 @@ function editItemScreen(){
   if(!it){state.screen='wardrobe';return wardrobeScreen();}
   const cats=[['top','Top'],['bottom','Bottom'],['dress','Dress'],['outerwear','Layer'],['shoes','Shoes'],['jewellery','Jewellery']];
   const forms=[[1,'Very casual'],[2,'Casual'],[3,'Smart'],[4,'Dressy'],[5,'Evening']];
+  const attrRow=(label,attr,cur,opts)=>`<label class="lbl">${label}</label>
+    <div class="chiprow" style="flex-wrap:wrap">${opts.map(([v,l])=>`<button class="chip" data-eattr="${attr}:${v}" aria-pressed="${String(cur)===String(v)}">${l}</button>`).join('')}</div>`;
+  let detail='';
+  if(it.cat==='shoes')detail=attrRow('Shoe type','style',it.style,[['trainers','Trainers'],['flats','Flats'],['boots','Boots'],['heels','Heels'],['sandals','Sandals']]);
+  if(it.cat==='top')detail=attrRow('How it fits','fit',it.fit,[['fitted','Fitted'],['regular','Regular'],['relaxed','Relaxed']])
+    +attrRow('Length','crop',it.crop?'yes':'no',[['no','Hip length or longer'],['yes','Cropped']]);
+  if(it.cat==='bottom')detail=attrRow('Leg / fit','fit',it.fit,[['fitted','Fitted / skinny'],['straight','Straight'],['relaxed','Wide / relaxed']])
+    +attrRow('Rise','rise',it.rise,[['high','High'],['mid','Mid'],['low','Low']]);
+  if(it.cat==='dress')detail=attrRow('Shape','fit',it.fit,[['fitted','Fitted / bodycon'],['regular','Skims'],['relaxed','Floaty / A-line']]);
   return `
     <button class="backlink" data-edit-back>${UI.back} Wardrobe</button>
     <div class="eyebrow">Edit piece</div>
@@ -990,6 +1050,7 @@ function editItemScreen(){
     <div class="chiprow" style="flex-wrap:wrap">${cats.map(([k,l])=>`<button class="chip accent" data-ecat="${k}" aria-pressed="${it.cat===k}">${l}</button>`).join('')}</div>
     <label class="lbl">How dressy?</label>
     <div class="chiprow" style="flex-wrap:wrap">${forms.map(([v,l])=>`<button class="chip" data-eform="${v}" aria-pressed="${it.formality===v}">${l}</button>`).join('')}</div>
+    ${detail}
     <div class="section-gap"></div>
     <button class="btn accent" id="eSave">${UI.check} Save changes</button>
     <div style="height:10px"></div>
@@ -1227,7 +1288,7 @@ function finishOnboarding(){
 /* ---------- Event binding ---------- */
 function bindScreen(){
   document.querySelectorAll('[data-nav]').forEach(b=>b.onclick=()=>{
-    state.screen=b.dataset.nav; if(state.screen!=='morning')state.anchor=null;
+    state.screen=b.dataset.nav; state.anchor=null;
     if(state.screen==='add')state.draft=null; render();});
   const prof=document.getElementById('toProfile'); if(prof)prof.onclick=()=>{state.screen='profile';render();};
   document.querySelectorAll('[data-anchor]').forEach(b=>b.onclick=()=>{
@@ -1273,6 +1334,13 @@ function bindScreen(){
     mut&&mut(it);store.wardrobe=w;};
   document.querySelectorAll('[data-ecat]').forEach(b=>b.onclick=()=>{applyEdit(it=>{it.cat=b.dataset.ecat;it.sub=SUBDEF[it.cat];});keepScroll(render);});
   document.querySelectorAll('[data-eform]').forEach(b=>b.onclick=()=>{applyEdit(it=>{it.formality=+b.dataset.eform;});keepScroll(render);});
+  document.querySelectorAll('[data-eattr]').forEach(b=>b.onclick=()=>{
+    const[attr,v]=b.dataset.eattr.split(':');
+    applyEdit(it=>{
+      if(attr==='style'){it.style=v;it.sub={trainers:'trainer',flats:'flat',boots:'boot',heels:'heel',sandals:'heel'}[v]||it.sub;}
+      else if(attr==='crop')it.crop=(v==='yes');
+      else it[attr]=v;
+    });keepScroll(render);});
   const eSave=document.getElementById('eSave'); if(eSave)eSave.onclick=()=>{applyEdit();state.screen='wardrobe';render();};
   const eRemove=document.getElementById('eRemove'); if(eRemove)eRemove.onclick=()=>{
     if(!confirm('Remove this piece from your wardrobe?'))return;
@@ -1304,13 +1372,20 @@ function bindScreen(){
   document.querySelectorAll('[data-imp-form]').forEach(b=>b.onclick=()=>{
     const[i,v]=b.dataset.impForm.split(':');state.importQueue[+i].formality=+v;keepScroll(render);});
   document.querySelectorAll('[data-imp-rm]').forEach(b=>b.onclick=()=>{state.importQueue.splice(+b.dataset.impRm,1);keepScroll(render);});
+  document.querySelectorAll('[data-imp-attr]').forEach(b=>b.onclick=()=>{
+    const[i,attr,v]=b.dataset.impAttr.split(':');const q=state.importQueue[+i];
+    if(attr==='crop')q.crop=!q.crop;
+    else q[attr]=q[attr]===v?undefined:v;
+    keepScroll(render);});
   const impCommit=document.getElementById('impCommit');
   if(impCommit)impCommit.onclick=()=>{
     const w=store.wardrobe;
     state.importQueue.forEach((it,i)=>{
       const id='u'+Date.now().toString(36)+i;
-      w.push({id,name:it.name.trim()||`${nearestColourName(it.hex)} ${IMPNOUN[it.cat]}`,cat:it.cat,sub:SUBDEF[it.cat],
-        hex:it.hex,color:nearestColourName(it.hex),neutral:isNeutral(it.hex),formality:it.formality,tags:[]});
+      const sub=it.cat==='shoes'&&it.style?({trainers:'trainer',flats:'flat',boots:'boot',heels:'heel',sandals:'heel'}[it.style]):SUBDEF[it.cat];
+      w.push({id,name:it.name.trim()||`${nearestColourName(it.hex)} ${IMPNOUN[it.cat]}`,cat:it.cat,sub,
+        hex:it.hex,color:nearestColourName(it.hex),neutral:isNeutral(it.hex),formality:it.formality,tags:[],
+        style:it.style,fit:it.fit,crop:!!it.crop,rise:it.rise});
       PHOTOS[id]=it.photo;idb.put(id,it.photo);
     });
     store.wardrobe=w;
