@@ -15,6 +15,11 @@ to check what it goes with before you buy.
 - **Morning** — pick a top, bottom or dress → four looks, casual → glam, each with
   a one-line "why this works". Flip the **occasion** (Everyday / Work / Weekend /
   Date / Event) to re-style on the fly.
+- **Plan my day** — for when you've no idea what to wear. Answer a stylist's
+  questions in taps (weather + rain, what you're doing, how you want to *feel*,
+  how long you're out, effort, plus an optional anchor like "wear my white
+  boots") and it builds a whole outfit — weather-, occasion- and feeling-aware —
+  with a dial-down and dial-up alternative.
 - **Wardrobe** — your full collection, filterable by category. Ships with a sample
   wardrobe so the flow works immediately.
 - **Add / fitting room** — photograph or hand-add a new piece and see what it
