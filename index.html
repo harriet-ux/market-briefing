@@ -986,6 +986,11 @@ function profileScreen(){
     <div class="section-gap"></div>
     <button class="btn ghost" id="redo">Redo my setup</button>
     <div style="height:10px"></div>
+    <button class="btn ghost" id="backup">Back up everything to a file</button>
+    <div style="height:10px"></div>
+    <label class="btn ghost" for="restoreFile" style="cursor:pointer">Restore from a backup</label>
+    <input id="restoreFile" type="file" accept=".json,application/json" hidden>
+    <div style="height:10px"></div>
     <button class="btn ghost" id="reset" style="color:var(--ink-faint)">Reset everything</button>
     <div style="height:20px"></div>
     <p style="font-size:12px;color:var(--ink-faint);line-height:1.5;text-align:center">Prototype · the styling brain here is a simple rule engine. In the full app your photos are read by Claude to tag pieces and reason out the looks.</p>
@@ -1242,7 +1247,37 @@ function bindScreen(){
   const addDiscard=document.getElementById('addDiscard');
   if(addDiscard)addDiscard.onclick=()=>{state.draft=null;render();};
 
-  // profile
+  // profile — backup & restore (wardrobe + profile + all photos)
+  const backup=document.getElementById('backup');
+  if(backup)backup.onclick=()=>{
+    const data={app:'muse',v:1,when:new Date().toISOString(),
+      wardrobe:store.wardrobe,profile:store.profile,photos:PHOTOS};
+    const blob=new Blob([JSON.stringify(data)],{type:'application/json'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='muse-backup.json';
+    document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+  };
+  const restoreFile=document.getElementById('restoreFile');
+  if(restoreFile)restoreFile.onchange=e=>{
+    const f=e.target.files[0];if(!f)return;
+    const r=new FileReader();
+    r.onload=ev=>{
+      try{
+        const d=JSON.parse(ev.target.result);
+        if(d.app!=='muse'||!Array.isArray(d.wardrobe))throw new Error('not a Muse backup');
+        if(!confirm(`Restore ${d.wardrobe.length} pieces${d.when?` from ${d.when.slice(0,10)}`:''}? This replaces what's here now.`))return;
+        store.wardrobe=d.wardrobe;
+        store.profile=d.profile||{};
+        store.onboarded=true;
+        PHOTOS=d.photos||{};
+        Object.entries(PHOTOS).forEach(([k,v])=>idb.put(k,v));
+        state.screen='wardrobe';state.wardrobeFilter='all';render();
+      }catch(err){alert('That file doesn’t look like a Muse backup — nothing was changed.');}
+    };
+    r.readAsText(f);
+  };
   const redo=document.getElementById('redo'); if(redo)redo.onclick=()=>{const pf=store.profile||{};onb={...freshOnb(),name:pf.name||'',bodyShape:pf.bodyShape||'',heightScale:pf.heightScale||'',lifestyle:pf.lifestyle||'',undertone:pf.undertone||'',contrast:pf.contrast||'',loved:pf.loved||[],hated:pf.hated||[],archetypes:pf.archetypes||[],noGo:pf.noGo||[],inspo:pf.inspo||0,selfCount:pf.selfCount||0};store.onboarded=false;render();};
   const reset=document.getElementById('reset'); if(reset)reset.onclick=()=>{if(confirm('Reset your wardrobe and profile back to the sample?')){localStorage.clear();
     PHOTOS={};try{store.wardrobe&&idb.db&&idb.db.transaction('photos','readwrite').objectStore('photos').clear();}catch(e){}
