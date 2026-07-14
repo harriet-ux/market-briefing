@@ -302,7 +302,7 @@ nav{
   display:flex;flex-direction:column;
 }
 .job:hover{transform:translateY(-4px);box-shadow:0 10px 0 0 var(--pine)}
-.job-art{height:120px;position:relative;border-bottom:3px solid var(--pine);background:var(--sky);overflow:hidden}
+.job-art{aspect-ratio:4/5;height:auto;position:relative;border-bottom:3px solid var(--pine);background:var(--sky);overflow:hidden}
 .job-body{padding:18px 20px 22px;display:flex;flex-direction:column;gap:8px;flex:1}
 .job-body p{font-size:.92rem;color:#44573F;flex:1}
 .job-price{
@@ -310,14 +310,8 @@ nav{
   background:var(--sun);border:2.5px solid var(--pine);border-radius:999px;
   padding:.3em .9em;box-shadow:0 3px 0 0 var(--pine);
 }
-/* photo-filled cards */
-.job-art:not(.has-photo){flex:1 1 auto;height:auto;min-height:120px}
-.job-art.has-photo{flex:1 1 auto;height:auto;min-height:120px}
-.job:has(.job-art.has-photo) .job-body{flex:0 0 auto}
-.job-art.wants-full.has-photo{flex:0 0 auto;display:block;padding:0}
-.job-art.wants-full.has-photo .photo-swap{position:static;height:auto}
-.job-art.wants-full.has-photo>:not(.photo-swap){display:none}
-.job-art.wants-full.has-photo::before,.job-art.wants-full.has-photo::after{display:none}
+/* photo-filled cards: hide drawn art behind the photo */
+.job-art.has-photo::before,.job-art.has-photo::after{content:none}
 /* patio art: tiles fan out on hover */
 .art-patio{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,1fr);gap:5px;padding:14px;background:#DDE9D2}
 .art-patio i{background:var(--stone);border:2.5px solid var(--pine);border-radius:5px;transition:transform .25s}
