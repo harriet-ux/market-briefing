@@ -294,9 +294,8 @@ nav{
 .dig-note{font-size:.88rem;color:#44573F;margin-top:14px;font-style:italic}
 
 /* ── Jobs grid ──────────────────────────────── */
-.jobs-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(18px,2.5vw,28px)}
-@media(max-width:960px){.jobs-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:620px){.jobs-grid{grid-template-columns:1fr}}
+.jobs-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(18px,2.5vw,28px)}
+@media(max-width:680px){.jobs-grid{grid-template-columns:1fr}}
 .job{
   background:#FAFBF2;border:3px solid var(--pine);border-radius:18px;overflow:hidden;
   box-shadow:0 6px 0 0 var(--pine);transition:transform .18s,box-shadow .18s;
@@ -312,11 +311,13 @@ nav{
   padding:.3em .9em;box-shadow:0 3px 0 0 var(--pine);
 }
 /* photo-filled cards */
+.job-art:not(.has-photo){flex:1 1 auto;height:auto;min-height:120px}
 .job-art.has-photo{flex:1 1 auto;height:auto;min-height:120px}
 .job:has(.job-art.has-photo) .job-body{flex:0 0 auto}
 .job-art.wants-full.has-photo{flex:0 0 auto;display:block;padding:0}
 .job-art.wants-full.has-photo .photo-swap{position:static;height:auto}
 .job-art.wants-full.has-photo>:not(.photo-swap){display:none}
+.job-art.wants-full.has-photo::before,.job-art.wants-full.has-photo::after{display:none}
 /* patio art: tiles fan out on hover */
 .art-patio{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,1fr);gap:5px;padding:14px;background:#DDE9D2}
 .art-patio i{background:var(--stone);border:2.5px solid var(--pine);border-radius:5px;transition:transform .25s}
@@ -727,7 +728,7 @@ footer{background:var(--pine-deep);color:var(--paper);padding:clamp(40px,6vw,64p
     </div>
     <div class="jobs-grid">
       <article class="job reveal">
-        <div class="job-art art-patio"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><img class="photo-swap" src="photos/job-patio.jpg" alt="" onload="this.classList.add('ok');this.parentElement.classList.add('has-photo')" onerror="this.remove()"></div>
+        <div class="job-art art-patio wants-full"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><img class="photo-swap" src="photos/job-patio.jpg" alt="" onload="this.classList.add('ok');this.parentElement.classList.add('has-photo')" onerror="this.remove()"></div>
         <div class="job-body">
           <h3>Patios &amp; paving</h3>
           <p>Indian sandstone, porcelain or block paving, laid on a proper sub base so it stays flat for decades.</p>
@@ -735,11 +736,27 @@ footer{background:var(--pine-deep);color:var(--paper);padding:clamp(40px,6vw,64p
         </div>
       </article>
       <article class="job reveal">
-        <div class="job-art art-lawn"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><img class="photo-swap" src="photos/job-lawn.jpg" alt="" onload="this.classList.add('ok');this.parentElement.classList.add('has-photo')" onerror="this.remove()"></div>
+        <div class="job-art art-lawn wants-full"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><img class="photo-swap" src="photos/job-lawn.jpg" alt="" onload="this.classList.add('ok');this.parentElement.classList.add('has-photo')" onerror="this.remove()"></div>
         <div class="job-body">
           <h3>New lawns &amp; turfing</h3>
           <p>Old lawn out, ground levelled, fresh cultivated turf down. Green and usable in weeks.</p>
           <span class="job-price">from £450</span>
+        </div>
+      </article>
+      <article class="job reveal">
+        <div class="job-art art-drive wants-full"><img class="photo-swap" src="photos/job-drive.jpg" alt="" onload="this.classList.add('ok');this.parentElement.classList.add('has-photo')" onerror="this.remove()"></div>
+        <div class="job-body">
+          <h3>Driveways</h3>
+          <p>Block paving, resin or gravel driveways with proper drainage, built to take years of parking.</p>
+          <span class="job-price">from £3,500</span>
+        </div>
+      </article>
+      <article class="job reveal">
+        <div class="job-art art-deck wants-full"><i></i><i></i><i></i><i></i><i></i><img class="photo-swap" src="photos/job-deck.jpg" alt="" onload="this.classList.add('ok');this.parentElement.classList.add('has-photo')" onerror="this.remove()"></div>
+        <div class="job-body">
+          <h3>Decking</h3>
+          <p>Timber or composite decking on a solid frame, perfect for gardens with a slope to tame.</p>
+          <span class="job-price">from £1,500</span>
         </div>
       </article>
       <article class="job reveal">
@@ -750,22 +767,7 @@ footer{background:var(--pine-deep);color:var(--paper);padding:clamp(40px,6vw,64p
           <span class="job-price">from £120 a panel</span>
         </div>
       </article>
-      <article class="job reveal">
-        <div class="job-art art-drive"><img class="photo-swap" src="photos/job-drive.jpg" alt="" onload="this.classList.add('ok');this.parentElement.classList.add('has-photo')" onerror="this.remove()"></div>
-        <div class="job-body">
-          <h3>Driveways</h3>
-          <p>Block paving, resin or gravel driveways with proper drainage, built to take years of parking.</p>
-          <span class="job-price">from £3,500</span>
-        </div>
-      </article>
-      <article class="job reveal">
-        <div class="job-art art-deck"><i></i><i></i><i></i><i></i><i></i><img class="photo-swap" src="photos/job-deck.jpg" alt="" onload="this.classList.add('ok');this.parentElement.classList.add('has-photo')" onerror="this.remove()"></div>
-        <div class="job-body">
-          <h3>Decking</h3>
-          <p>Timber or composite decking on a solid frame, perfect for gardens with a slope to tame.</p>
-          <span class="job-price">from £1,500</span>
-        </div>
-      </article>
+
       <article class="job reveal">
         <div class="job-art art-bloom wants-full">
           <div class="flower"><i class="stem"></i><i class="head"></i></div>
